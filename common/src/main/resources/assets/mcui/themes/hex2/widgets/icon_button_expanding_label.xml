@@ -1,0 +1,71 @@
+<widget name="icon_button_expanding_label">
+    <expect>
+        <variable key="text" type="STRING"/>
+        <variable key="initialWidth" type="INT" cache="STATIC">21</variable>
+        <variable key="initialHeight" type="INT" cache="STATIC">24</variable>
+        <variable key="xPos" type="DOUBLE" cache="STATIC">scaledwidth / 2.0</variable>
+        <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
+        <variable key="active" type="BOOLEAN" cache="STATIC">true</variable>
+        <variable key="colour" type="INT" cache="STATIC">0x424242FF</variable>
+        <variable key="hoverColour" type="INT" cache="STATIC">(int) (0x424242FF &amp; 0xAFAFAFFF)</variable>
+        <variable key="isHovered" type="BOOLEAN" cache="STATIC">false</variable>
+    </expect>
+    <contentWidth>isHovered? (19 + strWidth(text) + 12): initialWidth</contentWidth>
+    <contentHeight>initialHeight</contentHeight>
+    <active>active</active>
+    <texture>saoui:textures/hex2/hex_labels.png</texture>
+    <x>(isHovered? -initialWidth * 0.05: 0) + xPos</x>
+    <y>(isHovered? -initialHeight * 0.05: 0) + yPos</y>
+    <scale>isHovered? 1.1: 1.0</scale>
+    <children>
+        <glRectangle name="icon">
+            <texture>saoui:textures/hex2/hexv.png</texture>
+            <rgba>isHovered? hoverColour: colour</rgba>
+            <srcH cache="STATIC">256.0</srcH>
+            <srcW cache="STATIC">224.0</srcW>
+            <srcX cache="STATIC">16.0</srcX>
+            <w>initialWidth</w>
+            <h>initialHeight</h>
+        </glRectangle>
+
+        <elementGroup name="label">
+            <texture>saoui:textures/hex2/hex_labels.png</texture>
+            <enabled cache="PER_FRAME">isHovered</enabled>
+            <x>initialWidth</x>
+            <y>initialHeight / 2 - 6</y>
+            <children>
+                <glRectangle> <!-- middle part of label -->
+                    <rgba>isHovered? hoverColour: colour</rgba>
+                    <srcX cache="STATIC">24.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">26.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w cache="PER_FRAME">strWidth(text) + 8</w>
+                    <h cache="STATIC">12</h>
+                </glRectangle>
+
+                <glRectangle> <!-- right part of label -->
+                    <rgba>isHovered? hoverColour: colour</rgba>
+                    <x cache="PER_FRAME">strWidth(text) + 8</x>
+                    <srcX cache="STATIC">50.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">24.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w cache="STATIC">4</w>
+                    <h cache="STATIC">12</h>
+                </glRectangle>
+
+                <glString name="label">
+                    <x cache="STATIC">4</x>
+                    <y cache="STATIC">7.5</y>
+                    <text>text</text>
+                </glString>
+            </children>
+        </elementGroup>
+    </children>
+
+    <onMouseOverEvent>
+        local button, _, _, entered = ...
+        button.setVariable('isHovered', {type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC'})
+    </onMouseOverEvent>
+</widget>

@@ -17,10 +17,12 @@
 
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.api.themes.IHudDrawContext
 import be.bluexin.mcui.platform.Services
+import be.bluexin.mcui.themes.util.CDouble
 import be.bluexin.mcui.themes.util.profile
 import be.bluexin.mcui.util.Client
 import com.mojang.blaze3d.vertex.PoseStack
@@ -36,6 +38,7 @@ import nl.adaptivity.xmlutil.serialization.XmlElement
  * @author Bluexin
  */
 @Serializable
+@LuajExpose(includeType = LuajExpose.IncludeType.OPT_IN)
 sealed class ElementGroupParent : Element(), ElementParent {
 
     protected var children: Children = Children(emptyList())
@@ -50,7 +53,12 @@ sealed class ElementGroupParent : Element(), ElementParent {
     protected var rl: ResourceLocation? = null
 
     @XmlElement
-    private var texture: String? = null
+    @LuajExpose
+    var texture: String? = null
+        set(value) {
+            field = value
+            rl = value?.let(::ResourceLocation)
+        }
 
     // FIXME : an error in enabled will still crash
     override fun draw(ctx: IHudDrawContext, poseStack: PoseStack) {
@@ -69,6 +77,11 @@ sealed class ElementGroupParent : Element(), ElementParent {
 
         poseStack.pushPose()
         poseStack.translate(x(ctx), y(ctx), z(ctx))
+
+        scale?.let {
+            val scale = it(ctx).toFloat()
+            poseStack.scale(scale, scale, scale)
+        }
     }
 
     protected open fun finishDraw(ctx: IHudDrawContext, poseStack: PoseStack) {
@@ -106,7 +119,7 @@ sealed class ElementGroupParent : Element(), ElementParent {
         return res
     }
 
-    fun add(element: Element) {
+    open fun add(element: Element) {
         this.elements += element
     }
 

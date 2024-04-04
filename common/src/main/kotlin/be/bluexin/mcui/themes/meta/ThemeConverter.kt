@@ -1,6 +1,9 @@
-package be.bluexin.mcui.themes
+package be.bluexin.mcui.themes.meta
 
 import be.bluexin.mcui.themes.elements.Widget
+import be.bluexin.mcui.themes.loader.AbstractThemeLoader
+import be.bluexin.mcui.themes.loader.JsonThemeLoader
+import be.bluexin.mcui.themes.loader.XmlThemeLoader
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import net.minecraft.resources.ResourceLocation
@@ -118,7 +121,7 @@ object XmlTests {
     fun main(args: Array<String>) {
         val xml = XmlThemeLoader.xml
 
-        val iss = javaClass.classLoader.getResourceAsStream("assets/mcui/themes/hex2/widgets/button.xml")
+        val iss = javaClass.classLoader.getResourceAsStream("assets/mcui/themes/hex2/widgets/label_button.xml")
             ?: error("Couldn't load iss")
         val widget = xml.decodeFromString<Widget>(
             iss.reader().readText()

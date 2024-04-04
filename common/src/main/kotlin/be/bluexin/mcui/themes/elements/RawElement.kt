@@ -18,6 +18,7 @@
 package be.bluexin.mcui.themes.elements
 
 import be.bluexin.mcui.api.themes.IHudDrawContext
+import be.bluexin.mcui.themes.util.CDouble
 import be.bluexin.mcui.themes.util.CUnit
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
@@ -54,6 +55,11 @@ class RawElement(
         val y = this.y(ctx)
         val z = this.z(ctx) + ctx.z
         poseStack.translate(x, y, z)
+
+        scale?.let {
+            val scale = it(ctx).toFloat()
+            poseStack.scale(scale, scale, scale)
+        }
         expression(ctx)
         poseStack.popPose()
     }

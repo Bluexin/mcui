@@ -17,6 +17,7 @@
 
 package be.bluexin.mcui.themes.util
 
+import be.bluexin.luajksp.annotations.LuajMapped
 import be.bluexin.mcui.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.util.serialization.*
 import kotlinx.serialization.Serializable
@@ -27,6 +28,7 @@ import kotlinx.serialization.Transient
  *
  * @author Bluexin
  */
+@LuajMapped(UnknownCValueMapper::class)
 sealed class CValue<out T : Any>(@Transient val value: (IHudDrawContext) -> T) : (IHudDrawContext) -> T {
     override fun invoke(ctx: IHudDrawContext) = value(ctx)
 }
@@ -35,6 +37,7 @@ sealed class CValue<out T : Any>(@Transient val value: (IHudDrawContext) -> T) :
  * Custom Int type.
  */
 @Serializable(CIntSerializer::class)
+@LuajMapped(CIntMapper::class)
 class CInt(value: (IHudDrawContext) -> Int) : CValue<Int>(value) {
     companion object {
         val ZERO = CInt { 0 }
@@ -46,9 +49,11 @@ class CInt(value: (IHudDrawContext) -> Int) : CValue<Int>(value) {
  * Custom Double type.
  */
 @Serializable(CDoubleSerializer::class)
+@LuajMapped(CDoubleMapper::class)
 class CDouble(value: (IHudDrawContext) -> Double) : CValue<Double>(value) {
     companion object {
         val ZERO = CDouble { 0.0 }
+        val ONE = CDouble { 1.0 }
     }
 }
 
@@ -56,6 +61,7 @@ class CDouble(value: (IHudDrawContext) -> Double) : CValue<Double>(value) {
  * Custom String type.
  */
 @Serializable(CStringSerializer::class)
+@LuajMapped(CStringMapper::class)
 class CString(value: (IHudDrawContext) -> String) : CValue<String>(value) {
     companion object {
         val EMPTY = CString { "" }
@@ -66,6 +72,7 @@ class CString(value: (IHudDrawContext) -> String) : CValue<String>(value) {
  * Custom Boolean type.
  */
 @Serializable(CBooleanSerializer::class)
+@LuajMapped(CBooleanMapper::class)
 class CBoolean(value: (IHudDrawContext) -> Boolean) : CValue<Boolean>(value) {
     companion object {
         val TRUE = CBoolean { true }

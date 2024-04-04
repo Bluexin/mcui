@@ -69,6 +69,12 @@ sealed class GLRectangleParent : Element() {
         val y = this.y(ctx)
         val z = this.z(ctx) + ctx.z
 
+        val pushed = scale?.let {
+            val scale = it(ctx).toFloat()
+            poseStack.pushPose()
+            poseStack.scale(scale, scale, scale)
+            true
+        } ?: false
         GLCore.glBlend(true)
         GLCore.withColor(rgba?.let { it(ctx) }) {
             this.rl?.let(GLCore::glBindTexture)
@@ -80,6 +86,7 @@ sealed class GLRectangleParent : Element() {
                 poseStack = poseStack
             )
         }
+        if (pushed) poseStack.popPose()
     }
 
     override fun setup(parent: ElementParent, fragments: Map<ResourceLocation, () -> Fragment>): Boolean {

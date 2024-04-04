@@ -19,6 +19,7 @@ package be.bluexin.mcui.themes.elements
 
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.api.themes.IHudDrawContext
+import be.bluexin.mcui.themes.util.CDouble
 import be.bluexin.mcui.themes.util.CInt
 import be.bluexin.mcui.themes.util.CString
 import com.mojang.blaze3d.vertex.PoseStack
@@ -42,6 +43,13 @@ class GLString(
 
     override fun draw(ctx: IHudDrawContext, poseStack: PoseStack) {
         if (!enabled(ctx)) return
+
+        val pushed = scale?.let {
+            val scale = it(ctx).toFloat()
+            poseStack.pushPose()
+            poseStack.scale(scale, scale, scale)
+            true
+        } ?: false
         val x = this.x(ctx)
         val y = this.y(ctx) + h(ctx) / 2.0
         val rgba = (rgba ?: CInt.WHITE)(ctx)
@@ -55,5 +63,6 @@ class GLString(
             centered = centered,
             poseStack = poseStack
         )
+        if (pushed) poseStack.popPose()
     }
 }

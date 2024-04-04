@@ -1,6 +1,6 @@
 package be.bluexin.mcui.themes.util.typeadapters
 
-import be.bluexin.mcui.themes.AbstractThemeLoader
+import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.util.*
 import gnu.jel.CompilationException
 import gnu.jel.CompiledExpression
@@ -63,7 +63,7 @@ sealed class BasicExpressionAdapter<CValueType: CValue<T>, T : Any> {
 /**
  * Adapts an expression that should return a int.
  */
-object IntExpressionAdapter : BasicExpressionAdapter<CInt, Int>() {
+data object IntExpressionAdapter : BasicExpressionAdapter<CInt, Int>() {
     override fun value(c: CachedExpression<Int>) = CInt(c)
 
     override val type: Class<*> = Integer.TYPE
@@ -78,7 +78,7 @@ object IntExpressionAdapter : BasicExpressionAdapter<CInt, Int>() {
 /**
  * Adapts an expression that should return a double.
  */
-object DoubleExpressionAdapter : BasicExpressionAdapter<CDouble, Double>() {
+data object DoubleExpressionAdapter : BasicExpressionAdapter<CDouble, Double>() {
     override fun value(c: CachedExpression<Double>) = CDouble(c)
 
     override val type: Class<*> = java.lang.Double.TYPE
@@ -93,7 +93,7 @@ object DoubleExpressionAdapter : BasicExpressionAdapter<CDouble, Double>() {
 /**
  * Adapts an expression that should return a String.
  */
-object StringExpressionAdapter : BasicExpressionAdapter<CString, String>() {
+data object StringExpressionAdapter : BasicExpressionAdapter<CString, String>() {
     override fun value(c: CachedExpression<String>) = CString(c)
 
     override val type: Class<*> = String::class.java
@@ -108,7 +108,7 @@ object StringExpressionAdapter : BasicExpressionAdapter<CString, String>() {
 /**
  * Adapts an expression that should return a boolean.
  */
-object BooleanExpressionAdapter : BasicExpressionAdapter<CBoolean, Boolean>() {
+data object BooleanExpressionAdapter : BasicExpressionAdapter<CBoolean, Boolean>() {
     override fun value(c: CachedExpression<Boolean>) = CBoolean(c)
 
     override val type: Class<*> = java.lang.Boolean.TYPE
@@ -123,7 +123,7 @@ object BooleanExpressionAdapter : BasicExpressionAdapter<CBoolean, Boolean>() {
 /**
  * Adapts an expression that should return [Unit] (aka void).
  */
-object UnitExpressionAdapter : BasicExpressionAdapter<CUnit, Unit>() {
+data object UnitExpressionAdapter : BasicExpressionAdapter<CUnit, Unit>() {
     override val type: Class<*>? = null
 
     override fun value(c: CachedExpression<Unit>) = CUnit(c)

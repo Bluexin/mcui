@@ -11,6 +11,7 @@ import org.luaj.vm2.lib.*
 import org.luaj.vm2.lib.jse.JseBaseLib
 import org.luaj.vm2.lib.jse.JseMathLib
 import org.luaj.vm2.lib.jse.JseStringLib
+import kotlin.jvm.optionals.getOrNull
 
 // TODO : check BCEL for lua-to-(jvm bytecode) compilation -- see LuaJC::install
 object LuaJTest {
@@ -61,10 +62,10 @@ object LuaJTest {
         }
     }
 
-    fun runScript(rl: ResourceLocation) {
-        Minecraft.getInstance().resourceManager.getResource(rl)
+    fun runScript(rl: ResourceLocation): Varargs? {
+        return Minecraft.getInstance().resourceManager.getResource(rl)
             .map(Resource::open)
-            .ifPresent { scriptStream ->
+            .map { scriptStream ->
                 val (userGlobals, setHook) = getEnvFor(rl)
                 val chunk = serverGlobals.load(scriptStream, "=$rl", "t", userGlobals)
                 val userThread = LuaThread(userGlobals, chunk)
@@ -91,7 +92,8 @@ object LuaJTest {
 
                 // TODO: currently this doesn't throw, but returns a Lua Vararg with (false, <errorMessage>) in case of failure
                 Constants.LOG.info("Read $rl : $result")
-            }
+                result
+            }.getOrNull()
     }
 
     fun compileSnippet(key: String, snippet: String, themeId: ResourceLocation): LuaValue {

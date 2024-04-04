@@ -1,8 +1,9 @@
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.api.themes.IHudDrawContext
-import be.bluexin.mcui.themes.AbstractThemeLoader
+import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.util.*
 import be.bluexin.mcui.util.DeserializationOrder
 import com.mojang.blaze3d.vertex.PoseStack
@@ -13,6 +14,7 @@ import net.minecraft.resources.ResourceLocation
 
 @Serializable
 @SerialName("fragmentReference")
+@LuajExpose(LuajExpose.IncludeType.OPT_IN)
 class FragmentReference(
     @DeserializationOrder(0)
     private val serializedVariables: Variables = Variables.EMPTY,
@@ -71,6 +73,12 @@ class FragmentReference(
         fragment?.let {
             poseStack.pushPose()
             poseStack.translate(x(ctx), y(ctx), z(ctx))
+
+
+            scale?.let {
+                val scale = it(ctx).toFloat()
+                poseStack.scale(scale, scale, scale)
+            }
             ctx.pushContext(variables)
             it.draw(ctx, poseStack)
             ctx.popContext()

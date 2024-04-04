@@ -1,3 +1,4 @@
+--- @module theme
 theme = {}
 
 ---
@@ -17,7 +18,7 @@ function theme.readFragment(namespace, path) return {} end
 ---@param target string
 ---@param fragment table as returned by readFragment
 ---@param variables table containing variables to use when evaluating the fragment
----@return boolean whether the operation was successful
+---@return Fragment|boolean the fragment if successful, false otherwise
 function theme.loadFragment(target, fragment, variables) return false end
 
 ---
@@ -35,15 +36,15 @@ function theme.readWidget(namespace, path) return {} end
 --- evaluate the Widget.
 ---@overload fun(target:string,fragment:table):boolean
 ---@param target string
----@param fragment table as returned by readFragment
+---@param widget table as returned by readWidget
 ---@param variables table containing variables to use when evaluating the fragment
----@return boolean whether the operation was successful
-function theme.loadWidget(target, fragment, variables) return false end
+---@return Widget|boolean the widget if successful, false otherwise
+function theme.loadWidget(target, widget, variables) return false end
 
 ---
 --- Registers given callback for initializing Screen with given id
 ---@param id string
----@param callback function receiving the root for manipulating the Screen
+---@param callback fun(rootId: string) receiving the root for manipulating the Screen
 ---@return boolean whether the operation was successful
 function theme.registerScreen(id, callback) return false end
 

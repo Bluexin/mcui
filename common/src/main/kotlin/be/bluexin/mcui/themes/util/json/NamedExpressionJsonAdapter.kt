@@ -1,6 +1,6 @@
 package be.bluexin.mcui.themes.util.json
 
-import be.bluexin.mcui.themes.AbstractThemeLoader
+import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.util.CValue
 import be.bluexin.mcui.themes.util.CacheType
 import be.bluexin.mcui.themes.util.NamedExpressionIntermediate

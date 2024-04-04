@@ -1,6 +1,6 @@
 package be.bluexin.mcui.commands
 
-import be.bluexin.mcui.themes.AbstractThemeLoader
+import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.commands.CommandSourceStack

@@ -1,4 +1,4 @@
-package be.bluexin.mcui.themes
+package be.bluexin.mcui.themes.meta
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.util.append

@@ -1,9 +1,12 @@
-package be.bluexin.mcui.themes
+package be.bluexin.mcui.themes.loader
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.api.entity.rendering.ColorState
 import be.bluexin.mcui.config.Setting
 import be.bluexin.mcui.config.Settings
+import be.bluexin.mcui.themes.meta.ThemeFormat
+import be.bluexin.mcui.themes.meta.ThemeManager
+import be.bluexin.mcui.themes.meta.ThemeMetadata
 import be.bluexin.mcui.themes.elements.ElementGroup
 import be.bluexin.mcui.themes.elements.Fragment
 import be.bluexin.mcui.themes.elements.Hud

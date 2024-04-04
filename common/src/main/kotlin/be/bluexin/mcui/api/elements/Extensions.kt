@@ -25,8 +25,8 @@ import be.bluexin.mcui.screens.MouseButton
 import be.bluexin.mcui.screens.menus.IngameMenu
 import be.bluexin.mcui.screens.unaryPlus
 import be.bluexin.mcui.screens.util.PopupAdvancement
-import be.bluexin.mcui.themes.ThemeManager
-import be.bluexin.mcui.themes.ThemeMetadata
+import be.bluexin.mcui.themes.meta.ThemeManager
+import be.bluexin.mcui.themes.meta.ThemeMetadata
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.IconCore
 import be.bluexin.mcui.util.delegate

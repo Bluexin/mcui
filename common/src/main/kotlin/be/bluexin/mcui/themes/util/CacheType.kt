@@ -17,11 +17,14 @@
 
 package be.bluexin.mcui.themes.util
 
+import be.bluexin.luajksp.annotations.LuajMapped
+
 /**
  * Part of saoui by Bluexin.
  *
  * @author Bluexin
  */
+@LuajMapped(CacheTypeMapper::class)
 enum class CacheType(private val provider: (CompiledExpressionWrapper<*>, ExpressionIntermediate) -> CachedExpression<*>) {
 
     /**
@@ -52,4 +55,10 @@ enum class CacheType(private val provider: (CompiledExpressionWrapper<*>, Expres
 
     @Suppress("UNCHECKED_CAST")
     fun <T: Any> cacheExpression(expr: CompiledExpressionWrapper<T>, intermediate: ExpressionIntermediate) = provider(expr, intermediate) as CachedExpression<T>
+
+    companion object {
+        private val map = entries.associateBy(CacheType::name)
+
+        operator fun invoke(name: String) = map[name]
+    }
 }

@@ -10,13 +10,13 @@ object ThemeLib : TwoArgFunction() {
         themeTable["readFragment"] = ReadFragment
         themeTable["loadFragment"] = LoadFragment
         themeTable["readWidget"] = ReadWidget
-        TODO("Not yet implemented")
-        themeTable["loadWidget"] = ReadWidget
-        themeTable["registerScreen"] = ReadWidget
+        themeTable["loadWidget"] = LoadWidget
+        themeTable["registerScreen"] = RegisterScreen
         env["theme"] = themeTable
         if (!env["package"].isnil()) {
             env["package"]["loaded"]["theme"] = themeTable
         }
+        // TODO : https://github.com/lunarmodules/Penlight ?
 
         return themeTable
     }

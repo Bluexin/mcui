@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.architectury)
     alias(libs.plugins.architectury.loom) apply false
+    alias(libs.plugins.ksp)// apply false
 }
 
 kotlin {
@@ -30,7 +31,15 @@ architectury {
 }
 
 subprojects {
+    apply<JavaPlugin>()
+    apply<MavenPublishPlugin>()
+    apply<KotlinPluginWrapper>()
+    apply<SerializationGradleSubplugin>()
+    apply(plugin = "architectury-plugin")
+    apply(plugin = "maven-publish")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "dev.architectury.loom")
+    apply(plugin = "com.google.devtools.ksp")
 
     val loom = extensions.getByName<LoomGradleExtensionAPI>("loom")
     loom.silentMojangMappingsLicense()
@@ -43,17 +52,33 @@ subprojects {
                 parchment("org.parchmentmc.data:parchment-$mcVersion:${rootProject.libs.versions.parchment.get()}")
             }
         )
-    }
-}
 
-allprojects {
-    apply<JavaPlugin>()
-    apply<MavenPublishPlugin>()
-    apply<KotlinPluginWrapper>()
-    apply<SerializationGradleSubplugin>()
-    apply(plugin = "architectury-plugin")
-    apply(plugin = "maven-publish")
-    apply(plugin = "org.jetbrains.kotlin.jvm")
+        val libs = rootProject.libs
+        implementation(libs.kotlin.reflect)
+        implementation(libs.bundles.coroutines) {
+            exclude("org.jetbrains.kotlin")
+        }
+        implementation(libs.bundles.serialization)
+        implementation(libs.bundles.serialization.xml) {
+            isTransitive = false
+        }
+
+        implementation(libs.jel)
+        implementation(libs.bundles.phcss)
+        implementation(libs.slf4j)
+
+//        implementation(libs.luna)
+
+//        implementation(group = "none", name = "OC-LuaJ", version = "20220907.1", ext = "jar")
+        implementation(group = "none", name = "OC-JNLua", version = "20230530.0", ext = "jar")
+//        implementation(group = "none", name = "OC-JNLua-Natives", version = "20220928.1", ext = "jar")
+
+        implementation(libs.bundles.luaj)
+        implementation(libs.luajksp.annotations)
+        ksp(libs.luajksp.processor)
+    }
+
+
 
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -63,6 +88,17 @@ allprojects {
     kotlin {
         jvmToolchain(17)
 //        explicitApiWarning() TODO :enable this later or for an API module
+
+        sourceSets.main {
+            resources.srcDir("build/generated/ksp/main/resources")
+        }
+        sourceSets.test {
+            resources.srcDir("build/generated/ksp/test/resources")
+        }
+    }
+
+    tasks.withType<ProcessResources> {
+        duplicatesStrategy = DuplicatesStrategy.WARN
     }
 
     base.archivesName.set(property("mod_id").toString())
@@ -121,30 +157,15 @@ allprojects {
                 includeGroup("maven.modrinth")
             }
         }
-    }
-
-    dependencies {
-        val libs = rootProject.libs
-        implementation(libs.kotlin.reflect)
-        implementation(libs.bundles.coroutines) {
-            exclude("org.jetbrains.kotlin")
+        maven {
+            name = "Bluexin GH Packages"
+            url = uri("https://maven.pkg.github.com/bluexin/luaj-ksp")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+            }
         }
-        implementation(libs.bundles.serialization)
-        implementation(libs.bundles.serialization.xml) {
-            isTransitive = false
-        }
-
-        implementation(libs.jel)
-        implementation(libs.bundles.phcss)
-        implementation(libs.slf4j)
-
-//        implementation(libs.luna)
-
-//        implementation(group = "none", name = "OC-LuaJ", version = "20220907.1", ext = "jar")
-        implementation(group = "none", name = "OC-JNLua", version = "20230530.0", ext = "jar")
-//        implementation(group = "none", name = "OC-JNLua-Natives", version = "20220928.1", ext = "jar")
-
-        implementation(libs.bundles.luaj)
+        mavenLocal()
     }
 
     tasks {

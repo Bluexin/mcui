@@ -17,6 +17,7 @@
 
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.util.CBoolean
@@ -35,6 +36,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper
  *
  * @author Bluexin
  */
+@LuajExpose(includeType = LuajExpose.IncludeType.OPT_IN)
 @Serializable
 sealed class Element {
 
@@ -45,6 +47,7 @@ sealed class Element {
     /**
      * Friendly name for this element. Mostly used for debug purposes.
      */
+    @LuajExpose
     var name: String = DEFAULT_NAME
 
     /**
@@ -52,29 +55,40 @@ sealed class Element {
      */
     @SerialName("x")
     @XmlSerialName("x")
-    protected var x: CDouble = CDouble.ZERO
+    @LuajExpose
+    var x: CDouble = CDouble.ZERO
 
     /**
      * Y position.
      */
     @SerialName("y")
     @XmlSerialName("y")
-    protected var y: CDouble = CDouble.ZERO
+    @LuajExpose
+    var y: CDouble = CDouble.ZERO
 
     /**
      * Z position.
      */
     @SerialName("z")
     @XmlSerialName("z")
-    protected var z: CDouble = CDouble.ZERO
+    @LuajExpose
+    var z: CDouble = CDouble.ZERO
 
     /**
      * Whether this element should be enabled.
      */
     @SerialName("enabled")
     @XmlSerialName("enabled")
+    @LuajExpose
     var enabled: CBoolean = CBoolean.TRUE
-        private set
+
+    /**
+     * Global scale for this element
+     */
+    @SerialName("scale")
+    @XmlSerialName("scale")
+    @LuajExpose
+    var scale: CDouble? = null
 
     /**
      * Parent element for this element.
@@ -84,6 +98,7 @@ sealed class Element {
 
     protected val parentOrZero get() = parent.get() ?: ElementParent.ZERO
 
+    @LuajExpose
     val hasParent: Boolean get() = ::parent.isInitialized && parent.get().let { it != null && it !is Hud }
 
     /**

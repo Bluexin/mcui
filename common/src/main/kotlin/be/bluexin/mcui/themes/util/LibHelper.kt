@@ -98,8 +98,12 @@ object LibHelper {
     }
 
     private val stack
-        get() = StackWalker.getInstance().walk {
-            it.skip(2).limit(6).toList()
+        get() = StackWalker.getInstance().walk { stack ->
+            stack.skip(2)
+                .filter { !it.className.startsWith("kotlinx.serialization") }
+                .limit(6)
+                .toList()
+                .joinToString(separator = "\n\t at ")
     }
 }
 

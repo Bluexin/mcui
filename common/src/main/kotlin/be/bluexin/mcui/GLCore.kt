@@ -17,7 +17,7 @@
 
 package be.bluexin.mcui
 
-import be.bluexin.mcui.themes.ThemeManager
+import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.ColorUtil
 import be.bluexin.mcui.util.append

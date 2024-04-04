@@ -19,6 +19,7 @@ package be.bluexin.mcui.themes.elements
 
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.api.themes.IHudDrawContext
+import be.bluexin.mcui.themes.util.CDouble
 import be.bluexin.mcui.themes.util.CInt
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
@@ -84,6 +85,12 @@ class GLHotbarItem(
         if (!enabled(ctx) || hand == ctx.player.mainArm) return
         super.draw(ctx, poseStack)
 
+        val pushed = scale?.let {
+            val scale = it(ctx).toFloat()
+            poseStack.pushPose()
+            poseStack.scale(scale, scale, scale)
+            true
+        } ?: false
         val it: ItemStack = if (hand == null) ctx.player.inventory.items[slot(ctx)]
         else ctx.player.inventory.offhand[slot(ctx)]
 
@@ -99,6 +106,8 @@ class GLHotbarItem(
             ctx.partialTicks,
             it, ctx, poseStack
         )
+
+        if (pushed) poseStack.popPose()
 
 //        GLCore.glRescaleNormal(false)
 //        RenderHelper.disableStandardItemLighting()

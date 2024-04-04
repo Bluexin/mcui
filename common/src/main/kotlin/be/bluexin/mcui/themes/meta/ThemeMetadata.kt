@@ -1,5 +1,8 @@
-package be.bluexin.mcui.themes
+package be.bluexin.mcui.themes.meta
 
+import be.bluexin.mcui.themes.loader.AbstractThemeLoader
+import be.bluexin.mcui.themes.loader.JsonThemeLoader
+import be.bluexin.mcui.themes.loader.XmlThemeLoader
 import net.minecraft.resources.ResourceLocation
 
 data class ThemeMetadata(
@@ -27,7 +30,9 @@ enum class ThemeFormat(val hudFileSuffix: String, val loader: () -> AbstractThem
     companion object {
         private val fromFileExtension = entries.associateBy { it.hudFileSuffix.substringAfterLast('.') }
 
-        fun fromFile(fileName: String): ThemeFormat? = fromFileExtension.values.firstOrNull { fileName.endsWith(it.hudFileSuffix) }
+        fun fromFile(fileName: String): ThemeFormat? =
+            fromFileExtension.values.firstOrNull { fileName.endsWith(it.hudFileSuffix) }
+
         fun fromFileExtension(fileName: String): ThemeFormat? = fromFileExtension[fileName.substringAfterLast('.')]
     }
 }

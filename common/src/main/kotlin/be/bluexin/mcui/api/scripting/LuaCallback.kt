@@ -1,6 +1,6 @@
 package be.bluexin.mcui.api.scripting
 
-import be.bluexin.mcui.themes.ThemeManager
+import be.bluexin.mcui.themes.meta.ThemeManager
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer

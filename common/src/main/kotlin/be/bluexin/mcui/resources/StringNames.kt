@@ -20,7 +20,7 @@ package be.bluexin.mcui.resources
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.effects.StatusEffects
-import be.bluexin.mcui.themes.ThemeManager
+import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.util.IconCore
 import be.bluexin.mcui.util.append
 import net.minecraft.resources.ResourceLocation

@@ -4,8 +4,8 @@ import be.bluexin.mcui.CommonClass
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.commands.McuiCommand
 import be.bluexin.mcui.screens.ingame.McuiGui
-import be.bluexin.mcui.themes.ThemeManager
-import be.bluexin.mcui.themes.ThemeMetadata
+import be.bluexin.mcui.themes.meta.ThemeManager
+import be.bluexin.mcui.themes.meta.ThemeMetadata
 import fuzs.forgeconfigapiport.api.config.v2.ModConfigEvents
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback

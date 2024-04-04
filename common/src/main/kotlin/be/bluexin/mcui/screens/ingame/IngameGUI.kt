@@ -19,7 +19,7 @@ package be.bluexin.mcui.screens.ingame
 
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.config.OptionCore
-import be.bluexin.mcui.themes.ThemeManager
+import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.elements.HudPartType
 import be.bluexin.mcui.themes.util.HudDrawContext
 import com.mojang.blaze3d.systems.RenderSystem

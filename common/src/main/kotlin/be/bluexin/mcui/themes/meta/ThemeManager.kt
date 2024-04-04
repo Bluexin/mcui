@@ -15,13 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package be.bluexin.mcui.themes
+package be.bluexin.mcui.themes.meta
 
 import be.bluexin.mcui.Constants
+import be.bluexin.mcui.api.scripting.RegisterScreen
 import be.bluexin.mcui.commands.GeneralCommands
 import be.bluexin.mcui.commands.McuiCommand
 import be.bluexin.mcui.config.ConfigHandler
 import be.bluexin.mcui.themes.elements.Hud
+import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.util.Client
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.ClickEvent
@@ -68,6 +70,7 @@ object ThemeManager {
     }
 
     fun applyData(data: Map<ResourceLocation, ThemeMetadata>, resourceManager: ResourceManager) {
+        RegisterScreen.clear()
         themeList = data
         isReloading = true
         load(resourceManager)

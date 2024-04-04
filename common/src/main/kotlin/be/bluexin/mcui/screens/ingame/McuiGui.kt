@@ -1,6 +1,6 @@
 package be.bluexin.mcui.screens.ingame
 
-import be.bluexin.mcui.themes.ThemeManager
+import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.util.HudDrawContext
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft

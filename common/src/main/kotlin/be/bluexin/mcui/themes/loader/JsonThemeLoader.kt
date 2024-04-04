@@ -15,8 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package be.bluexin.mcui.themes
+package be.bluexin.mcui.themes.loader
 
+import be.bluexin.mcui.themes.meta.ThemeFormat
 import be.bluexin.mcui.themes.elements.ElementParent
 import be.bluexin.mcui.themes.elements.Fragment
 import be.bluexin.mcui.themes.elements.Hud

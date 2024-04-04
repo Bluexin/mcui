@@ -1,7 +1,7 @@
 package be.bluexin.mcui.themes.util.json
 
-import be.bluexin.mcui.themes.AbstractThemeLoader
 import be.bluexin.mcui.themes.elements.Expect
+import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.util.CacheType
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader

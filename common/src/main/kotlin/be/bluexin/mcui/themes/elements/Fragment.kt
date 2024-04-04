@@ -1,5 +1,6 @@
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.themes.util.LibHelper
 import be.bluexin.mcui.themes.util.NamedExpressionIntermediate
 import be.bluexin.mcui.themes.util.json.ExpectJsonAdapter
@@ -17,6 +18,7 @@ import nl.adaptivity.xmlutil.serialization.XmlSerialName
     value = "bl:fragment"
 )
 @XmlNamespaceDeclSpec("bl=https://www.bluexin.be/com/saomc/saoui/fragment-schema")
+@LuajExpose(LuajExpose.IncludeType.OPT_IN)
 class Fragment(
     @XmlSerialName("expect")
     @XmlBefore("x", "children", "texture")

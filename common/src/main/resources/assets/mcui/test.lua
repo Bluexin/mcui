@@ -72,6 +72,8 @@ local function tstatic(value, jtype)
     }
 end
 
+local targetRoot = 'mcui:luatestscreen.root'
+
 for i = 1, 5 do
     print("Loading " .. i .. " to " .. offset * (i - 1))
     labelFragment.name = labelFragment.name .. " edited from Lua"
@@ -80,7 +82,7 @@ for i = 1, 5 do
     labelFragment.x = static(150)
     print("Loading ...")
     local centered = i % 2 == 0
-    local r = theme.loadFragment("LuaTestScreen.root", labelFragment, {
+    local r = theme.loadFragment(targetRoot, labelFragment, {
         text = tstatic("Label from Lua " .. i .. " centered: " .. tostring(centered)),
         centered = tstatic(centered)
     })
@@ -90,7 +92,7 @@ end
 labelFragment.y = "scaledheight - 64"
 labelFragment.x = static(16)
 
-theme.loadFragment("LuaTestScreen.root", labelFragment, {
+theme.loadFragment(targetRoot, labelFragment, {
     text = {
         expression = "\"Dear \" + username",
         type = "STRING"
@@ -105,7 +107,7 @@ for _, child in ipairs(labelFragment.children[2].value.children) do
     end
 end
 
-theme.loadFragment("LuaTestScreen.root", labelFragment, {
+theme.loadFragment(targetRoot, labelFragment, {
     text = {
         expression = "\"Dear \" + username",
         type = "STRING"

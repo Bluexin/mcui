@@ -1,5 +1,6 @@
-package be.bluexin.mcui.themes
+package be.bluexin.mcui.themes.loader
 
+import be.bluexin.mcui.themes.meta.ThemeFormat
 import be.bluexin.mcui.themes.elements.Fragment
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.elements.Widget
