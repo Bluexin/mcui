@@ -1,5 +1,4 @@
-local label_button_frag = theme.readWidget("mcui:themes/hex2/widgets/label_button.xml")
-local icon_label_button_frag = theme.readWidget("mcui:themes/hex2/widgets/icon_button_expanding_label.xml")
+local theme = require("theme")
 
 local function static(value)
     if (type(value) == "string") then
@@ -13,6 +12,9 @@ local function static(value)
     }
 end
 
+--- @param value string|number
+--- @param jtype? JelType|nil
+--- @return CValue
 local function tstatic(value, jtype)
     if (not jtype or type(jtype) ~= "string") then
         local vtype = type(value)
@@ -31,12 +33,15 @@ local function tstatic(value, jtype)
         value = "\"" .. value .. "\""
     end
     return {
-        type = jtype,
+        type = jtype or 'ERROR',
         expression = value,
-        cache = "STATIC"
+        cache = 'STATIC'
     }
 end
 
+--- @param value string|number
+--- @param jtype? JelType
+--- @return CValue
 local function tframe(value, jtype)
     local basic = tstatic(value, jtype)
     basic.cache = "PER_FRAME"
@@ -56,6 +61,9 @@ local function colourButtons(colour)
     end
 end
 
+local label_button_frag = theme.readWidget("mcui:themes/hex2/widgets/label_button.xml")
+local icon_label_button_frag = theme.readWidget("mcui:themes/hex2/widgets/icon_button_expanding_label.xml")
+
 local function loadCenteredButton(root, text, onClick, x, y)
     local r = theme.loadWidget(root, icon_label_button_frag, {
         text = tstatic(text, "STRING"),
@@ -65,8 +73,9 @@ local function loadCenteredButton(root, text, onClick, x, y)
     if (r == false) then
         print('Could not load button')
     else
-        r.onClick = onClick
-        table.insert(buttons, r)
+        local button = --[[---@type Widget]] r
+        button.onClick = onClick
+        table.insert(buttons, button)
     end
 end
 
@@ -89,3 +98,9 @@ local function testGui(root)
 end
 
 theme.registerScreen("mcui:testgui", testGui)
+
+theme.registerScreen("mcui:settings", function(root)
+    --- @type table<string, Widget>
+    local topCategories = {}
+
+end)

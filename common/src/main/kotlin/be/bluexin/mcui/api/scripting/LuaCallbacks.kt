@@ -1,7 +1,5 @@
 package be.bluexin.mcui.api.scripting
 
-import be.bluexin.luajksp.annotations.LuajExpose
-import be.bluexin.luajksp.annotations.LuajExposeExternal
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.themes.elements.*
 import be.bluexin.mcui.themes.elements.access.toLua

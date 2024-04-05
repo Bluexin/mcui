@@ -13,7 +13,6 @@ import be.bluexin.mcui.util.DeserializationOrder
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import net.minecraft.client.gui.GuiComponent
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
@@ -35,12 +34,21 @@ class Widget(
     @XmlBefore("x", "children", "texture")
     @DeserializationOrder(0)
     val expect: Expect? = null,
+    /**
+     * Width used for hover events
+     */
     @XmlSerialName("contentWidth")
     @LuajExpose
     var contentWidth: CInt,
+    /**
+     * Height used for hover events
+     */
     @XmlSerialName("contentHeight")
     @LuajExpose
     var contentHeight: CInt,
+    /**
+     * Whether this widget is interactive
+     */
     @XmlSerialName("active")
     @LuajExpose
     var active: CBoolean = CBoolean.TRUE,
@@ -58,6 +66,9 @@ class Widget(
     @Transient
     private var focused = false
 
+    /**
+     * Whether the mouse is currently over this widget
+     */
     @Transient
     @LuajExpose
     var isMouseOver = false
@@ -67,16 +78,17 @@ class Widget(
      * Basic check against contentWidth/contentHeight already performed.
      * Returning false will let the parent handle the event.
      *
+     * @param self Widget the receiver widget
      * @param mouseX number the mouse's X position, relative to this widget
      * @param mouseY number the mouse's Y position, relative to this widget
-     * @param mouseButton number which button was pressed
+     * @param mouseButton mouse_buttons which button was pressed
      * @return boolean whether the click was handled
-     * @see mouse_buttons (lua)
      */
     @LuajExpose
     var onClick: Widget.(Double, Double, Int) -> Boolean = { _, _, _ -> false }
 
     /**
+     * @param self Widget the receiver widget
      * @param mouseX number the mouse's X position, relative to this widget
      * @param mouseY number the mouse's Y position, relative to this widget
      * @param isMouseOver boolean whether the mouse entered (true) or left (false)
@@ -162,18 +174,27 @@ class Widget(
 
     private fun loadCallbackFromScript(access: LuaValue, script: String?, name: String) {
         if (!script.isNullOrBlank()) try {
-            access.set(name, LuaJTest.compileSnippet("${this.name}/$name".lowercase(), script, ThemeManager.currentTheme.id))
+            access.set(
+                name,
+                LuaJTest.compileSnippet("${this.name}/$name".lowercase(), script, ThemeManager.currentTheme.id)
+            )
         } catch (e: Throwable) {
             AbstractThemeLoader.Reporter += e.message ?: "Unknown error loading ${this.name}/$name"
             Constants.LOG.warn("Error loading ${this.name}/$name", e)
         }
     }
 
+    /**
+     * Add a variable to this Widget's context
+     */
     @LuajExpose
     fun setVariable(key: String, variable: CValue<*>?) {
         variables[key] = variable
     }
 
+    /**
+     * Get a variable from this Widget's context
+     */
     @LuajExpose
     fun getVariable(key: String): CValue<*>? = variables[key]
 
