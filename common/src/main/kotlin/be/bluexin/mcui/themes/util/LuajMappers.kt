@@ -1,12 +1,15 @@
 package be.bluexin.mcui.themes.util
 
 import be.bluexin.luajksp.annotations.LKMapper
+import be.bluexin.luajksp.annotations.LuajMapped
 import be.bluexin.mcui.themes.util.typeadapters.*
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.HumanoidArm
 import org.luaj.vm2.LuaValue
 
 object CacheTypeMapper : LKMapper<CacheType> {
     override fun fromLua(value: LuaValue) = CacheType(value.checkjstring())
-        ?: throw IllegalArgumentException("Invalid CacheType value: $value")
+        ?: argError(1, "Invalid CacheType value: $value")
 
     override fun toLua(value: CacheType): LuaValue = LuaValue.valueOf(value.name)
 }
@@ -26,7 +29,7 @@ sealed class CValueMapper<CValueType : CValue<T>, T : Any>(
                 else AnonymousExpressionIntermediate(expression, cacheType)
             )
         }
-        else -> throw IllegalArgumentException("Unhandled type of $value")
+        else -> typesafeArgError(1, "Expected number, string or table - found $value")
     }
 
     override fun toLua(value: CValueType): LuaValue = LuaValue.tableOf(arrayOf(
@@ -38,6 +41,8 @@ sealed class CValueMapper<CValueType : CValue<T>, T : Any>(
             set("type", ei.type.toString())
         }
     }
+
+    protected abstract fun typesafeArgError(arg: Int, message: String): Nothing
 }
 
 data object UnknownCValueMapper: LKMapper<CValue<*>> {
@@ -54,7 +59,7 @@ data object UnknownCValueMapper: LKMapper<CValue<*>> {
             )
         }
 
-        else -> throw IllegalArgumentException("Unhandled type of $value")
+        else -> argError(1, "Expected table - found $value")
     }
 
     override fun toLua(value: CValue<*>): LuaValue {
@@ -71,24 +76,75 @@ data object UnknownCValueMapper: LKMapper<CValue<*>> {
 /**
  * Maps an expression that should return an int.
  */
-data object CIntMapper : CValueMapper<CInt, Int>(IntExpressionAdapter)
+data object CIntMapper : CValueMapper<CInt, Int>(IntExpressionAdapter) {
+    override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
+}
 
 /**
  * Maps an expression that should return a double.
  */
-data object CDoubleMapper : CValueMapper<CDouble, Double>(DoubleExpressionAdapter)
+data object CDoubleMapper : CValueMapper<CDouble, Double>(DoubleExpressionAdapter) {
+    override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
+}
 
 /**
  * Maps an expression that should return a String.
  */
-data object CStringMapper : CValueMapper<CString, String>(StringExpressionAdapter)
+data object CStringMapper : CValueMapper<CString, String>(StringExpressionAdapter) {
+    override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
+}
 
 /**
  * Maps an expression that should return a boolean.
  */
-data object CBooleanMapper : CValueMapper<CBoolean, Boolean>(BooleanExpressionAdapter)
+data object CBooleanMapper : CValueMapper<CBoolean, Boolean>(BooleanExpressionAdapter) {
+    override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
+}
 
 /**
  * Maps an expression that should return [Unit] (aka void).
  */
-data object CUnitMapper : CValueMapper<CUnit, Unit>(UnitExpressionAdapter)
+data object CUnitMapper : CValueMapper<CUnit, Unit>(UnitExpressionAdapter) {
+    override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
+}
+
+object ResourceLocationMapper : LKMapper<ResourceLocation> {
+    override fun fromLua(value: LuaValue): ResourceLocation = when {
+        value.isstring() -> ResourceLocation(value.checkjstring())
+        value.istable() -> ResourceLocation(
+            value["namespace"].checkjstring(),
+            value["path"].checkjstring()
+        )
+
+        else -> argError(1, "Expected string or table - found $value")
+    }
+
+    override fun toLua(value: ResourceLocation): LuaValue = LuaValue.tableOf(
+        arrayOf(
+            LuaValue.valueOf("namespace"), LuaValue.valueOf(value.namespace),
+            LuaValue.valueOf("path"), LuaValue.valueOf(value.path),
+            LuaValue.valueOf("string"), LuaValue.valueOf(value.toString())
+        )
+    )
+}
+
+@LuajMapped(ResourceLocationMapper::class)
+typealias LKResourceLocation = ResourceLocation
+
+object HumanoidArmMapper : LKMapper<HumanoidArm> {
+    override fun fromLua(value: LuaValue): HumanoidArm = when {
+        value.isint() -> HumanoidArm.entries.find { it.id == value.checkint() }
+            ?: argError(1, "Unknown id: $value")
+
+        value.isstring() -> HumanoidArm.valueOf(value.checkjstring())
+        else -> argError(1, "Expected id (int) or name (string) - found $value")
+    }
+
+    override fun toLua(value: HumanoidArm): LuaValue = LuaValue.valueOf(value.name)
+}
+
+@Suppress("UnusedReceiverParameter") // Used to get T
+private inline fun <reified T : Any> LKMapper<T>.argError(arg: Int, message: String): Nothing {
+    LuaValue.argerror(arg, "Couldn't read ${T::class.simpleName}: $message")
+    error("Never reach here, argerror throws")
+}

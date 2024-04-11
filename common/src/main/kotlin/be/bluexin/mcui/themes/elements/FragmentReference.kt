@@ -3,6 +3,7 @@ package be.bluexin.mcui.themes.elements
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.api.themes.IHudDrawContext
+import be.bluexin.mcui.themes.elements.access.FragmentReferenceAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.util.*
 import be.bluexin.mcui.util.DeserializationOrder
@@ -11,6 +12,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import net.minecraft.resources.ResourceLocation
+import org.luaj.vm2.LuaValue
 
 @Serializable
 @SerialName("fragmentReference")
@@ -38,14 +40,14 @@ class FragmentReference(
         val anonymous = super.setup(parent, fragments)
         if (id == MISSING_ID) {
             val message = "Missing id in fragment reference "
-            Constants.LOG.warn(message + hierarchyName())
+            Constants.LOG.warn(message + hierarchyName)
             AbstractThemeLoader.Reporter += message + nameOrParent()
         } else {
             fragment = fragments[ResourceLocation(id)]?.invoke()
                 ?.also { it.setup(this, fragments) }
             if (fragment == null) {
                 val message = "Missing fragment with id $id referenced in "
-                Constants.LOG.warn(message + hierarchyName())
+                Constants.LOG.warn(message + hierarchyName)
                 AbstractThemeLoader.Reporter += message + nameOrParent()
             } else {
                 val missing = fragment?.expect?.variables.orEmpty().filter { (key, it) ->
@@ -59,7 +61,7 @@ class FragmentReference(
                 if (realMissing.isNotEmpty()) {
                     val present = variables.mapValues { (_, value) -> value?.value?.expressionIntermediate }
                     val message = "Missing variables $realMissing for $id (present : $present) in "
-                    Constants.LOG.warn(message + hierarchyName())
+                    Constants.LOG.warn(message + hierarchyName)
                     AbstractThemeLoader.Reporter += message + nameOrParent()
                 }
             }
@@ -68,25 +70,31 @@ class FragmentReference(
         return anonymous
     }
 
-    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack) {
+    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
         if (!enabled(ctx)) return
         fragment?.let {
             poseStack.pushPose()
-            poseStack.translate(x(ctx), y(ctx), z(ctx))
-
+            val x = x(ctx)
+            val y = y(ctx)
+            poseStack.translate(x, y, z(ctx))
 
             scale?.let {
                 val scale = it(ctx).toFloat()
                 poseStack.scale(scale, scale, scale)
             }
             ctx.pushContext(variables)
-            it.draw(ctx, poseStack)
+            it.draw(ctx, poseStack, mouseX - x, mouseY - y)
             ctx.popContext()
             poseStack.popPose()
         }
     }
 
+    override val elements: Iterable<Element>
+        get() = fragment?.let(::listOf) ?: emptyList()
+
     private val CValue<*>?.type get() = (this?.value?.expressionIntermediate as? NamedExpressionIntermediate)?.type
+
+    override fun toLua(): LuaValue = FragmentReferenceAccess(this)
 
     private companion object {
         private const val MISSING_ID = "@@MISSING_ID@@"

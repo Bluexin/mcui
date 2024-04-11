@@ -17,13 +17,13 @@ data class NamedExpressionIntermediate(
     val type: JelType,
     @XmlValue
     @SerialName("expression")
-    override val serializedExpression: String = "",
+    override val expression: String = "",
     @SerialName("cache")
     @XmlOtherAttributes
     override val cacheType: CacheType = CacheType.PER_FRAME
 ) : ExpressionIntermediate() {
 
-    fun hasDefault() = serializedExpression.isNotEmpty()
+    fun hasDefault() = expression.isNotEmpty()
 }
 
 @SerialName("variables")

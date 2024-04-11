@@ -1,6 +1,7 @@
 package be.bluexin.mcui.themes.elements
 
 import be.bluexin.luajksp.annotations.LuajExpose
+import be.bluexin.mcui.themes.elements.access.FragmentAccess
 import be.bluexin.mcui.themes.util.LibHelper
 import be.bluexin.mcui.themes.util.NamedExpressionIntermediate
 import be.bluexin.mcui.themes.util.json.ExpectJsonAdapter
@@ -11,6 +12,7 @@ import nl.adaptivity.xmlutil.ExperimentalXmlUtilApi
 import nl.adaptivity.xmlutil.serialization.XmlBefore
 import nl.adaptivity.xmlutil.serialization.XmlNamespaceDeclSpec
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
+import org.luaj.vm2.LuaValue
 
 @OptIn(ExperimentalXmlUtilApi::class)
 @Serializable
@@ -29,6 +31,8 @@ class Fragment(
     init {
         if (expect != null) LibHelper.popContext()
     }
+
+    override fun toLua(): LuaValue = FragmentAccess(this)
 }
 
 @JsonAdapter(ExpectJsonAdapter::class)

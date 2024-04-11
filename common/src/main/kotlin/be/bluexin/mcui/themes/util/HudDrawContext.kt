@@ -294,14 +294,14 @@ class HudDrawContext(
 
     override fun targetHealthStep(): HealthStep = getStep(targetEntity?.get(), targetHpPct().toDouble())
 
-    private var context: Map<String, CValue<*>> = emptyMap()
+    private var context = LayeredMap<String, CValue<*>>()
 
     override fun pushContext(context: Map<String, CValue<*>>) {
-        this.context = context
+        this.context += context
     }
 
     override fun popContext() {
-        this.context = emptyMap()
+        this.context.pop()
     }
 
     // TODO: error report ?

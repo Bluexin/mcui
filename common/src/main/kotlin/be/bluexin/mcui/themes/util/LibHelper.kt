@@ -51,7 +51,6 @@ object LibHelper {
             StatusEffects::class.java,
             OptionCore::class.java,
             ColorUtil::class.java,
-            I18n::class.java,
             McuiStaticLib::class.java
         )
         val dynLib = arrayOf(
@@ -120,6 +119,12 @@ object McuiStaticLib {
 
     @JvmStatic
     fun ifloor(n: Float) = floorInt(n)
+
+    @JvmStatic // need separate no-arg one for JEL it seems :/
+    fun format(key: String): String = I18n.get(key)
+
+    @JvmStatic
+    fun format(key: String, vararg args: Any): String = I18n.get(key, *args)
 }
 
 private class ContextAwareDVMap(

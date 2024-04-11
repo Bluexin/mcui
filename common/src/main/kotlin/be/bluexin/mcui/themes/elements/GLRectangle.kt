@@ -17,8 +17,10 @@
 
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.api.themes.IHudDrawContext
+import be.bluexin.mcui.themes.elements.access.GLRectangleAccess
 import be.bluexin.mcui.themes.util.CDouble
 import be.bluexin.mcui.themes.util.CInt
 import com.mojang.blaze3d.vertex.PoseStack
@@ -28,6 +30,7 @@ import kotlinx.serialization.Transient
 import net.minecraft.resources.ResourceLocation
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
+import org.luaj.vm2.LuaValue
 
 /**
  * Part of saoui by Bluexin.
@@ -35,34 +38,42 @@ import nl.adaptivity.xmlutil.serialization.XmlSerialName
  * @author Bluexin
  */
 @Serializable
+@LuajExpose(LuajExpose.IncludeType.OPT_IN)
 sealed class GLRectangleParent : Element() {
     @SerialName("rgba")
     @XmlSerialName("rgba")
-    protected var rgba: CInt? = null
+    @LuajExpose
+    var rgba: CInt? = null
     @SerialName("srcX")
     @XmlSerialName("srcX")
-    protected var srcX= CDouble.ZERO
+    @LuajExpose
+    var srcX = CDouble.ZERO
     @SerialName("srcY")
     @XmlSerialName("srcY")
-    protected var srcY= CDouble.ZERO
+    @LuajExpose
+    var srcY = CDouble.ZERO
     @SerialName("w")
     @XmlSerialName("w")
-    protected var w= CDouble.ZERO
+    @LuajExpose
+    var w = CDouble.ZERO
     @SerialName("h")
     @XmlSerialName("h")
-    protected var h= CDouble.ZERO
+    @LuajExpose
+    var h = CDouble.ZERO
     @SerialName("srcW")
     @XmlSerialName("srcW")
-    protected var srcW= CDouble.ZERO
+    @LuajExpose
+    var srcW = CDouble.ZERO
     @SerialName("srcH")
     @XmlSerialName("srcH")
-    protected var srcH= CDouble.ZERO
+    @LuajExpose
+    var srcH = CDouble.ZERO
     @Transient
     protected var rl: ResourceLocation? = null
     @XmlElement
     private val texture: String? = null
 
-    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack) {
+    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
         if (!enabled(ctx)) return
 
         val x = this.x(ctx)
@@ -98,4 +109,7 @@ sealed class GLRectangleParent : Element() {
 
 @Serializable
 @SerialName("glRectangle")
-class GLRectangle : GLRectangleParent()
+@LuajExpose(LuajExpose.IncludeType.OPT_IN)
+class GLRectangle : GLRectangleParent() {
+    override fun toLua(): LuaValue = GLRectangleAccess(this)
+}

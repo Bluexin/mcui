@@ -50,6 +50,7 @@ object LuaJTest {
             load(JseStringLib())
             load(JseMathLib())
             load(ThemeLib)
+            load(SettingsLib)
         }
         val setHook = globals.enableDebugSafely()
 

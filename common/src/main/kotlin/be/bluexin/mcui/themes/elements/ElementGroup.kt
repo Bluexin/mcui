@@ -22,7 +22,7 @@ import be.bluexin.mcui.Constants
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.api.themes.IHudDrawContext
 import be.bluexin.mcui.platform.Services
-import be.bluexin.mcui.themes.util.CDouble
+import be.bluexin.mcui.themes.elements.access.ElementGroupAccess
 import be.bluexin.mcui.themes.util.profile
 import be.bluexin.mcui.util.Client
 import com.mojang.blaze3d.vertex.PoseStack
@@ -31,6 +31,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import net.minecraft.resources.ResourceLocation
 import nl.adaptivity.xmlutil.serialization.XmlElement
+import org.luaj.vm2.LuaValue
 
 /**
  * Part of saoui by Bluexin.
@@ -43,11 +44,17 @@ sealed class ElementGroupParent : Element(), ElementParent {
 
     protected var children: Children = Children(emptyList())
 
-    var elements: List<Element>
+    override var elements: List<Element>
         get() = children
         internal set(value) {
             children = Children(value)
         }
+
+    @LuajExpose
+    val allChildren: List<Element> get() = elements
+
+    @LuajExpose
+    fun getChildByName(name: String): Element? = elements.find { it.name == name }
 
     @Transient
     protected var rl: ResourceLocation? = null
@@ -61,11 +68,11 @@ sealed class ElementGroupParent : Element(), ElementParent {
         }
 
     // FIXME : an error in enabled will still crash
-    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack) {
+    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
         if (!enabled(ctx)) return
 
         prepareDraw(ctx, poseStack)
-        drawChildren(ctx, poseStack)
+        drawChildren(ctx, poseStack, mouseX, mouseY)
         finishDraw(ctx, poseStack)
     }
 
@@ -88,15 +95,23 @@ sealed class ElementGroupParent : Element(), ElementParent {
         poseStack.popPose()
     }
 
-    protected open fun drawChildren(ctx: IHudDrawContext, poseStack: PoseStack) {
-        if (Services.PLATFORM.isDevelopmentEnvironment) {
+    protected open fun drawChildren(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
+        /*RenderSystem.setShaderTexture(0, AbstractWidget.WIDGETS_LOCATION)
+        GuiComponent.renderOutline(
+            poseStack, 0, 0, x(ctx).toInt(), y(ctx).toInt(), 0x00e11dff
+        )*/
+
+        val relMouseX = mouseX - x(ctx)
+        val relMouseY = mouseY - y(ctx)
+
+        if (Services.PLATFORM.isDevelopmentEnvironment /* TODO : debug setting ? */) {
             this.children = this.children.filter {
                 ctx.profile(it.name) {
                     try {
-                        it.draw(ctx, poseStack)
+                        it.draw(ctx, poseStack, relMouseX, relMouseY)
                         true
                     } catch (e: Throwable) {
-                        Client.showError("Error rendering child ${it.hierarchyName()}, removing from group", e)
+                        Client.showError("Error rendering child ${it.hierarchyName}, removing from group", e)
                         false
                     }
                 }
@@ -104,7 +119,7 @@ sealed class ElementGroupParent : Element(), ElementParent {
         } else {
             this.children.forEach {
                 ctx.profile(it.name) {
-                    it.draw(ctx, poseStack)
+                    it.draw(ctx, poseStack, relMouseX, relMouseY)
                 }
             }
         }
@@ -132,4 +147,7 @@ sealed class ElementGroupParent : Element(), ElementParent {
 
 @Serializable
 @SerialName("elementGroup")
-class ElementGroup : ElementGroupParent()
+@LuajExpose(LuajExpose.IncludeType.OPT_IN)
+class ElementGroup : ElementGroupParent() {
+    override fun toLua(): LuaValue = ElementGroupAccess(this)
+}

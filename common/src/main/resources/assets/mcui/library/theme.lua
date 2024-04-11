@@ -1,5 +1,5 @@
 --- @module theme
-theme = {}
+local theme = {}
 
 ---
 --- Reads the Fragment pointed towards by the resource location made from given
@@ -41,7 +41,7 @@ end
 --- Loads the Widget into the target's children, optionally using variables to
 --- evaluate the Widget.
 ---@overload fun(target:string,fragment:table):boolean
----@param target string
+---@param target string|Widget root id of a Screen, or reference to an already loaded Widget
 ---@param widget table<any,any> as returned by readWidget
 ---@param variables table<string, CValue> containing variables to use when evaluating the fragment
 ---@return Widget|boolean @the widget if successful, false otherwise

@@ -17,15 +17,17 @@
 
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.api.themes.IHudDrawContext
-import be.bluexin.mcui.themes.util.CDouble
+import be.bluexin.mcui.themes.elements.access.GLStringAccess
 import be.bluexin.mcui.themes.util.CInt
 import be.bluexin.mcui.themes.util.CString
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
+import org.luaj.vm2.LuaValue
 
 /**
  * Part of saoui by Bluexin.
@@ -34,14 +36,18 @@ import nl.adaptivity.xmlutil.serialization.XmlSerialName
  */
 @Serializable
 @SerialName("glString")
+@LuajExpose(LuajExpose.IncludeType.OPT_IN)
 class GLString(
     @XmlSerialName("text")
-    private var text: CString,
-    private val shadow: Boolean = true,
-    private val centered: Boolean = true
+    @LuajExpose
+    var text: CString,
+    @LuajExpose
+    var shadow: Boolean = true,
+    @LuajExpose
+    var centered: Boolean = true
 ) : GLRectangleParent() {
 
-    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack) {
+    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
         if (!enabled(ctx)) return
 
         val pushed = scale?.let {
@@ -65,4 +71,6 @@ class GLString(
         )
         if (pushed) poseStack.popPose()
     }
+
+    override fun toLua(): LuaValue = GLStringAccess(this)
 }

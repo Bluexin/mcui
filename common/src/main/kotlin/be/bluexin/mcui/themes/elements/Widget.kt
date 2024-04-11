@@ -4,13 +4,14 @@ import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.api.scripting.LuaJTest
 import be.bluexin.mcui.api.themes.IHudDrawContext
-import be.bluexin.mcui.themes.elements.access.toLua
+import be.bluexin.mcui.themes.elements.access.WidgetAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.util.*
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.DeserializationOrder
 import com.mojang.blaze3d.vertex.PoseStack
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import net.minecraft.client.gui.components.Renderable
@@ -27,6 +28,7 @@ import org.luaj.vm2.LuaValue
  * Widget
  */
 @Serializable
+@SerialName("widget")
 @XmlSerialName(value = "widget")
 @LuajExpose(LuajExpose.IncludeType.OPT_IN)
 class Widget(
@@ -58,10 +60,7 @@ class Widget(
     @XmlElement
     @XmlSerialName("onMouseOverEvent")
     val onMouseOverEventScript: String? = null,
-) : ElementGroupParent(), GuiEventListener, Renderable, NarratableEntry {
-
-    @Transient
-    var TMP_CTX: IHudDrawContext? = null
+) : ElementGroupParent(), GuiEventListener, Renderable, NarratableEntry, WidgetParent {
 
     @Transient
     private var focused = false
@@ -88,6 +87,19 @@ class Widget(
     var onClick: Widget.(Double, Double, Int) -> Boolean = { _, _, _ -> false }
 
     /**
+     * Basic check against contentWidth/contentHeight already performed.
+     * Returning false will let the parent handle the event.
+     *
+     * @param self Widget the receiver widget
+     * @param mouseX number the mouse's X position, relative to this widget
+     * @param mouseY number the mouse's Y position, relative to this widget
+     * @param delta number the scroll delta
+     * @return boolean whether the click was handled
+     */
+    @LuajExpose
+    var onScroll: Widget.(Double, Double, Double) -> Boolean = { _, _, _ -> false }
+
+    /**
      * @param self Widget the receiver widget
      * @param mouseX number the mouse's X position, relative to this widget
      * @param mouseY number the mouse's Y position, relative to this widget
@@ -103,48 +115,46 @@ class Widget(
         if (expect != null) LibHelper.popContext()
     }
 
-    private inline fun <T> withContext(body: (IHudDrawContext) -> T): T? = TMP_CTX?.let {
-        it.pushContext(variables)
-        val r = body(it)
-        it.popContext()
-        r
+    private inline fun <T> IHudDrawContext.withContext(crossinline body: (IHudDrawContext) -> T): T {
+        pushContext(variables)
+        val r = body(this)
+        popContext()
+        return r
     }
 
-    private fun checkMouseOver(mouseX: Int, mouseY: Int, ctx: IHudDrawContext) =
-        checkMouseOver(mouseX.toDouble(), mouseY.toDouble(), ctx)
-
-    private fun checkMouseOver(mouseX: Double, mouseY: Double, ctx: IHudDrawContext) {
-        val x = x(ctx)
-        val y = y(ctx)
+    /**
+     * Mouse coords relative to this widget's (x,y)
+     */
+    private fun checkMouseOver(
+        mouseX: Double,
+        mouseY: Double,
+        ctx: IHudDrawContext,
+    ): Boolean {
         val wasMouseOver = isMouseOver
         val scale = scale?.let { it(ctx) } ?: 1.0
-        isMouseOver = isActive(ctx) && mouseX >= x && mouseX < x + contentWidth(ctx) * scale
-                && mouseY >= y && mouseY < y + contentHeight(ctx) * scale
+        isMouseOver = isActive(ctx) && mouseX >= 0 && mouseX < contentWidth(ctx) * scale
+                && mouseY >= 0 && mouseY < contentHeight(ctx) * scale
         if (isMouseOver != wasMouseOver) {
             try {
-                onMouseOverEvent(mouseX - x, mouseY - y, isMouseOver)
+                onMouseOverEvent(mouseX, mouseY, isMouseOver)
             } catch (e: Throwable) {
                 Client.showError("Error while evaluating onMouseOverEvent handler for $name", e)
                 onMouseOverEvent = { _, _, _ -> }
             }
         }
+
+        return isMouseOver
     }
 
-    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack) {
-        if (!enabled(ctx)) return
+    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
+        ctx.withContext {
+            if (!enabled(it)) return@withContext
+            checkMouseOver(mouseX - x(it), mouseY - y(it), it)
 
-        prepareDraw(ctx, poseStack)
-        /*GuiComponent.fill(
-            poseStack,
-            0, 0,
-            contentWidth(ctx),
-            contentHeight(ctx),
-            0,
-            if (isMouseOver) 0xd632ef44.toInt() else 0x1082e544
-        )*/
-
-        drawChildren(ctx, poseStack)
-        finishDraw(ctx, poseStack)
+            prepareDraw(ctx, poseStack)
+            drawChildren(ctx, poseStack, mouseX, mouseY)
+            finishDraw(ctx, poseStack)
+        }
     }
 
     override fun setup(parent: ElementParent, fragments: Map<ResourceLocation, () -> Fragment>): Boolean {
@@ -161,7 +171,7 @@ class Widget(
         if (realMissing.isNotEmpty()) {
             val present = variables.mapValues { (_, value) -> value?.value?.expressionIntermediate }
             val message = "Missing variables $realMissing for (present : $present) in "
-            Constants.LOG.warn(message + hierarchyName())
+            Constants.LOG.warn(message + hierarchyName)
             AbstractThemeLoader.Reporter += message + nameOrParent()
         }
 
@@ -204,7 +214,7 @@ class Widget(
 
     override fun isFocused(): Boolean = focused
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    /*override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
         return withContext { ctx ->
             checkMouseOver(mouseX, mouseY, ctx)
             isMouseOver && (
@@ -212,24 +222,53 @@ class Widget(
                             checkOnClickSafely(ctx, mouseX, mouseY, button)
                     )
         } ?: false
-    }
+    }*/
 
-    private fun checkOnClickSafely(ctx: IHudDrawContext, mouseX: Double, mouseY: Double, button: Int): Boolean = try {
-        onClick(mouseX - x(ctx), mouseY - y(ctx), button)
+    fun mouseClicked(mouseX: Double, mouseY: Double, button: Int, ctx: IHudDrawContext): Boolean =
+        ctx.withContext { context ->
+            if (!enabled(ctx)) return@withContext false
+            val relMouseX = mouseX - x(ctx)
+            val relMouseY = mouseY - y(ctx)
+            children.any { it is Widget && it.mouseClicked(relMouseX, relMouseY, button, ctx) }
+                    || (checkMouseOver(relMouseX, relMouseY, context)
+                    && checkOnClickSafely(relMouseX, relMouseY, button))
+        }
+
+    fun mouseScrolled(mouseX: Double, mouseY: Double, delta: Double, ctx: IHudDrawContext): Boolean =
+        ctx.withContext { context ->
+            if (!enabled(ctx)) return@withContext false
+            val relMouseX = mouseX - x(ctx)
+            val relMouseY = mouseY - y(ctx)
+            children.any { it is Widget && it.mouseScrolled(mouseX, mouseY, delta, ctx) }
+                    || (checkMouseOver(relMouseX, relMouseY, context)
+                    && checkOnScrollSafely(relMouseX, relMouseY, delta))
+        }
+
+    /**
+     * Mouse coords relative to this widget's (x,y)
+     */
+    private fun checkOnClickSafely(mouseX: Double, mouseY: Double, button: Int): Boolean = try {
+        onClick(mouseX, mouseY, button)
     } catch (e: Throwable) {
         Client.showError("Error while evaluating onClick handler for $name", e)
         onClick = { _, _, _ -> false }
         false
     }
 
-    override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
-        withContext {
-            checkMouseOver(mouseX, mouseY, it)
-            this.draw(it, poseStack)
-        }
+    /**
+     * Mouse coords relative to this widget's (x,y)
+     */
+    private fun checkOnScrollSafely(mouseX: Double, mouseY: Double, delta: Double): Boolean = try {
+        onScroll(mouseX, mouseY, delta)
+    } catch (e: Throwable) {
+        Client.showError("Error while evaluating onScroll handler for $name", e)
+        onScroll = { _, _, _ -> false }
+        false
     }
 
-    override fun isActive(): Boolean = withContext(::isActive) ?: false
+    override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) = Unit
+
+//    override fun isActive(): Boolean = withContext(::isActive) ?: false
 
     private fun isActive(ctx: IHudDrawContext) = enabled(ctx) && active(ctx)
 
@@ -241,4 +280,11 @@ class Widget(
     override fun narrationPriority() = NarratableEntry.NarrationPriority.FOCUSED
 
     private val CValue<*>?.type get() = (this?.value?.expressionIntermediate as? NamedExpressionIntermediate)?.type
+
+    override fun toLua(): LuaValue = WidgetAccess(this)
+
+    override fun plusAssign(widget: Widget) {
+        widget.setup(this, emptyMap() /*TODO: frags*/)
+        add(widget)
+    }
 }

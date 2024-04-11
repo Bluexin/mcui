@@ -55,15 +55,17 @@ class Hud(
     fun setup(fragments: Map<ResourceLocation, () -> Fragment>) =
         this.indexedParts.values.forEach { it.setup(this, fragments) }
 
+    override val elements: Iterable<Element> = emptyList() // this could be populated if we open up HUD to scripting
+
     fun draw(key: HudPartType, ctx: IHudDrawContext, poseStack: PoseStack) {
-        this[key]?.draw(ctx, poseStack)
+        this[key]?.draw(ctx, poseStack, 0.0, 0.0)
     }
 
     fun drawAll(ctx: IHudDrawContext, poseStack: PoseStack) {
         ctx.profile(javaClass.simpleName) {
             parts.parts.forEach { (key, part) ->
                 ctx.profile(key.name) {
-                    part.draw(ctx, poseStack)
+                    part.draw(ctx, poseStack, 0.0, 0.0)
                 }
             }
         }

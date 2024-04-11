@@ -17,16 +17,20 @@
 
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.LuajExpose
+import be.bluexin.luajksp.annotations.LuajMapped
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.api.themes.IHudDrawContext
-import be.bluexin.mcui.themes.util.CDouble
+import be.bluexin.mcui.themes.elements.access.GLHotbarItemAccess
 import be.bluexin.mcui.themes.util.CInt
+import be.bluexin.mcui.themes.util.HumanoidArmMapper
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.minecraft.world.entity.HumanoidArm
 import net.minecraft.world.item.ItemStack
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
+import org.luaj.vm2.LuaValue
 
 /**
  * Part of saoui by Bluexin.
@@ -35,19 +39,24 @@ import nl.adaptivity.xmlutil.serialization.XmlSerialName
  */
 @Serializable
 @SerialName("glHotbarItem")
+@LuajExpose(LuajExpose.IncludeType.OPT_IN)
 class GLHotbarItem(
     @SerialName("slot")
     @XmlSerialName("slot")
-    private var slot: CInt,
+    @LuajExpose
+    var slot: CInt,
     @SerialName("itemXoffset")
     @XmlSerialName("itemXoffset")
-    private var itemXoffset: CInt,
+    @LuajExpose
+    var itemXoffset: CInt,
     @SerialName("itemYoffset")
     @XmlSerialName("itemYoffset")
-    private var itemYoffset: CInt,
+    @LuajExpose
+    var itemYoffset: CInt,
     @SerialName("hand")
     @XmlSerialName("hand")
-    private var hand: HumanoidArm? = null
+    @LuajExpose
+    var hand: @LuajMapped(HumanoidArmMapper::class) HumanoidArm? = null
 ) : GLRectangleParent() {
 
     /*
@@ -81,9 +90,9 @@ class GLHotbarItem(
         ctx.itemRenderer.renderGuiItemDecorations(poseStack, ctx.fontRenderer, stack, x, y)
     }
 
-    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack) {
+    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
         if (!enabled(ctx) || hand == ctx.player.mainArm) return
-        super.draw(ctx, poseStack)
+        super.draw(ctx, poseStack, mouseX, mouseY)
 
         val pushed = scale?.let {
             val scale = it(ctx).toFloat()
@@ -113,4 +122,6 @@ class GLHotbarItem(
 //        RenderHelper.disableStandardItemLighting()
 //        GLCore.glBlend(true)
     }
+
+    override fun toLua(): LuaValue = GLHotbarItemAccess(this)
 }

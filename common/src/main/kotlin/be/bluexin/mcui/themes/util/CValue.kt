@@ -84,6 +84,7 @@ class CBoolean(value: (IHudDrawContext) -> Boolean) : CValue<Boolean>(value) {
  * Custom Unit/Void type.
  */
 @Serializable(CUnitSerializer::class)
+@LuajMapped(CUnitMapper::class)
 class CUnit(value: (IHudDrawContext) -> Unit) : CValue<Unit>(value) {
     companion object {
         val UNIT = CUnit { }

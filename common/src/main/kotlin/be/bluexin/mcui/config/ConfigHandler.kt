@@ -39,8 +39,10 @@ object ConfigHandler {
     var ignoreUpdate by wrap(BooleanSetting(NS_BUILTIN, general("ignore_update"), true))
     var enableDebug by wrap(BooleanSetting(NS_BUILTIN, general("debug"), false))
     var debugFakePT by wrap(IntSetting(
-        NS_BUILTIN, general("debug_fake_pt"), 0, "Amount of fake party members, 0 to disable."
-    ) { it in 0..10 })
+        NS_BUILTIN, general("debug_fake_pt"), 0, "Amount of fake party members, 0 to disable.",
+        min = 0, max = 10
+    )
+    )
     var currentTheme by wrap(
         ResourceLocationSetting(
         NS_BUILTIN, general("current_theme"), DEFAULT_THEME,

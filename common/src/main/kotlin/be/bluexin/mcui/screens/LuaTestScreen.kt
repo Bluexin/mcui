@@ -2,10 +2,10 @@ package be.bluexin.mcui.screens
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.api.scripting.*
-import be.bluexin.mcui.themes.elements.*
-import be.bluexin.mcui.themes.loader.XmlThemeLoader
-import be.bluexin.mcui.themes.util.CDouble
-import be.bluexin.mcui.themes.util.CString
+import be.bluexin.mcui.themes.elements.Element
+import be.bluexin.mcui.themes.elements.ElementGroup
+import be.bluexin.mcui.themes.elements.Widget
+import be.bluexin.mcui.themes.elements.WidgetParent
 import be.bluexin.mcui.themes.util.HudDrawContext
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
@@ -25,9 +25,12 @@ class LuaTestScreen : Screen(Component.literal("Lua Test Screen")), WidgetParent
         setup(this@LuaTestScreen, emptyMap())
     }
 
-    override val rootId = ResourceLocation("mcui", root.name)
+    private val rootId = ResourceLocation("mcui", root.name)
 
     private val context by lazy { HudDrawContext() }
+
+    override val elements: Iterable<Element>
+        get() = widgets
 
     private val widgets: MutableList<Widget> = LinkedList()
 
@@ -69,8 +72,9 @@ class LuaTestScreen : Screen(Component.literal("Lua Test Screen")), WidgetParent
                 }
             }.pos(50, 140).build()
         )
-        addRenderableOnly(Renderable { poseStack: PoseStack, _: Int, _: Int, _: Float ->
-            root.draw(context, poseStack)
+
+        addRenderableOnly(Renderable { poseStack: PoseStack, mx: Int, my: Int, _: Float ->
+            root.draw(context, poseStack, mx.toDouble(), my.toDouble())
         })
         widgets.forEach(::addRenderableWidget)
     }
@@ -94,7 +98,7 @@ class LuaTestScreen : Screen(Component.literal("Lua Test Screen")), WidgetParent
     }
 
     override fun plusAssign(widget: Widget) {
-        widget.TMP_CTX = context
+        widget.setup(this, emptyMap())
         widgets += widget
         addRenderableWidget(widget)
     }

@@ -17,13 +17,16 @@
 
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.api.themes.IHudDrawContext
+import be.bluexin.mcui.themes.elements.access.RepetitionGroupAccess
 import be.bluexin.mcui.themes.util.CInt
 import be.bluexin.mcui.themes.util.profile
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
+import org.luaj.vm2.LuaValue
 
 /**
  * Part of saoui by Bluexin.
@@ -32,25 +35,32 @@ import nl.adaptivity.xmlutil.serialization.XmlSerialName
  */
 @Serializable
 @SerialName("repetitionGroup")
+@LuajExpose(LuajExpose.IncludeType.OPT_IN)
 class RepetitionGroup(
     @SerialName("amount")
     @XmlSerialName("amount")
-    private var amount: CInt
+    @LuajExpose
+    var amount: CInt
 ) : ElementGroupParent() {
 
-    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack) {
+    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
         if (!enabled(ctx)) return
 
         prepareDraw(ctx, poseStack)
+
+        val relMouseX = mouseX - x(ctx)
+        val relMouseY = mouseY - y(ctx)
 
         val m = amount(ctx)
         for (i in 0 until m) {
             ctx.profile(i.toString()) {
                 ctx.setI(i)
-                super.drawChildren(ctx, poseStack)
+                super.drawChildren(ctx, poseStack, relMouseX, relMouseY)
             }
         }
 
         finishDraw(ctx, poseStack)
     }
+
+    override fun toLua(): LuaValue = RepetitionGroupAccess(this)
 }

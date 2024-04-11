@@ -26,9 +26,12 @@ interface ElementParent {
 
     val name: String
 
+    val elements: Iterable<Element>
+
     companion object {
         val ZERO = object : ElementParent {
             override val name = "__ZERO"
+            override val elements = emptyList<Element>()
         }
     }
 }

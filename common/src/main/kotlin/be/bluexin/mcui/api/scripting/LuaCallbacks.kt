@@ -2,7 +2,7 @@ package be.bluexin.mcui.api.scripting
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.themes.elements.*
-import be.bluexin.mcui.themes.elements.access.toLua
+import be.bluexin.mcui.themes.elements.access.WidgetAccess
 import be.bluexin.mcui.themes.loader.JsonThemeLoader
 import be.bluexin.mcui.themes.util.LibHelper
 import be.bluexin.mcui.themes.util.Variables
@@ -75,40 +75,54 @@ object LoadFragment : LuaFunction() {
     private fun generateId() = "mcuigenerated:${UUID.randomUUID()}"
 
     override fun call(arg1: LuaValue, arg2: LuaValue): LuaValue {
-        val (target, fragment) = internalLoad(arg1, arg2)
-        val id = generateId()
-        val fragmentRef = FragmentReference(id = id).also {
-            it.setup(target, mapOf(ResourceLocation(id) to { fragment }))
-        }
-        Minecraft.getInstance().tell {
-            target.add(fragmentRef)
-        }
+        try {
+            val (target, fragment) = internalLoad(arg1, arg2)
+            val id = generateId()
+            val fragmentRef = FragmentReference(id = id).also {
+                it.setup(target, mapOf(ResourceLocation(id) to { fragment }))
+            }
+            Minecraft.getInstance().tell {
+                target.add(fragmentRef)
+            }
 
-        return LuaValue.TRUE
+            return fragment.toLua()
+        } catch (e: Throwable) {
+            try {
+                LibHelper.popContext()
+            } catch (_: Throwable) {
+            }
+            Constants.LOG.error("Could not parse variables", e)
+            return FALSE
+        }
     }
 
     override fun call(arg1: LuaValue, arg2: LuaValue, arg3: LuaValue): LuaValue {
-        val (target, fragment) = internalLoad(arg1, arg2)
-        val fragmentReference = try {
+        try {
+            val (target, fragment) = internalLoad(arg1, arg2)
             val id = generateId()
             val serializer = Variables.serializer()
             @OptIn(ExperimentalSerializationApi::class) // TODO : move this special handling to the decoder
-            AbstractLuaDecoder.LuaMapDecoder(arg3.checktable(), null, serializer.descriptor.getElementDescriptor(0))
+            val fragmentReference =
+                AbstractLuaDecoder.LuaMapDecoder(arg3.checktable(), null, serializer.descriptor.getElementDescriptor(0))
                 .decodeSerializableValue(serializer).let { variables ->
                     FragmentReference(id = id, serializedVariables = variables).also {
                         it.setup(target, mapOf(ResourceLocation(id) to { fragment }))
                     }
                 }
+
+            Minecraft.getInstance().tell {
+                target.add(fragmentReference)
+            }
+
+            return fragment.toLua()
         } catch (e: Throwable) {
+            try {
+                LibHelper.popContext()
+            } catch (_: Throwable) {
+            }
             Constants.LOG.error("Could not parse variables", e)
-            FragmentReference()
+            return FALSE
         }
-
-        Minecraft.getInstance().tell {
-            target.add(fragmentReference)
-        }
-
-        return fragment.toLua()
     }
 
     private fun internalLoad(arg1: LuaValue, arg2: LuaValue): Pair<ElementGroupParent, Fragment> {
@@ -139,18 +153,26 @@ object LoadFragment : LuaFunction() {
 object LoadWidget : LuaFunction() {
 
     override fun call(arg1: LuaValue, arg2: LuaValue): LuaValue {
-        val (target, widget) = internalLoad(arg1, arg2)
-        widget.setup(target, emptyMap())
-        Minecraft.getInstance().tell {
-            target += widget
-        }
+        try {
+            val (target, widget) = internalLoad(arg1, arg2)
+            Minecraft.getInstance().tell {
+                target += widget
+            }
 
-        return widget.toLua()
+            return widget.toLua()
+        } catch (e: Throwable) {
+            try {
+                LibHelper.popContext()
+            } catch (_: Throwable) {
+            }
+            Constants.LOG.error("Could not parse variables", e)
+            return LuaValue.FALSE
+        }
     }
 
     override fun call(arg1: LuaValue, arg2: LuaValue, arg3: LuaValue): LuaValue {
-        val (target, widget) = internalLoad(arg1, arg2)
         try {
+            val (target, widget) = internalLoad(arg1, arg2)
             val serializer = Variables.serializer()
             @OptIn(ExperimentalSerializationApi::class) // TODO : move this special handling to the decoder
             AbstractLuaDecoder.LuaMapDecoder(arg3.checktable(), null, serializer.descriptor.getElementDescriptor(0))
@@ -158,27 +180,41 @@ object LoadWidget : LuaFunction() {
                     variables.variable.forEach { (key, expressionIntermediate) ->
                         if (expressionIntermediate.expression.isNotEmpty()) {
                             val value = expressionIntermediate.type.expressionAdapter.compile(expressionIntermediate)
+                            Constants.LOG.info("Deserialized $key -> `${expressionIntermediate.expression}`")
                             widget.setVariable(key, value)
                         }
                     }
                 }
             LibHelper.popContext() // from Variables deser
-            widget.setup(target, emptyMap())
+//            widget.setup(target, emptyMap())
+
+            Minecraft.getInstance().tell {
+                target += widget
+                Constants.LOG.info("Adding ${widget.name} to ${(target as? Widget)?.hierarchyName ?: target.name}")
+            }
+
+            return widget.toLua()
         } catch (e: Throwable) {
+            try {
+                LibHelper.popContext()
+            } catch (_: Throwable) {
+            }
             Constants.LOG.error("Could not parse variables", e)
             return LuaValue.FALSE
         }
-
-        Minecraft.getInstance().tell {
-            target += widget
-        }
-
-        return widget.toLua()
     }
 
     private fun internalLoad(arg1: LuaValue, arg2: LuaValue): Pair<WidgetParent, Widget> {
-        val target = find(arg1.checkjstring().let(::ResourceLocation))
+        val target = when {
+            arg1.isuserdata(Widget::class.java) -> (arg1 as WidgetAccess).wrapped
+            arg1.isstring() -> find(arg1.checkjstring().let(::ResourceLocation))
+            else -> {
+                argerror(1, "Expected Widget reference or resource location, found $arg1")
+                kotlin.error("Unreachable")
+            }
+        }
         requireNotNull(target) { "Couldn't find fragment $arg1" }
+
         return target to AbstractLuaDecoder.LuaDecoder(arg2.checktable())
             .decodeSerializableValue(Widget.serializer())
     }
@@ -202,7 +238,7 @@ object LoadWidget : LuaFunction() {
     }
 }
 
-object RegisterScreen: LuaFunction() {
+object RegisterScreen : LuaFunction() {
     override fun call(arg1: LuaValue, arg2: LuaValue): LuaValue {
         val id = arg1.checkjstring().let(::ResourceLocation)
         val callback = arg2.checkfunction()
@@ -216,6 +252,7 @@ object RegisterScreen: LuaFunction() {
     private val registry = mutableMapOf<ResourceLocation, (ResourceLocation) -> Unit>()
 
     operator fun get(id: ResourceLocation): ((ResourceLocation) -> Unit)? = registry[id]
+    fun allIds(): Set<ResourceLocation> = registry.keys
 
     fun clear() = registry.clear()
 }

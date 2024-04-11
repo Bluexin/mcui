@@ -20,6 +20,7 @@ package be.bluexin.mcui.themes.util
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.api.themes.IHudDrawContext
 import be.bluexin.mcui.config.Settings
+import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import gnu.jel.CompiledExpression
 
 /**
@@ -31,9 +32,9 @@ sealed class CompiledExpressionWrapper<out T: Any>(val compiledExpression: Compi
     protected fun warn(e: Throwable) {
         val message = "An error occurred while executing an Expression"
         Constants.LOG.warn(message, e)
-//        AbstractThemeLoader.Reporter += e.message ?: message
+        AbstractThemeLoader.Reporter += e.message ?: message
         // let ElementGroup handle it
-        throw RuntimeException(message, e)
+//        throw RuntimeException(message, e)
     }
 }
 

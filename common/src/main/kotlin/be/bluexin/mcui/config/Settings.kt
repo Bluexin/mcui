@@ -24,6 +24,8 @@ object Settings {
         logger.warn("Undelivered $it")
     }
 
+    fun findAll(): Iterable<Setting<*>> = registry.values
+
     operator fun get(namespace: ResourceLocation, key: ResourceLocation): Any? =
         getSetting(namespace, key, "get")
             ?.let(this::get)

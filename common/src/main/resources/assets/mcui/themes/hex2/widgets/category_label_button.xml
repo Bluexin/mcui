@@ -1,14 +1,15 @@
-<widget name="label_button">
+<widget name="category_label_button">
     <expect>
         <variable key="text" type="STRING"/>
-        <variable key="initialWidth" type="INT" cache="STATIC">80</variable>
+        <variable key="initialWidth" type="INT" cache="STATIC">120</variable>
         <variable key="initialHeight" type="INT" cache="STATIC">16</variable>
-        <variable key="xPos" type="DOUBLE" cache="STATIC">scaledwidth / 2.0</variable>
+        <variable key="xPos" type="DOUBLE" cache="STATIC">0.0</variable>
         <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
         <variable key="active" type="BOOLEAN" cache="STATIC">true</variable>
         <variable key="colour" type="INT" cache="STATIC">0x424242FF</variable>
         <variable key="hoverColour" type="INT" cache="STATIC">(int) (0x424242FF &amp; 0xAFAFAFFF)</variable>
         <variable key="isHovered" type="BOOLEAN" cache="STATIC">false</variable>
+        <variable key="isOpen" type="BOOLEAN" cache="STATIC">false</variable>
     </expect>
     <contentWidth>initialWidth</contentWidth>
     <contentHeight>initialHeight</contentHeight>
@@ -59,14 +60,35 @@
         <glString name="label">
             <x>initialWidth / 2 - strWidth(text) / 2</x>
             <y cache="STATIC">9.5</y>
-            <text>text</text>
+            <text>isOpen ? text + " >" : text</text>
         </glString>
+
+        <widget name="content">
+            <x>initialWidth + 10</x>
+            <y cache="STATIC">0</y>
+            <enabled>isOpen</enabled>
+            <contentWidth cache="STATIC">0</contentWidth>
+            <contentHeight cache="STATIC">0</contentHeight>
+        </widget>
     </children>
 
-    <!--<onClick>
-        local mouseX, mouseY, button = ...
-        print("onClick with " .. button .. " from Lua script !")
-    </onClick>-->
+    <onClick>
+        local self = ...
+        local isOpen = self.getVariable('isOpen')
+        isOpen.expression = string.gsub('!' .. isOpen.expression, '!!', '')
+        self.setVariable('isOpen', isOpen)
+        --- @type Element[]
+        local peers = self.peers
+        for _, peer in ipairs(peers) do
+            if type(peer) == 'Widget' then
+                local peerIsOpen = peer.getVariable('isOpen')
+                if peerIsOpen and peerIsOpen.expression ~= 'false' then
+                    peer.setVariable('isOpen', { type = 'BOOLEAN', expression = 'false', cache = 'STATIC' })
+                end
+            end
+        end
+        return true
+    </onClick>
 
     <onMouseOverEvent>
         local button, _, _, entered = ...

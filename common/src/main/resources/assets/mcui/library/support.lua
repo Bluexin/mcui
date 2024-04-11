@@ -32,3 +32,9 @@ mouse_buttons = {
 
 --- Represents a MiniScript value computing to void type
 --- @alias CUnit TypeSpecificCValue|string|number
+
+--- Minecraft ResourceLocation
+--- @shape LKResourceLocation
+--- @field namespace string
+--- @field path string
+--- @field string string text representation in namespace:path format

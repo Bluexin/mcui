@@ -17,8 +17,9 @@
 
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.api.themes.IHudDrawContext
-import be.bluexin.mcui.themes.util.CDouble
+import be.bluexin.mcui.themes.elements.access.RawElementAccess
 import be.bluexin.mcui.themes.util.CUnit
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
@@ -26,6 +27,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import net.minecraft.resources.ResourceLocation
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
+import org.luaj.vm2.LuaValue
 
 /**
  * Part of saoui by Bluexin, released under GNU GPLv3.
@@ -34,9 +36,11 @@ import nl.adaptivity.xmlutil.serialization.XmlSerialName
  */
 @Serializable
 @SerialName("rawElement")
+@LuajExpose(LuajExpose.IncludeType.OPT_IN)
 class RawElement(
     @XmlSerialName("expression")
-    private var expression: CUnit
+    @LuajExpose
+    var expression: CUnit
 ) : Element() {
 
     @Transient
@@ -49,7 +53,7 @@ class RawElement(
         return anonymous
     }
 
-    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack) {
+    override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
         poseStack.pushPose()
         val x = this.x(ctx)
         val y = this.y(ctx)
@@ -63,4 +67,6 @@ class RawElement(
         expression(ctx)
         poseStack.popPose()
     }
+
+    override fun toLua(): LuaValue = RawElementAccess(this)
 }

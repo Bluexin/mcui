@@ -17,6 +17,7 @@
 
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.LKExposed
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.api.themes.IHudDrawContext
@@ -38,7 +39,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper
  */
 @LuajExpose(includeType = LuajExpose.IncludeType.OPT_IN)
 @Serializable
-sealed class Element {
+sealed class Element : LKExposed {
 
     companion object {
         const val DEFAULT_NAME = "anonymous"
@@ -96,10 +97,19 @@ sealed class Element {
     @Transient
     protected lateinit var parent: WeakReference<ElementParent>
 
-    protected val parentOrZero get() = parent.get() ?: ElementParent.ZERO
+    private val parentOrZero get() = parent.get() ?: ElementParent.ZERO
+
+    @LuajExpose
+    val parentElement: Element? get() = parent.get() as? Element
 
     @LuajExpose
     val hasParent: Boolean get() = ::parent.isInitialized && parent.get().let { it != null && it !is Hud }
+
+    /**
+     * Elements contained in the same parent, except this element
+     */
+    @LuajExpose
+    val peers: List<Element> get() = parentOrZero.elements.filter { it != this }
 
     /**
      * Draw this element on the screen.
@@ -107,7 +117,7 @@ sealed class Element {
      *
      * @param ctx additional info about the draws
      */
-    abstract fun draw(ctx: IHudDrawContext, poseStack: PoseStack)
+    abstract fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double)
 
     /**
      * Called during setup, used to initialize anything extra (after it has finished loading)
@@ -125,7 +135,10 @@ sealed class Element {
         } else true
     }
 
-    fun hierarchyName(sb: StringBuilder = StringBuilder()): StringBuilder {
+    @LuajExpose
+    val hierarchyName by lazy { hierarchyName().toString() }
+
+    protected fun hierarchyName(sb: StringBuilder = StringBuilder()): StringBuilder {
         parent.get()?.let {
             if (it is Element) {
                 it.hierarchyName(sb)
