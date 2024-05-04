@@ -5,8 +5,6 @@
         <entry>
             <key>HEALTH_BOX</key>
             <value name="health box">
-                <x cache="STATIC">4.0</x>
-                <y cache="STATIC">4.0</y>
                 <x>doubleSetting("hud:health_offset_x")</x>
                 <y>doubleSetting("hud:health_offset_y")</y>
                 <children>

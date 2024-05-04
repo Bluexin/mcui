@@ -63,11 +63,11 @@ sealed class GLRectangleParent : Element() {
     @SerialName("srcW")
     @XmlSerialName("srcW")
     @LuajExpose
-    var srcW = CDouble.ZERO
+    var srcW = w
     @SerialName("srcH")
     @XmlSerialName("srcH")
     @LuajExpose
-    var srcH = CDouble.ZERO
+    var srcH = h
     @Transient
     protected var rl: ResourceLocation? = null
     @XmlElement

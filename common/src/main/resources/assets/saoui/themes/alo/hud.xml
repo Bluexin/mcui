@@ -287,6 +287,7 @@
                 <x cache="SIZE_CHANGE">scaledwidth / 2 - 91</x>
                 <y cache="SIZE_CHANGE">scaledheight - 29</y>
                 <texture>minecraft:textures/gui/icons.png</texture>
+                <enabled>hasMount</enabled>
                 <children>
                     <glRectangle name="bg">
                         <srcY cache="STATIC">84</srcY>
