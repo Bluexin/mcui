@@ -13,7 +13,7 @@ local function static(value)
     }
 end
 
---- @param value string|number
+--- @param value string|number|boolean
 --- @param jtype? JelType|nil
 --- @param nowrap? boolean
 --- @return CValue
@@ -36,16 +36,17 @@ local function tstatic(value, jtype, nowrap)
     end
     return {
         type = jtype or 'ERROR',
-        expression = value,
+        expression = --[[---@type string]] value,
         cache = 'STATIC'
     }
 end
 
 --- @param value string|number
 --- @param jtype? JelType
+--- @param nowrap? boolean
 --- @return CValue
-local function tframe(value, jtype)
-    local basic = tstatic(value, jtype)
+local function tframe(value, jtype, nowrap)
+    local basic = tstatic(value, jtype, nowrap)
     basic.cache = "PER_FRAME"
     return basic
 end
@@ -169,8 +170,9 @@ end
 --- @param yPos string|number
 --- @param xPos string|number
 --- @param label string
+--- @param tooltip string
 --- @return Widget|nil
-local function loadSetting(parent, yPos, xPos, label)
+local function loadSetting(parent, yPos, xPos, label, tooltip)
     local r = theme.loadWidget(parent, label_button_frag, {
         text = tstatic(label, 'STRING'),
         xPos = tframe(xPos, 'DOUBLE'),
@@ -181,15 +183,17 @@ local function loadSetting(parent, yPos, xPos, label)
         print('Could not load category')
         return nil
     end
-    return --[[---@type Widget]] r
+    local w = --[[---@type Widget]] r
+    w.tooltip = tstatic(tooltip)
+    return w
 end
 
 --- @param parent Widget|nil
 --- @param name string
 local function getChildWidget(parent, name)
-    if parent ~= nil then
+    if parent then
         local child = (--[[---@type Widget]] parent).getChildByName(name)
-        if child ~= nil and type(child) == 'Widget' then
+        if child and type(child) == 'Widget' then
             return --[[---@type Widget]] child
         end
     end
@@ -214,7 +218,58 @@ local function settingsCategoryName(id)
     return 'format("mcui.screen.settings.' .. string.gsub(id, ':', '.') .. '")'
 end
 
+--- @param parent Widget the parent's **content** widget
+local function addThemeSettings(parent)
+    local currentTheme = settings.currentTheme().string
+    local themeCount = 0
+    for index, themeId in ipairs(settings.themes()) do
+        local themeLocalKey = themeId.namespace .. '.' .. themeId.path
+        local r = theme.loadWidget(parent, label_button_frag, {
+            isCurrentTheme = tstatic(themeId.string == currentTheme),
+            --text = tstatic('tmp'),
+            text = tframe('(isCurrentTheme? "> ": "" ) + format("mcui.theme.' .. themeLocalKey .. '.name")', 'STRING', true),
+            --active = tframe('!isCurrentTheme', 'BOOLEAN'),
+            xPos = tstatic(0),
+            yPos = tframe((index - 1) * 20, 'DOUBLE'),
+            initialWidth = tstatic(80, 'INT'),
+        })
+        if r then
+            themeCount = themeCount + 1
+            local b = --[[---@type Widget]] r
+            --b.setVariable('text', tframe('(isCurrentTheme? "> ": "" ) + format("mcui.theme.' .. themeId.namespace .. '.' .. themeId.path .. '.name")', 'STRING', true))
+            --b.setVariable('active', tframe('!isCurrentTheme', 'BOOLEAN'))
+            b.tooltip = tstatic('format("mcui.theme.' .. themeLocalKey .. '.description")', 'STRING', true)
+            b.onClick = function(receiver)
+                if receiver.getVariable('isCurrentTheme').expression == 'false' then
+                    receiver.setVariable('isCurrentTheme', tstatic(true))
+                    --receiver.setVariable('active', tstatic(false))
+                    for _, v in ipairs(receiver.peers) do
+                        if (type(v) == 'Widget') then
+                            -- TODO: disabled themes that failed to load to show helpful tooltip ?
+                            --(--[[---@type Widget]] v).setVariable('active', tstatic(true))
+                            (--[[---@type Widget]] v).setVariable('isCurrentTheme', tstatic(false))
+                        end
+                    end
+                    settings.setTheme(themeId)
+                    return true
+                else
+                    return false
+                end
+            end
+        end
+    end
+    centerCategoryContent(parent, themeCount)
+end
+
 theme.registerScreen("mcui:settings", function(root)
+    local themes = loadCategory(root, 'scaledheight / 2 - 10', "scaledwidth / 2 - 120", 'themeselection', function()
+        return 'format("mcui.screen.settings.themeselection")'
+    end)
+    if (themes) then
+        local themesContent = getChildWidget(themes, 'content')
+        addThemeSettings(themesContent)
+    end
+
     --- @type table<string, table<string, table<string, Setting>>>
     local topCategories = {}
     for i, v in ipairs(settings.listAll()) do
@@ -229,20 +284,20 @@ theme.registerScreen("mcui:settings", function(root)
     print(tprint(topCategories))
 
     local yPosBase = 'scaledheight / 2 - 10 + '
-    local yPos = 0
+    local yPos = 20
 
     for topLevelName, topLevelValue in pairs(topCategories) do
         local topLevel = loadCategory(root, yPosBase .. tostring(yPos), "scaledwidth / 2 - 120", topLevelName, settingsTabName)
-        if topLevel ~= nil then
+        if topLevel then
             local tlN = 0
             local tlContent = getChildWidget(topLevel, 'content')
             for catName, catValue in pairs(topLevelValue) do
                 local category = loadCategory(tlContent, tlN * 20, 0, catName, settingsCategoryName)
                 local catN = 0
-                if category ~= nil then
+                if category then
                     local catContent = getChildWidget(category, 'content')
                     for settingName, setting in pairs(catValue) do
-                        loadSetting(catContent, catN * 20, 0, settingName .. ': ' .. type(setting))
+                        loadSetting(catContent, catN * 20, 0, settingName .. ': ' .. type(setting), setting.comment)
                         catN = catN + 1
                     end
                     centerCategoryContent(catContent, catN)

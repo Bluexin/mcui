@@ -84,6 +84,10 @@ class LuaTestScreen : Screen(Component.literal("Lua Test Screen")), WidgetParent
         super.render(poseStack, mouseX, mouseY, partialTick)
     }
 
+    override fun setTooltipForNextRenderPass(tooltip: Component) {
+        super.setTooltipForNextRenderPass(tooltip)
+    }
+
     override fun added() {
         super.added()
         LoadFragment[rootId] = root

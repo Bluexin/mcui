@@ -3,7 +3,7 @@
         <variable key="text" type="STRING"/>
         <variable key="initialWidth" type="INT" cache="STATIC">80</variable>
         <variable key="initialHeight" type="INT" cache="STATIC">16</variable>
-        <variable key="xPos" type="DOUBLE" cache="STATIC">scaledwidth / 2.0</variable>
+        <variable key="xPos" type="DOUBLE">scaledwidth / 2.0</variable>
         <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
         <variable key="active" type="BOOLEAN" cache="STATIC">true</variable>
         <variable key="colour" type="INT" cache="STATIC">0x424242FF</variable>

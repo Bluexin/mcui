@@ -18,6 +18,7 @@ import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import nl.adaptivity.xmlutil.serialization.XmlBefore
 import nl.adaptivity.xmlutil.serialization.XmlElement
@@ -60,6 +61,10 @@ class Widget(
     @XmlElement
     @XmlSerialName("onMouseOverEvent")
     val onMouseOverEventScript: String? = null,
+    @XmlElement
+    @XmlSerialName
+    @LuajExpose
+    var tooltip: CString? = null,
 ) : ElementGroupParent(), GuiEventListener, Renderable, NarratableEntry, WidgetParent {
 
     @Transient
@@ -151,9 +156,16 @@ class Widget(
             if (!enabled(it)) return@withContext
             checkMouseOver(mouseX - x(it), mouseY - y(it), it)
 
-            prepareDraw(ctx, poseStack)
-            drawChildren(ctx, poseStack, mouseX, mouseY)
-            finishDraw(ctx, poseStack)
+            prepareDraw(it, poseStack)
+            drawChildren(it, poseStack, mouseX, mouseY)
+            if (isMouseOver) tooltip?.let { tt -> setTooltipForNextRenderPass(Component.literal(tt(it))) }
+            finishDraw(it, poseStack)
+        }
+    }
+
+    override fun setTooltipForNextRenderPass(tooltip: Component) {
+        when (val parent = parent.get()) {
+            is WidgetParent -> parent.setTooltipForNextRenderPass(tooltip)
         }
     }
 

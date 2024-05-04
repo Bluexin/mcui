@@ -41,11 +41,15 @@ class LuaScriptedScreen(
     init {
         LoadWidget[rootId] = this
         try {
-            RegisterScreen[screenId]?.invoke(rootId)
+            RegisterScreen[screenId]?.invoke(rootId) // TODO : caching
         } catch (e: Throwable) {
             Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Something went wrong : ${e.message}. See console for more info."))
             Constants.LOG.error("Couldn't evaluate initializer for mcui:testgui", e)
         }
+    }
+
+    override fun setTooltipForNextRenderPass(tooltip: Component) {
+        super.setTooltipForNextRenderPass(tooltip)
     }
 
     override fun init() {
