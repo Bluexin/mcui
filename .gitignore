@@ -25,3 +25,5 @@ run
 /tmp/
 
 !/fabric/run/config/fabric_loader_dependencies.json
+
+/logs/
