@@ -18,7 +18,6 @@
 package be.bluexin.mcui.api.elements
 
 import be.bluexin.mcui.api.screens.IIcon
-import be.bluexin.mcui.api.scripting.catching
 import be.bluexin.mcui.config.OptionCore
 import be.bluexin.mcui.screens.CoreGUI
 import be.bluexin.mcui.screens.MouseButton
@@ -34,7 +33,6 @@ import be.bluexin.mcui.util.math.Vec2d
 import be.bluexin.mcui.util.math.vec
 import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.blaze3d.vertex.PoseStack
-import li.cil.repack.com.naef.jnlua.LuaValueProxy
 import net.minecraft.advancements.Advancement
 import net.minecraft.client.resources.language.I18n
 import net.minecraft.resources.ResourceLocation
@@ -99,24 +97,6 @@ open class CategoryButton(
 
     override fun onClick(body: (Vec2d, MouseButton) -> Boolean) = delegate.onClick(body)
 
-    @JvmName("onClick")
-    @Suppress("unused") // for lua
-    fun luaOnClick(bodyProxy: LuaValueProxy) = onClick { _, _ ->
-        val state = bodyProxy.luaState
-        state.catching(false) {
-            bodyProxy.pushValue()
-            val r = if (state.isFunction(-1)) {
-                state.pushJavaObject(this)
-                state.call(1, 1)
-                state.checkBoolean(-1).also {
-                    state.pop(1)
-                }
-            } else false
-//            state.pop(1)
-            r
-        }
-    }
-
     override fun onClickOut(body: (Vec2d, MouseButton) -> Unit) = delegate.onClickOut(body)
     override fun hide() = delegate.hide()
     override fun show() = delegate.show()
@@ -125,14 +105,17 @@ open class CategoryButton(
         mouse,
         partialTicks
     )
+
     override fun draw(poseStack: PoseStack, mouse: Vec2d, partialTicks: Float) = delegate.draw(
         poseStack, mouse,
         partialTicks
     )
+
     override fun drawForeground(poseStack: PoseStack, mouse: Vec2d, partialTicks: Float) = delegate.drawForeground(
         poseStack, mouse,
         partialTicks
     )
+
     override fun contains(pos: Vec2d) = delegate.contains(pos)
     override fun update() {
         super.update()
@@ -235,10 +218,12 @@ open class CategoryButton(
                     val skipFront = (selectedIdx - (count / 2 - (count + 1) % 2) + count) % count
                     validElementsSequence.drop(skipFront) + validElementsSequence.take(skipFront)
                 }
+
                 count >= 7 -> {
                     val s = validElementsSequence + validElementsSequence
                     s.drop(min(max((scroll + count) % count, 0), count)).take(7)
                 }
+
                 else -> validElementsSequence
             }
         }
@@ -261,32 +246,6 @@ open class CategoryButton(
         val cat = CategoryButton(IconLabelElement(icon, label, description = description), this, body)
         +cat
         return cat
-    }
-
-    @Suppress("unused") // For Lua
-    @JvmOverloads
-    @JvmName("category")
-    fun luaCategory(
-        icon: String,
-        label: String,
-        description: List<String> = listOf(),
-        bodyProxy: LuaValueProxy? = null
-    ): CategoryButton {
-        val body: (CategoryButton.() -> Unit)? = bodyProxy?.let {
-            {
-                val state = it.luaState
-                state.catching(Unit) {
-                    it.pushValue()
-                    if (state.isFunction(-1)) {
-                        state.pushJavaObject(this)
-                        state.call(1, 0)
-                    }
-                    state.pop(1)
-                }
-            }
-        }
-
-        return category(IconCore.valueOf(icon), label, description.toMutableList(), body)
     }
 
     fun partyMenu(): CategoryButton {
@@ -364,12 +323,14 @@ open class CategoryButton(
                             }
                             parent.elements[index].mouseClicked(vec, mouse)
                         }
+
                         PopupAdvancement.Result.PREVIOUS -> {
                             if (--index < 0) {
                                 index = parent.elements.size.minus(1)
                             }
                             parent.elements[index].mouseClicked(vec, mouse)
                         }
+
                         else -> {}
                     }
                 }

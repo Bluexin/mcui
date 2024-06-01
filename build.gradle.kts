@@ -70,7 +70,7 @@ subprojects {
 //        implementation(libs.luna)
 
 //        implementation(group = "none", name = "OC-LuaJ", version = "20220907.1", ext = "jar")
-        implementation(group = "none", name = "OC-JNLua", version = "20230530.0", ext = "jar")
+//        implementation(group = "none", name = "OC-JNLua", version = "20230530.0", ext = "jar")
 //        implementation(group = "none", name = "OC-JNLua-Natives", version = "20220928.1", ext = "jar")
 
         implementation(libs.bundles.luaj)
