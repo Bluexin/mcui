@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Arnaud 'Bluexin' Solé
+ * Copyright (C) 2016-2024 Arnaud 'Bluexin' Solé
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@ package be.bluexin.mcui.themes.elements
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.luajksp.annotations.LuajMapped
 import be.bluexin.mcui.GLCore
-import be.bluexin.mcui.api.themes.IHudDrawContext
+import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.elements.access.GLHotbarItemAccess
-import be.bluexin.mcui.themes.util.CInt
-import be.bluexin.mcui.themes.util.HumanoidArmMapper
+import be.bluexin.mcui.themes.miniscript.CInt
+import be.bluexin.mcui.themes.miniscript.HumanoidArmMapper
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

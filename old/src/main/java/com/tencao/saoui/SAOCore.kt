@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Arnaud 'Bluexin' Solé
+ * Copyright (C) 2016-2024 Arnaud 'Bluexin' Solé
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ package be.bluexin.mcui
 import be.bluexin.mcui.util.Client
 import com.tencao.saomclib.SAOMCLib
 import com.tencao.saomclib.capabilities.CapabilitiesHandler
-import be.bluexin.mcui.api.elements.registry.ElementRegistry
+import be.bluexin.mcui.deprecated.elements.registry.ElementRegistry
 import be.bluexin.mcui.api.events.EventInitStatsProvider
 import be.bluexin.mcui.capabilities.RenderCapability
 import be.bluexin.mcui.commands.SaouiCommand

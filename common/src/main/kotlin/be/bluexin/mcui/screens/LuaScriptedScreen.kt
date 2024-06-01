@@ -1,15 +1,14 @@
 package be.bluexin.mcui.screens
 
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.api.scripting.JNLua
-import be.bluexin.mcui.api.scripting.LoadFragment
-import be.bluexin.mcui.api.scripting.LoadWidget
-import be.bluexin.mcui.api.scripting.RegisterScreen
 import be.bluexin.mcui.themes.elements.Element
 import be.bluexin.mcui.themes.elements.ElementGroup
 import be.bluexin.mcui.themes.elements.Widget
 import be.bluexin.mcui.themes.elements.WidgetParent
-import be.bluexin.mcui.themes.util.HudDrawContext
+import be.bluexin.mcui.themes.miniscript.HudDrawContext
+import be.bluexin.mcui.themes.scripting.lib.LoadFragment
+import be.bluexin.mcui.themes.scripting.lib.LoadWidget
+import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.Renderable
@@ -94,7 +93,6 @@ class LuaScriptedScreen(
         super.removed()
         LoadFragment.clear(rootId)
         LoadWidget.clear(rootId)
-        JNLua.close()
     }
 
     override fun plusAssign(widget: Widget) {

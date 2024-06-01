@@ -3,6 +3,7 @@ package be.bluexin.mcui.themes.meta
 import be.bluexin.mcui.themes.elements.Widget
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.loader.JsonThemeLoader
+import be.bluexin.mcui.themes.loader.SettingsLoader
 import be.bluexin.mcui.themes.loader.XmlThemeLoader
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -31,10 +32,12 @@ object ThemeConverter {
         }
         val toRead = File(args[0])
         val toWrite = File(args[1])
+        val settingsLoader = SettingsLoader()
+        val xmlThemeLoader = XmlThemeLoader(settingsLoader)
         val (hud, fragments) = try {
             logger.info("Loading $toRead")
             clearAndLogErrors {
-                val hud = XmlThemeLoader.loadHud(toRead)
+                val hud = xmlThemeLoader.loadHud(toRead)
                 val fragmentRoot = toRead.toPath().resolveSibling("fragments")
                 val ns = fragmentRoot.parent.name
                 val fragments = buildMap {
@@ -45,7 +48,7 @@ object ThemeConverter {
                                     ns,
                                     it.nameWithoutExtension
                                 )
-                            ) { XmlThemeLoader.loadFragment(it.toFile()) }
+                            ) { xmlThemeLoader.loadFragment(it.toFile()) }
                         }
                     }
                 }
@@ -58,16 +61,17 @@ object ThemeConverter {
             logger.error(message, e)
             return
         }
+        val jsonThemeLoader = JsonThemeLoader(settingsLoader)
         try {
             logger.info("Exporting to $toWrite")
             clearAndLogErrors {
                 toWrite.parentFile.mkdirs()
-                JsonThemeLoader.export(hud, toWrite)
+                jsonThemeLoader.export(hud, toWrite)
                 if (fragments.isNotEmpty()) {
                     val fragmentExportRoot = toWrite.toPath().resolveSibling("fragments")
                     fragmentExportRoot.toFile().mkdirs()
                     fragments.forEach { (key, fragment) ->
-                        JsonThemeLoader.export(fragment(), fragmentExportRoot.resolve("${key.path}.json").toFile())
+                        jsonThemeLoader.export(fragment(), fragmentExportRoot.resolve("${key.path}.json").toFile())
                     }
                 }
             }
@@ -80,7 +84,7 @@ object ThemeConverter {
 
         val time = measureTimeMillis {
             clearAndLogErrors {
-                val read = JsonThemeLoader.loadHud(toWrite)
+                val read = jsonThemeLoader.loadHud(toWrite)
                 val fragmentRoot = toWrite.toPath().resolveSibling("fragments")
                 val ns = fragments.keys.first().namespace
                 val readFragments = buildMap {
@@ -91,7 +95,7 @@ object ThemeConverter {
                                     ns,
                                     it.nameWithoutExtension
                                 )
-                            ) { JsonThemeLoader.loadFragment(it.toFile()) }
+                            ) { jsonThemeLoader.loadFragment(it.toFile()) }
                         }
                     }
                 }
@@ -119,7 +123,7 @@ object ThemeConverter {
 object XmlTests {
     @JvmStatic
     fun main(args: Array<String>) {
-        val xml = XmlThemeLoader.xml
+        val xml = XmlThemeLoader(SettingsLoader()).xml
 
         val iss = javaClass.classLoader.getResourceAsStream("assets/mcui/themes/hex2/widgets/label_button.xml")
             ?: error("Couldn't load iss")

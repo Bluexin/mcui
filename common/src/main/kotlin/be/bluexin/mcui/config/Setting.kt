@@ -3,8 +3,8 @@ package be.bluexin.mcui.config
 import be.bluexin.luajksp.annotations.LKExposed
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.config.access.*
-import be.bluexin.mcui.themes.util.LKResourceLocation
-import be.bluexin.mcui.themes.util.json.JsonSettingAdapterFactory
+import be.bluexin.mcui.themes.miniscript.LKResourceLocation
+import be.bluexin.mcui.themes.miniscript.serialization.json.JsonSettingAdapterFactory
 import com.google.gson.annotations.JsonAdapter
 import net.minecraft.resources.ResourceLocation
 import org.luaj.vm2.LuaValue

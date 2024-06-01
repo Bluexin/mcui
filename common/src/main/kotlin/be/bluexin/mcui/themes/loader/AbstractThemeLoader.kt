@@ -1,17 +1,15 @@
 package be.bluexin.mcui.themes.loader
 
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.api.entity.rendering.ColorState
 import be.bluexin.mcui.config.Setting
 import be.bluexin.mcui.config.Settings
-import be.bluexin.mcui.themes.meta.ThemeFormat
-import be.bluexin.mcui.themes.meta.ThemeManager
-import be.bluexin.mcui.themes.meta.ThemeMetadata
+import be.bluexin.mcui.effects.ColorState
 import be.bluexin.mcui.themes.elements.ElementGroup
 import be.bluexin.mcui.themes.elements.Fragment
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.elements.Widget
-import be.bluexin.mcui.themes.settings.SettingsLoader
+import be.bluexin.mcui.themes.meta.ThemeFormat
+import be.bluexin.mcui.themes.meta.ThemeMetadata
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.ColorUtil
 import be.bluexin.mcui.util.HealthStep
@@ -30,7 +28,7 @@ import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.util.*
 
-abstract class AbstractThemeLoader(protected val type: ThemeFormat) {
+abstract class AbstractThemeLoader(protected val type: ThemeFormat, protected val settingsLoader: SettingsLoader) {
 
     object Reporter {
         val errors: Deque<String> = LinkedList()
@@ -40,7 +38,7 @@ abstract class AbstractThemeLoader(protected val type: ThemeFormat) {
         }
     }
 
-    fun load(resourceManager: ResourceManager, theme: ThemeMetadata) {
+    fun load(resourceManager: ResourceManager, theme: ThemeMetadata, sink: (Hud) -> Unit) {
 //        if (OptionCore.CUSTOM_FONT.isEnabled) GLCore.setFont(Minecraft.getMinecraft(), OptionCore.CUSTOM_FONT.isEnabled)
         Reporter.errors.clear()
 
@@ -48,7 +46,7 @@ abstract class AbstractThemeLoader(protected val type: ThemeFormat) {
 
         runCatching {
             val old = Settings.clear(theme.id)
-            SettingsLoader.loadSettings(resourceManager, theme)?.forEach(Setting<*>::register)
+            settingsLoader.loadSettings(resourceManager, theme)?.forEach(Setting<*>::register)
             Settings.build(theme.id, old)
             val hud = loadHud(resourceManager, theme.themeRoot.append("/${type.hudFileSuffix}"))
             val fragments = theme.fragments.mapValues { (_, path) -> { this.loadFragment(path) } }
@@ -56,7 +54,7 @@ abstract class AbstractThemeLoader(protected val type: ThemeFormat) {
             hud to fragments
         }.onSuccess { (hud, fragments) ->
             hud.setup(fragments)
-            ThemeManager.HUD = hud // FIXME : code smell
+            sink(hud)
         }.onFailure {
             Constants.LOG.warn("Failed to load $theme", it)
             Reporter += it.message ?: "unknown error"
@@ -88,7 +86,7 @@ abstract class AbstractThemeLoader(protected val type: ThemeFormat) {
      * Load [ElementGroup] from File reference
      */
     fun loadFragment(location: File): Fragment =
-        when (val loader = ThemeFormat.fromFileExtension(location.extension)?.loader?.invoke()) {
+        when (val loader = ThemeFormat.fromFileExtension(location.extension)?.loader) {
             this -> FileInputStream(location).loadFragment()
             null -> error("Unknown fragment format for $location")
             else -> loader.loadFragment(location)
@@ -98,7 +96,7 @@ abstract class AbstractThemeLoader(protected val type: ThemeFormat) {
      * Load [ElementGroup] from ResourceLocation reference (using mc ResourceManager)
      */
     fun loadFragment(location: ResourceLocation): Fragment =
-        when (val loader = ThemeFormat.fromFileExtension(location.path)?.loader?.invoke()) {
+        when (val loader = ThemeFormat.fromFileExtension(location.path)?.loader) {
             this -> Client.resourceManager.getResourceOrThrow(location).open().loadFragment()
             null -> error("Unknown fragment format for $location")
             else -> loader.loadFragment(location)
@@ -108,7 +106,7 @@ abstract class AbstractThemeLoader(protected val type: ThemeFormat) {
      * Load [ElementGroup] from ResourceLocation reference (using mc ResourceManager)
      */
     fun loadWidget(location: ResourceLocation): Widget =
-        when (val loader = ThemeFormat.fromFileExtension(location.path)?.loader?.invoke()) {
+        when (val loader = ThemeFormat.fromFileExtension(location.path)?.loader) {
             this -> Client.resourceManager.getResourceOrThrow(location).open().loadWidget()
             null -> error("Unknown fragment format for $location")
             else -> loader.loadWidget(location)

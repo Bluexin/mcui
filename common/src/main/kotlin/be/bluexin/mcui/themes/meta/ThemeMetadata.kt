@@ -4,6 +4,8 @@ import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.loader.JsonThemeLoader
 import be.bluexin.mcui.themes.loader.XmlThemeLoader
 import net.minecraft.resources.ResourceLocation
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
 data class ThemeMetadata(
     val id: ResourceLocation,
@@ -23,9 +25,12 @@ data class ThemeMetadata(
     val descTranslationKey = "theme.${id.toString().replace(':', '.')}.description"
 }
 
-enum class ThemeFormat(val hudFileSuffix: String, val loader: () -> AbstractThemeLoader) {
-    XML("hud.xml", { XmlThemeLoader }),
-    JSON("hud.json", { JsonThemeLoader });
+enum class ThemeFormat(val hudFileSuffix: String, private val loaderP: KoinComponent.() -> AbstractThemeLoader) :
+    KoinComponent {
+    XML("hud.xml", { get<XmlThemeLoader>() }),
+    JSON("hud.json", { get<JsonThemeLoader>() });
+
+    val loader: AbstractThemeLoader get() = loaderP()
 
     companion object {
         private val fromFileExtension = entries.associateBy { it.hudFileSuffix.substringAfterLast('.') }

@@ -19,6 +19,8 @@ night_config = "3.6.3"
 jsr305 = "3.0.1"
 forge_config = "2TybfFU8"
 shadow = "7.1.2"
+koin_annotations = "1.3.1"
+koin = "3.5.6"
 
 jel = "2.1.3"
 ph_css = "6.5.0"
@@ -80,6 +82,11 @@ jsr305 = { module = "com.google.code.findbugs:jsr305", version.ref = "jsr305" }
 luajksp_annotations = { module = "be.bluexin:luaj-ksp-annotations", version.ref = "luajksp" }
 luajksp_processor = { module = "be.bluexin:luaj-ksp-processor", version.ref = "luajksp" }
 
+koin_core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin_logger = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin" }
+koin_annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin_annotations" }
+koin_processor = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin_annotations" }
+
 [bundles]
 coroutines = [
     "coroutines_core",
@@ -113,6 +120,11 @@ ftb_forge = [
 nightconfig = [
     "nc_core",
     "nc_toml",
+]
+koin = [
+    "koin_annotations",
+    "koin_core",
+    "koin_logger",
 ]
 
 [plugins]

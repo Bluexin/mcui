@@ -2,16 +2,18 @@ package be.bluexin.mcui.themes.elements
 
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.api.themes.IHudDrawContext
+import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.elements.access.FragmentReferenceAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
-import be.bluexin.mcui.themes.util.*
-import be.bluexin.mcui.util.DeserializationOrder
+import be.bluexin.mcui.themes.miniscript.*
+import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import net.minecraft.resources.ResourceLocation
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.luaj.vm2.LuaValue
 
 @Serializable
@@ -21,10 +23,10 @@ class FragmentReference(
     @DeserializationOrder(0)
     private val serializedVariables: Variables = Variables.EMPTY,
     private var id: String = MISSING_ID
-) : Element(), ElementParent {
+) : Element(), ElementParent, KoinComponent {
 
     init {
-        if (serializedVariables !== Variables.EMPTY) LibHelper.popContext()
+        if (serializedVariables !== Variables.EMPTY) get<LibHelper>().popContext()
     }
 
     @Transient

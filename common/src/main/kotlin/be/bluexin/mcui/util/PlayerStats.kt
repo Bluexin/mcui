@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Arnaud 'Bluexin' Solé
+ * Copyright (C) 2016-2024 Arnaud 'Bluexin' Solé
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 package be.bluexin.mcui.util
 
-import be.bluexin.mcui.api.info.PlayerStatsProvider
+import be.bluexin.mcui.deprecated.api.info.PlayerStatsProvider
 
 /**
  * Part of saoui

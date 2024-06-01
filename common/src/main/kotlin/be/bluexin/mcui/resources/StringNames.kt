@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Arnaud 'Bluexin' Solé
+ * Copyright (C) 2016-2024 Arnaud 'Bluexin' Solé
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,17 +24,20 @@ import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.util.IconCore
 import be.bluexin.mcui.util.append
 import net.minecraft.resources.ResourceLocation
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.*
 
-object StringNames {
+object StringNames : KoinComponent /* TODO: this should either be removed or made part of the context properly */ {
+    private val themeManager by inject<ThemeManager>()
 
     private fun logMissingAndUse(type: String, default: ResourceLocation): ResourceLocation {
-        Constants.LOG.info("Theme {} missing custom {}, defaulting to SAO", ThemeManager.currentTheme, type)
+        Constants.LOG.info("Theme {} missing custom {}, defaulting to SAO", themeManager.currentTheme, type)
         return default
     }
 
     fun init() {
-        val textureRoot = ThemeManager.currentTheme.texturesRoot
+        val textureRoot = themeManager.currentTheme.texturesRoot
 
         gui = GLCore.takeTextureIfExists(textureRoot.append("gui.png"))
             ?: logMissingAndUse("gui", defaultGui)

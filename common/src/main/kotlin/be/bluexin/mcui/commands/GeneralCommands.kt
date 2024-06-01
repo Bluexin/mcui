@@ -1,8 +1,8 @@
 package be.bluexin.mcui.commands
 
-import be.bluexin.mcui.api.scripting.RegisterScreen
 import be.bluexin.mcui.screens.LuaScriptedScreen
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
+import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType

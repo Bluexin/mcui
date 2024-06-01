@@ -1,9 +1,9 @@
 package be.bluexin.mcui.fabric
 
-import be.bluexin.mcui.CommonClass
 import be.bluexin.mcui.Constants
+import be.bluexin.mcui.MCUICore
 import be.bluexin.mcui.commands.McuiCommand
-import be.bluexin.mcui.screens.ingame.McuiGui
+import be.bluexin.mcui.screens.McuiGui
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.meta.ThemeMetadata
 import fuzs.forgeconfigapiport.api.config.v2.ModConfigEvents
@@ -16,12 +16,19 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.util.profiling.ProfilerFiller
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 
 @Suppress("unused")
-object MCUIFabricCore : ClientModInitializer {
+object MCUIFabricCore : ClientModInitializer, KoinComponent {
+
+    private val themeManager by inject<ThemeManager>()
+
     override fun onInitializeClient() {
+        MCUICore.init()
+
         ModConfigEvents.loading(Constants.MOD_ID).register {
             Constants.LOG.info("Loading config ${it.fullPath}")
         }
@@ -29,7 +36,6 @@ object MCUIFabricCore : ClientModInitializer {
             Constants.LOG.info("Reloading config ${it.fullPath}")
         }
 
-        CommonClass.init()
         CommandRegistrationCallback.EVENT.register { commandDispatcher, _, _ ->
             McuiCommand.setup(commandDispatcher)
         }
@@ -50,7 +56,7 @@ object MCUIFabricCore : ClientModInitializer {
                     profiler: ProfilerFiller,
                     executor: Executor
                 ) = CompletableFuture.supplyAsync({
-                    ThemeManager.loadData(manager)
+                    themeManager.loadData(manager)
                 }, executor)
 
                 override fun apply(
@@ -59,7 +65,7 @@ object MCUIFabricCore : ClientModInitializer {
                     profiler: ProfilerFiller,
                     executor: Executor
                 ) = CompletableFuture.runAsync({
-                    ThemeManager.applyData(data, manager)
+                    themeManager.applyData(data, manager)
                 }, executor)
             })
     }

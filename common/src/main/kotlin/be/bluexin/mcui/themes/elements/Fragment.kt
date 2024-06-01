@@ -2,16 +2,18 @@ package be.bluexin.mcui.themes.elements
 
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.themes.elements.access.FragmentAccess
-import be.bluexin.mcui.themes.util.LibHelper
-import be.bluexin.mcui.themes.util.NamedExpressionIntermediate
-import be.bluexin.mcui.themes.util.json.ExpectJsonAdapter
-import be.bluexin.mcui.util.DeserializationOrder
+import be.bluexin.mcui.themes.miniscript.LibHelper
+import be.bluexin.mcui.themes.miniscript.NamedExpressionIntermediate
+import be.bluexin.mcui.themes.miniscript.serialization.json.ExpectJsonAdapter
+import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
 import com.google.gson.annotations.JsonAdapter
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.ExperimentalXmlUtilApi
 import nl.adaptivity.xmlutil.serialization.XmlBefore
 import nl.adaptivity.xmlutil.serialization.XmlNamespaceDeclSpec
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.luaj.vm2.LuaValue
 
 @OptIn(ExperimentalXmlUtilApi::class)
@@ -26,10 +28,9 @@ class Fragment(
     @XmlBefore("x", "children", "texture")
     @DeserializationOrder(0)
     val expect: Expect? = null
-) : ElementGroupParent() {
-
+) : ElementGroupParent(), KoinComponent {
     init {
-        if (expect != null) LibHelper.popContext()
+        if (expect != null) get<LibHelper>().popContext()
     }
 
     override fun toLua(): LuaValue = FragmentAccess(this)
@@ -39,8 +40,8 @@ class Fragment(
 @Serializable
 data class Expect(
     val variables: Map<String, NamedExpressionIntermediate> = emptyMap()
-) {
+) : KoinComponent {
     init {
-        LibHelper.pushContext(variables.mapValues { (_, value) -> value.type })
+        get<LibHelper>().pushContext(variables.mapValues { (_, value) -> value.type })
     }
 }

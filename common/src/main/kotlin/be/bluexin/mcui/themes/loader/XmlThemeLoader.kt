@@ -1,15 +1,17 @@
 package be.bluexin.mcui.themes.loader
 
-import be.bluexin.mcui.themes.meta.ThemeFormat
 import be.bluexin.mcui.themes.elements.Fragment
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.elements.Widget
+import be.bluexin.mcui.themes.meta.ThemeFormat
 import nl.adaptivity.xmlutil.StAXReader
 import nl.adaptivity.xmlutil.serialization.XML
 import nl.adaptivity.xmlutil.serialization.XmlSerializationPolicy
+import org.koin.core.annotation.Single
 import java.io.InputStream
 
-object XmlThemeLoader : AbstractThemeLoader(ThemeFormat.XML) {
+@Single
+class XmlThemeLoader(settingsLoader: SettingsLoader) : AbstractThemeLoader(ThemeFormat.XML, settingsLoader) {
 
     internal val xml by lazy {
         XML {

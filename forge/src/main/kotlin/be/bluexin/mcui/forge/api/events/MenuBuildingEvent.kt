@@ -1,6 +1,6 @@
 package be.bluexin.mcui.forge.api.events
 
-import be.bluexin.mcui.api.elements.NeoElement
+import be.bluexin.mcui.deprecated.elements.NeoElement
 import net.minecraftforge.eventbus.api.Event
 
 /**

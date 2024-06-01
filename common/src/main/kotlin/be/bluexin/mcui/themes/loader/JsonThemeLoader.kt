@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Arnaud 'Bluexin' Solé
+ * Copyright (C) 2016-2024 Arnaud 'Bluexin' Solé
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,15 @@
 
 package be.bluexin.mcui.themes.loader
 
-import be.bluexin.mcui.themes.meta.ThemeFormat
 import be.bluexin.mcui.themes.elements.ElementParent
 import be.bluexin.mcui.themes.elements.Fragment
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.elements.Widget
-import be.bluexin.mcui.themes.util.CInt
-import be.bluexin.mcui.themes.util.json.AfterUnmarshalAdapterFactory
+import be.bluexin.mcui.themes.meta.ThemeFormat
+import be.bluexin.mcui.themes.miniscript.CInt
+import be.bluexin.mcui.themes.miniscript.serialization.json.AfterUnmarshalAdapterFactory
 import com.google.gson.GsonBuilder
+import org.koin.core.annotation.Single
 import java.io.File
 import java.io.FileWriter
 import java.io.InputStream
@@ -35,7 +36,8 @@ import java.io.InputStream
  * @author Bluexin
  */
 // TODO : convert to kotlinx.serialization
-object JsonThemeLoader : AbstractThemeLoader(ThemeFormat.JSON) {
+@Single
+class JsonThemeLoader(settingsLoader: SettingsLoader) : AbstractThemeLoader(ThemeFormat.JSON, settingsLoader) {
 
     private val gson = GsonBuilder()
         .registerTypeAdapterFactory(AfterUnmarshalAdapterFactory())

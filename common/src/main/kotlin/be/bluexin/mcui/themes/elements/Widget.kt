@@ -2,14 +2,14 @@ package be.bluexin.mcui.themes.elements
 
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.api.scripting.LuaJTest
-import be.bluexin.mcui.api.themes.IHudDrawContext
+import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.elements.access.WidgetAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.meta.ThemeManager
-import be.bluexin.mcui.themes.util.*
+import be.bluexin.mcui.themes.miniscript.*
+import be.bluexin.mcui.themes.scripting.LuaJManager
+import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
 import be.bluexin.mcui.util.Client
-import be.bluexin.mcui.util.DeserializationOrder
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -23,6 +23,9 @@ import net.minecraft.resources.ResourceLocation
 import nl.adaptivity.xmlutil.serialization.XmlBefore
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.luaj.vm2.LuaValue
 
 /**
@@ -65,7 +68,10 @@ class Widget(
     @XmlSerialName
     @LuajExpose
     var tooltip: CString? = null,
-) : ElementGroupParent(), GuiEventListener, Renderable, NarratableEntry, WidgetParent {
+) : ElementGroupParent(), GuiEventListener, Renderable, NarratableEntry, WidgetParent, KoinComponent {
+
+    private val themeManager: ThemeManager by inject()
+    private val luaJManager: LuaJManager by inject()
 
     @Transient
     private var focused = false
@@ -117,7 +123,7 @@ class Widget(
     private val variables: MutableMap<String, CValue<*>?> = mutableMapOf()
 
     init {
-        if (expect != null) LibHelper.popContext()
+        if (expect != null) get<LibHelper>().popContext()
     }
 
     private inline fun <T> IHudDrawContext.withContext(crossinline body: (IHudDrawContext) -> T): T {
@@ -198,7 +204,7 @@ class Widget(
         if (!script.isNullOrBlank()) try {
             access.set(
                 name,
-                LuaJTest.compileSnippet("${this.name}/$name".lowercase(), script, ThemeManager.currentTheme.id)
+                luaJManager.compileSnippet("${this.name}/$name".lowercase(), script, themeManager.currentTheme.id)
             )
         } catch (e: Throwable) {
             AbstractThemeLoader.Reporter += e.message ?: "Unknown error loading ${this.name}/$name"

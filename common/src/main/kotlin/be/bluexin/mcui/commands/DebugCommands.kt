@@ -1,10 +1,10 @@
 package be.bluexin.mcui.commands
 
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.api.scripting.LuaJTest
-import be.bluexin.mcui.api.scripting.RegisterScreen
 import be.bluexin.mcui.screens.LuaScriptedScreen
 import be.bluexin.mcui.screens.LuaTestScreen
+import be.bluexin.mcui.themes.scripting.LuaJManager
+import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
@@ -14,11 +14,13 @@ import net.minecraft.commands.Commands
 import net.minecraft.commands.arguments.ResourceLocationArgument
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 @Suppress("unused") // automatic
 enum class DebugCommands(
     override vararg val arguments: ArgumentBuilder<CommandSourceStack, *>
-) : Command {
+) : Command, KoinComponent {
     OPEN_TEST_GUI {
         override fun execute(c: CommandContext<CommandSourceStack>): Int {
             Minecraft.getInstance().tell {
@@ -28,9 +30,11 @@ enum class DebugCommands(
         }
     },
     RELOAD_SCRIPTS {
+        private val luaJManager: LuaJManager by inject()
+
         override fun execute(c: CommandContext<CommandSourceStack>): Int {
             try {
-                LuaJTest.runScript(ResourceLocation("mcui", "themes/hex2/screens.lua"))
+                luaJManager.runScript(ResourceLocation("mcui", "themes/hex2/screens.lua"))
                 return 1
             } catch (e: Throwable) {
                 Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Something went wrong : ${e.message}. See console for more info."))

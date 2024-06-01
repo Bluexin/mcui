@@ -22,6 +22,10 @@ kotlin {
     explicitApiWarning()
 }
 
+ksp {
+    arg("KOIN_CONFIG_CHECK", "true")
+}
+
 repositories(RepositoryHandler::mavenCentral)
 
 val mcVersion = libs.versions.minecraft.get()
@@ -76,6 +80,9 @@ subprojects {
         implementation(libs.bundles.luaj)
         implementation(libs.luajksp.annotations)
         ksp(libs.luajksp.processor)
+
+        implementation(libs.bundles.koin)
+        ksp(libs.koin.processor)
     }
 
 

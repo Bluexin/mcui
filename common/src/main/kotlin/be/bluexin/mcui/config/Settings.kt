@@ -1,6 +1,7 @@
 package be.bluexin.mcui.config
 
 import be.bluexin.mcui.Constants
+import be.bluexin.mcui.logger
 import be.bluexin.mcui.platform.Services
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -10,12 +11,11 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.selects.onTimeout
 import kotlinx.coroutines.selects.select
 import net.minecraft.resources.ResourceLocation
-import org.apache.logging.log4j.LogManager
 
 object Settings {
     val NS_BUILTIN = ResourceLocation(Constants.MOD_ID, "builtin")
 
-    private val logger = LogManager.getLogger("${Constants.MOD_ID}.${javaClass.simpleName}")
+    private val logger = logger()
 
     private val configurations: MutableMap<ResourceLocation, Configuration> = mutableMapOf()
     private val registry: MutableMap<Pair<ResourceLocation, ResourceLocation>, Setting<Any>> = mutableMapOf()

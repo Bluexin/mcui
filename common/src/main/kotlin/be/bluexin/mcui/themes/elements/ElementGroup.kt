@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Arnaud 'Bluexin' Solé
+ * Copyright (C) 2016-2024 Arnaud 'Bluexin' Solé
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@ package be.bluexin.mcui.themes.elements
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.GLCore
-import be.bluexin.mcui.api.themes.IHudDrawContext
+import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.platform.Services
 import be.bluexin.mcui.themes.elements.access.ElementGroupAccess
-import be.bluexin.mcui.themes.util.profile
+import be.bluexin.mcui.themes.miniscript.profile
 import be.bluexin.mcui.util.Client
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName

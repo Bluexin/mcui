@@ -5,6 +5,7 @@ import be.bluexin.mcui.util.append
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.Resource
 import net.minecraft.server.packs.resources.ResourceManager
+import org.koin.core.annotation.Single
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -14,12 +15,20 @@ import kotlin.io.path.name
 import kotlin.io.path.nameWithoutExtension
 import kotlin.streams.asSequence
 
-object ThemeDetector {
+interface ThemeDetector {
+    /**
+     * Returns a map of path to display name for themes
+     */
+    fun listThemes(resourceManager: ResourceManager): Map<ResourceLocation, ThemeMetadata>
+}
+
+@Single
+internal class ThemeDetectorImpl : ThemeDetector {
 
     /**
      * Returns a map of path to display name for themes
      */
-    fun listThemes(resourceManager: ResourceManager): Map<ResourceLocation, ThemeMetadata> {
+    override fun listThemes(resourceManager: ResourceManager): Map<ResourceLocation, ThemeMetadata> {
         // TODO : variant returning the whole stack to check for overriding of critical scripts ?
         // TODO : legacy themes
         return resourceManager.listResources("themes") { rl ->
@@ -28,7 +37,7 @@ object ThemeDetector {
             (key to value).extractThemesMetadataV2(resourceManager)
         }.filter { (_, it) ->
             try {
-                it.type.loader()
+                it.type.loader
                     .loadHud(resourceManager, it.themeRoot.append("/${it.type.hudFileSuffix}"))
                     .setup(emptyMap())
                 true

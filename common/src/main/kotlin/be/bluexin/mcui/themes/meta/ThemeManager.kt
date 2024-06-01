@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Arnaud 'Bluexin' Solé
+ * Copyright (C) 2016-2024 Arnaud 'Bluexin' Solé
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
 package be.bluexin.mcui.themes.meta
 
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.api.scripting.RegisterScreen
 import be.bluexin.mcui.commands.GeneralCommands
 import be.bluexin.mcui.commands.McuiCommand
 import be.bluexin.mcui.config.ConfigHandler
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
+import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
 import be.bluexin.mcui.util.Client
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.ClickEvent
@@ -32,13 +32,12 @@ import net.minecraft.network.chat.HoverEvent
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
+import org.koin.core.annotation.Single
 
-/**
- * Part of saoui by Bluexin.
- *
- * @author Bluexin
- */
-object ThemeManager {
+@Single
+class ThemeManager(
+    private val themeDetector: ThemeDetector
+) {
 
     // TODO: tests
     // TODO: theme versions
@@ -63,7 +62,7 @@ object ThemeManager {
 
         ConfigHandler.currentTheme = currentTheme.id
 
-        currentTheme.type.loader().load(resourceManager, currentTheme)
+        currentTheme.type.loader.load(resourceManager, currentTheme) { HUD = it }
         reportLoading()
 
 //        if (!isReloading) GLCore.setFont(Client.mc, OptionCore.CUSTOM_FONT.isEnabled)
@@ -78,7 +77,7 @@ object ThemeManager {
     }
 
     fun loadData(resourceManager: ResourceManager): Map<ResourceLocation, ThemeMetadata> =
-        ThemeDetector.listThemes(resourceManager)
+        themeDetector.listThemes(resourceManager)
 
     private fun reportLoading() {
         Client.mc.chatListener.let {

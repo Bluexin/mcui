@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Arnaud 'Bluexin' Solé
+ * Copyright (C) 2016-2024 Arnaud 'Bluexin' Solé
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,11 @@
 
 package be.bluexin.mcui
 
-import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.ColorUtil
-import be.bluexin.mcui.util.append
 import be.bluexin.mcui.util.math.Vec2d
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.resources.ResourceLocation
@@ -159,29 +156,6 @@ object GLCore {
         poseStack: PoseStack
     ) {
         glString(string, pos.xi, pos.yi, rgba, shadow, centered, poseStack)
-    }
-
-    fun setFont(mc: Minecraft, custom: Boolean) {
-
-        val fontLocation: ResourceLocation =
-            if (custom) {
-                takeTextureIfExists(
-                    ThemeManager.currentTheme.texturesRoot.append("ascii.png")
-                ) ?: takeTextureIfExists(
-                    ResourceLocation(
-                        ThemeManager.currentTheme.themeRoot.namespace,
-                        "textures/ascii.png"
-                    )
-                ) ?: ResourceLocation(Constants.MOD_ID, "textures/ascii.png")
-            } else {
-                ResourceLocation("textures/font/ascii.png")
-            }
-        /*mc.fontRenderer = FontRenderer(mc.gameSettings, fontLocation, mc.textureManager, false)
-        if (mc.gameSettings.language != null) {
-            mc.fontRenderer.unicodeFlag = mc.isUnicode
-            mc.fontRenderer.bidiFlag = mc.languageManager.isCurrentLanguageBidirectional
-        }
-        (mc.resourceManager as IReloadableResourceManager).registerReloadListener(mc.fontRenderer)*/
     }
 
     @JvmOverloads
