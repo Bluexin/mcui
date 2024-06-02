@@ -30,7 +30,7 @@ luna = "0.4.1"
 luaj = "f062b53a34"
 bcel = { require = "6.7.0" }
 
-luajksp = "local"
+luajksp = "master-SNAPSHOT"
 ksp = "1.9.23-1.0.19"
 
 [libraries]
