@@ -25,6 +25,7 @@ import be.bluexin.mcui.platform.Services
 import be.bluexin.mcui.themes.elements.access.ElementGroupAccess
 import be.bluexin.mcui.themes.miniscript.profile
 import be.bluexin.mcui.util.Client
+import be.bluexin.mcui.util.debug
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -130,7 +131,7 @@ sealed class ElementGroupParent : Element(), ElementParent {
         this.rl = this.texture?.let(::ResourceLocation)
         var anonymous = 0
         this.children.forEach { if (it.name == DEFAULT_NAME) ++anonymous; it.setup(this, fragments) }
-        if (anonymous > 0) Constants.LOG.info("Set up $anonymous anonymous elements in $name.")
+        if (anonymous > 0) Constants.LOG.debug { "Set up $anonymous anonymous elements in $name." }
         return res
     }
 

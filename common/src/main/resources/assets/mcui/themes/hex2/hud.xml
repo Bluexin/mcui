@@ -63,6 +63,7 @@
             <value name="vanilla horse jump bar">
                 <x cache="SIZE_CHANGE">scaledwidth / 2 - 91</x>
                 <y cache="SIZE_CHANGE">scaledheight - 29</y>
+                <enabled>hasMount</enabled>
                 <children>
                     <fragmentReference id="mcui.hex2:jump_bar"/>
                 </children>

@@ -234,6 +234,7 @@
                 <x cache="SIZE_CHANGE">scaledwidth / 2 - 91</x>
                 <y cache="SIZE_CHANGE">scaledheight - 29</y>
                 <texture>saoui:textures/ggo/horse.png</texture>
+                <enabled>hasMount</enabled>
                 <children>
                     <glRectangle name="fill">
                         <enabled>horsejump > 0</enabled>

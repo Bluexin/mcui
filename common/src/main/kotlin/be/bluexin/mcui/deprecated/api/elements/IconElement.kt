@@ -415,7 +415,7 @@ open class IconElement(
 
     override fun show() {
         visible = true
-//        Constants.LOG.info("Showing $this")
+//        Constants.LOG.debug { "Showing $this" }
     }
 
     override fun toString(): String {

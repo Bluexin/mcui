@@ -23,6 +23,7 @@ import be.bluexin.mcui.Constants
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.miniscript.CBoolean
 import be.bluexin.mcui.themes.miniscript.CDouble
+import be.bluexin.mcui.util.debug
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -130,7 +131,7 @@ sealed class Element : LKExposed {
     open fun setup(parent: ElementParent, fragments: Map<ResourceLocation, () -> Fragment>): Boolean {
         this.parent = WeakReference(parent)
         return if (name != DEFAULT_NAME) {
-            Constants.LOG.debug("Set up {} in {}", this, parent.name)
+            Constants.LOG.debug { "Set up $this in ${parent.name}" }
             false
         } else true
     }

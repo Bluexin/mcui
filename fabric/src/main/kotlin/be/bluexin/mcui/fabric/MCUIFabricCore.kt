@@ -6,6 +6,7 @@ import be.bluexin.mcui.commands.McuiCommand
 import be.bluexin.mcui.screens.McuiGui
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.meta.ThemeMetadata
+import be.bluexin.mcui.util.debug
 import fuzs.forgeconfigapiport.api.config.v2.ModConfigEvents
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
@@ -30,10 +31,10 @@ object MCUIFabricCore : ClientModInitializer, KoinComponent {
         MCUICore.init()
 
         ModConfigEvents.loading(Constants.MOD_ID).register {
-            Constants.LOG.info("Loading config ${it.fullPath}")
+            Constants.LOG.debug { "Loading config ${it.fullPath}" }
         }
         ModConfigEvents.reloading(Constants.MOD_ID).register {
-            Constants.LOG.info("Reloading config ${it.fullPath}")
+            Constants.LOG.debug { "Reloading config ${it.fullPath}" }
         }
 
         CommandRegistrationCallback.EVENT.register { commandDispatcher, _, _ ->

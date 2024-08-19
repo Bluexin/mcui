@@ -8,6 +8,8 @@ import be.bluexin.mcui.themes.miniscript.LibHelper
 import be.bluexin.mcui.themes.miniscript.Variables
 import be.bluexin.mcui.themes.scripting.serialization.AbstractLuaDecoder
 import be.bluexin.mcui.themes.scripting.serialization.AbstractLuaEncoder
+import be.bluexin.mcui.util.debug
+import be.bluexin.mcui.util.trace
 import kotlinx.serialization.ExperimentalSerializationApi
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
@@ -182,7 +184,7 @@ object LoadWidget : LuaFunction(), KoinComponent {
                     variables.variable.forEach { (key, expressionIntermediate) ->
                         if (expressionIntermediate.expression.isNotEmpty()) {
                             val value = expressionIntermediate.type.expressionAdapter.compile(expressionIntermediate)
-                            Constants.LOG.info("Deserialized $key -> `${expressionIntermediate.expression}`")
+                            Constants.LOG.trace { "Deserialized $key -> `${expressionIntermediate.expression}`" }
                             widget.setVariable(key, value)
                         }
                     }
@@ -192,7 +194,7 @@ object LoadWidget : LuaFunction(), KoinComponent {
 
             Minecraft.getInstance().tell {
                 target += widget
-                Constants.LOG.info("Adding ${widget.name} to ${(target as? Widget)?.hierarchyName ?: target.name}")
+                Constants.LOG.debug { "Adding ${widget.name} to ${(target as? Widget)?.hierarchyName ?: target.name}" }
             }
 
             return widget.toLua()

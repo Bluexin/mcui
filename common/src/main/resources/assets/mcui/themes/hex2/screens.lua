@@ -273,15 +273,15 @@ theme.registerScreen("mcui:settings", function(root)
     --- @type table<string, table<string, table<string, Setting>>>
     local topCategories = {}
     for i, v in ipairs(settings.listAll()) do
-        print("Found setting " .. v.namespace.string .. " / " .. v.key.string)
+        --print("Found setting " .. v.namespace.string .. " / " .. v.key.string)
 
         local topLevel = getOrCreate(topCategories, v.namespace.string)
         local category = getOrCreate(topLevel, v.namespace.string .. '/' .. v.key.namespace)
         category[v.key.path] = v
     end
 
-    print("Organised settings : ")
-    print(tprint(topCategories))
+    --print("Organised settings : ")
+    --print(tprint(topCategories))
 
     local yPosBase = 'scaledheight / 2 - 10 + '
     local yPos = 20

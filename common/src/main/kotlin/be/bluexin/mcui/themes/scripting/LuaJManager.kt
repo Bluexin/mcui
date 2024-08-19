@@ -5,6 +5,7 @@ import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.LibHelper
 import be.bluexin.mcui.themes.scripting.lib.SettingsLib
 import be.bluexin.mcui.themes.scripting.lib.ThemeLib
+import be.bluexin.mcui.util.debug
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.Resource
@@ -100,7 +101,7 @@ class LuaJManager(
                 }
 
                 // TODO: currently this doesn't throw, but returns a Lua Vararg with (false, <errorMessage>) in case of failure
-                Constants.LOG.info("Read $rl : $result")
+                Constants.LOG.debug { "Read $rl : $result" }
                 result
             }.getOrNull()
     }

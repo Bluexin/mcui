@@ -3,6 +3,7 @@ package be.bluexin.mcui.config
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.logger
 import be.bluexin.mcui.platform.Services
+import be.bluexin.mcui.util.trace
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.onFailure
@@ -97,9 +98,9 @@ object Settings {
      */
     fun initialize() {
         CoroutineScope(Dispatchers.IO).launch {
-            logger.info("[${currentCoroutineContext()}] Starting listener")
+            logger.trace { "[${currentCoroutineContext()}] Starting listener" }
             flow<ResourceLocation> {
-                logger.info("[${currentCoroutineContext()}] Starting updates filter")
+                logger.trace { "[${currentCoroutineContext()}] Starting updates filter" }
                 // emit a value when the new one is different from the previous one or a timeout has been reached
                 var lastValue: ResourceLocation? = null
                 while (true) select {

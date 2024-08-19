@@ -10,10 +10,7 @@ import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.elements.Widget
 import be.bluexin.mcui.themes.meta.ThemeFormat
 import be.bluexin.mcui.themes.meta.ThemeMetadata
-import be.bluexin.mcui.util.Client
-import be.bluexin.mcui.util.ColorUtil
-import be.bluexin.mcui.util.HealthStep
-import be.bluexin.mcui.util.append
+import be.bluexin.mcui.util.*
 import com.helger.commons.io.IHasInputStream
 import com.helger.css.ECSSVersion
 import com.helger.css.decl.CSSStyleRule
@@ -30,6 +27,7 @@ import java.util.*
 
 abstract class AbstractThemeLoader(protected val type: ThemeFormat, protected val settingsLoader: SettingsLoader) {
 
+    // TODO : Koinify
     object Reporter {
         val errors: Deque<String> = LinkedList()
 
@@ -162,13 +160,13 @@ abstract class AbstractThemeLoader(protected val type: ThemeFormat, protected va
                                     .firstOrNull()?.expression?.allSimpleMembers?.firstOrNull()?.value?.substring(1)
                                 if (hfg != null && hfg.length == 6) hfg += "ff"
                                 val fg = hfg?.toLongOrNull(16)?.toInt()
-                                Constants.LOG.info(
+                                Constants.LOG.debug {
                                     "Set ${aStyleRule.allSelectors.joinToString { it.asCSSString }} bg ${
                                         "0x%08X".format(
                                             bg
                                         )
                                     } ($hbg) fg ${"0x%08X".format(fg)} ($hfg)"
-                                )
+                                }
 
                                 when (aStyleRule.allSelectors.joinToString { it.asCSSString }) {
                                     "*" -> {

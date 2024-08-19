@@ -23,12 +23,12 @@ import be.bluexin.mcui.config.Settings
 import be.bluexin.mcui.deprecated.api.info.IOption
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.effects.StatusEffects
-import be.bluexin.mcui.platform.Services
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
 import be.bluexin.mcui.util.ColorUtil
 import be.bluexin.mcui.util.HealthStep
 import be.bluexin.mcui.util.math.ceilInt
 import be.bluexin.mcui.util.math.floorInt
+import be.bluexin.mcui.util.trace
 import gnu.jel.CompilationException
 import gnu.jel.DVMap
 import gnu.jel.Library
@@ -79,21 +79,15 @@ class LibHelper {
         }
     }
 
-    val obfuscated: Boolean by lazy {
-        val obf = !Services.PLATFORM.isDevelopmentEnvironment
-        Constants.LOG.debug("Obfuscated: $obf")
-        obf
-    }
-
     // TODO : would be nice to have a cleaner way to do this with less side effects in init {}, maybe move compiling to setup ?
     fun pushContext(context: Map<String, JelType>) {
-        Constants.LOG.info("Context pushed $context from $stack")
+        Constants.LOG.trace { "Context pushed $context from $stack" }
         check(emptyContext === contextResolver.context) { "Context already pushed !" }
         contextResolver.context = context
     }
 
     fun popContext() {
-        Constants.LOG.info("Context popped from $stack")
+        Constants.LOG.trace { "Context popped from $stack" }
         check(emptyContext !== contextResolver.context) { "Context not pushed !" }
         contextResolver.context = emptyContext
     }
@@ -109,7 +103,7 @@ class LibHelper {
 }
 
 @Suppress("unused") // exposed via JEL
-private object McuiStaticLib {
+object McuiStaticLib {
     @JvmStatic
     fun iceil(n: Double) = ceilInt(n)
 

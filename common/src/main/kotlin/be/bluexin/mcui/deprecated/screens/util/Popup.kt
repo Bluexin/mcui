@@ -140,8 +140,7 @@ open class Popup<T : Any>(
         val step3 = max(h * 0.125 - h * 0.375 * (1 - expansion), 0.0) * text.size / 2f // TODO: handle multiline text
         val step5 = h * 0.375
 
-//        if (shadows < 20.0) Constants.LOG.info("h=$h; shadows=$shadows; step3=$step3; expansion=$expansion")
-
+//        if (shadows < 20.0) Constants.LOG.debug { "h=$h; shadows=$shadows; step3=$step3; expansion=$expansion" }
         val h = h - h * 0.250 * (1 - expansion) + h * 0.0625 * (text.size + 2)
 
         val alpha = if (expansion < 1f) expansion else eol

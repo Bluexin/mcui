@@ -46,6 +46,10 @@ sealed class Setting<T : Any>(
     abstract fun read(serialized: String): T?
     abstract fun write(value: T): String
     abstract fun validate(value: T): Boolean
+
+    override fun toString(): String {
+        return "${this::class.simpleName}(type=$type, comment=$comment, defaultValue=$defaultValue, key=$key, namespace=$namespace)"
+    }
 }
 
 @LuajExpose(LuajExpose.IncludeType.OPT_IN)
@@ -105,6 +109,10 @@ class IntSetting(
     override fun validate(value: Int): Boolean = validate?.invoke(value) ?: defaultValidate(this, value)
     override fun toLua(): LuaValue = IntSettingAccess(this)
 
+    override fun toString(): String {
+        return "IntSetting(min=$min, max=$max) ${super.toString()}"
+    }
+
     private companion object {
         fun defaultValidate(setting: IntSetting, newValue: Int) =
             (setting.min == null || newValue >= setting.min) &&
@@ -134,6 +142,10 @@ class DoubleSetting(
     override fun validate(value: Double): Boolean = validate?.invoke(value) ?: defaultValidate(this, value)
     override fun toLua(): LuaValue = DoubleSettingAccess(this)
 
+    override fun toString(): String {
+        return "DoubleSetting(min=$min, max=$max) ${super.toString()}"
+    }
+
     private companion object {
         fun defaultValidate(setting: DoubleSetting, newValue: Double) =
             (setting.min == null || newValue >= setting.min) &&
@@ -155,6 +167,10 @@ class ChoiceSetting(
     values::contains
 ) {
     override fun toLua(): LuaValue = ChoiceSettingAccess(this)
+
+    override fun toString(): String {
+        return "ChoiceSetting(values=$values) ${super.toString()}"
+    }
 }
 
 @LuajExpose(LuajExpose.IncludeType.OPT_IN)
