@@ -5,77 +5,85 @@ import be.bluexin.mcui.screens.LuaScriptedScreen
 import be.bluexin.mcui.screens.LuaTestScreen
 import be.bluexin.mcui.themes.scripting.LuaJManager
 import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
-import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 import net.minecraft.client.Minecraft
 import net.minecraft.commands.CommandSourceStack
-import net.minecraft.commands.Commands
+import net.minecraft.commands.Commands.argument
+import net.minecraft.commands.Commands.literal
+import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.commands.arguments.ResourceLocationArgument
+import net.minecraft.commands.arguments.ResourceLocationArgument.id
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-@Suppress("unused") // automatic
-enum class DebugCommands(
-    override vararg val arguments: ArgumentBuilder<CommandSourceStack, *>
-) : Command, KoinComponent {
-    OPEN_TEST_GUI {
-        override fun execute(c: CommandContext<CommandSourceStack>): Int {
-            Minecraft.getInstance().tell {
-                Minecraft.getInstance().setScreen(LuaTestScreen())
-            }
-            return 1
-        }
-    },
-    RELOAD_SCRIPTS {
+sealed class DebugCommands(usage: String) : McuiCommand(usage) {
+    data object Reload : DebugCommands("reload"), KoinComponent {
         private val luaJManager: LuaJManager by inject()
 
-        override fun execute(c: CommandContext<CommandSourceStack>): Int {
-            try {
-                luaJManager.runScript(ResourceLocation("mcui", "themes/hex2/screens.lua"))
-                return 1
-            } catch (e: Throwable) {
-                Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Something went wrong : ${e.message}. See console for more info."))
-                Constants.LOG.error("Couldn't evaluate screens.lua", e)
-                return 0
-            }
-        }
-    },
-    OPEN_SCRIPT_GUI(
-        // FIXME : this doesn't work (:
-        Commands.argument("screen", ResourceLocationArgument.id())
-            .suggests { _, builder ->
-                RegisterScreen.allIds().forEach {
-                    if (it.toString().startsWith(builder.remaining)) builder.suggest(it.toString())
-                }
+        private fun reloadAll(commandContext: CommandContext<CommandSourceStack>): Int =
+            reloadScripts(commandContext)
 
-                builder.buildFuture()
-            }
-    ) {
+        private fun reloadScripts(commandContext: CommandContext<CommandSourceStack>): Int = try {
+            luaJManager.runScript(ResourceLocation("mcui", "themes/hex2/screens.lua"))
+            commandContext.source.sendSuccess(Component.literal("Reloaded scripts"), false)
+
+            1
+        } catch (e: Throwable) {
+            commandContext.source.sendFailure(Component.literal("Something went wrong : ${e.message}. See console for more info."))
+            Constants.LOG.error("Couldn't evaluate screens.lua", e)
+
+            0
+        }
+
+        override fun register(): CommandRegistrar = literal(literal)
+            .executes(::reloadAll)
+            .then(literal("all").executes(::reloadAll))
+            .then(literal("scripts").executes(::reloadScripts))
+    }
+
+    data object Open : DebugCommands("open") {
         private val missingScreenError =
             SimpleCommandExceptionType(Component.translatable("mcui.commands.open.missingscreen"))
 
-        override fun execute(c: CommandContext<CommandSourceStack>): Int {
-            val screenId = ResourceLocationArgument.getId(c, "screen")
-            if (RegisterScreen[screenId] == null) throw missingScreenError.create()
+        override fun register(): CommandRegistrar = literal(literal).then(
+            argument("screen", id())
+                .suggests { _, builder ->
+                    SharedSuggestionProvider.suggestResource(RegisterScreen.allIds(), builder)
+                }
+                .executes { context: CommandContext<CommandSourceStack> ->
+                    val screenId = ResourceLocationArgument.getId(context, "screen")
+                    if (RegisterScreen[screenId] == null) throw missingScreenError.create()
+                    Minecraft.getInstance().tell {
+                        Minecraft.getInstance().setScreen(LuaScriptedScreen(screenId))
+                    }
+
+                    1
+                }
+        )
+    }
+
+    data object TestGui : DebugCommands("testgui") {
+        override fun register(): CommandRegistrar = literal(literal).executes {
             Minecraft.getInstance().tell {
-                Minecraft.getInstance().setScreen(LuaScriptedScreen(screenId))
+                Minecraft.getInstance().setScreen(LuaTestScreen())
             }
-
-            return 1
+            1
         }
-    };
+    }
 
-    override val id = "debug.${name.lowercase()}"
+    override val defaultUseCommand = "$DEBUG_LITERAL $literal"
 
-    /*fun getUsage(sender: ICommandSender): String {
-        return "commands.general.${name.lowercase()}.usage"
-    }*/
+    companion object {
+        private const val DEBUG_LITERAL = "debug"
 
-    companion object : Command.Commands {
-        override val values = entries.asIterable()
-        val indexedValues = values.associateBy(DebugCommands::id)
+        fun register(builder: CommandRegistrar): CommandRegistrar = builder.then(
+            literal(DEBUG_LITERAL)
+                .then(Reload.register())
+                .then(Open.register())
+                .then(TestGui.register())
+        )
     }
 }

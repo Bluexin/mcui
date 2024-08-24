@@ -3,32 +3,37 @@ package be.bluexin.mcui.commands
 import be.bluexin.mcui.screens.LuaScriptedScreen
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
-import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
 import net.minecraft.client.Minecraft
 import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands.literal
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-@Suppress("unused") // automatic
-enum class GeneralCommands(
-    override vararg val arguments: ArgumentBuilder<CommandSourceStack, *>
-) : Command {
-    PRINT_ERRORS {
-        override fun execute(c: CommandContext<CommandSourceStack>): Int {
-            AbstractThemeLoader.Reporter.errors.forEach {
-                c.source.sendSystemMessage(Component.literal(it))
-            }
-            return AbstractThemeLoader.Reporter.errors.size
-        }
-    },
-    SETTINGS {
+sealed class GeneralCommands(literal: String) : McuiCommand(literal) {
+    data object PrintErrors : GeneralCommands("print_errors") {
+        override fun register(): CommandRegistrar =
+            literal(literal)
+                .executes { context ->
+                    AbstractThemeLoader.Reporter.errors.forEach {
+                        context.source.sendSystemMessage(Component.literal(it))
+                    }
+                    AbstractThemeLoader.Reporter.errors.size
+                }
+    }
+
+    data object Settings : GeneralCommands("settings") {
+
         private val screenId = ResourceLocation("mcui", "settings")
         private val missingScreenError =
             DynamicCommandExceptionType { Component.translatable("mcui.commands.missingscreen", it) }
 
-        override fun execute(c: CommandContext<CommandSourceStack>): Int {
+        private fun openSettings(
+            // For reference syntax
+            @Suppress("UNUSED_PARAMETER")
+            context: CommandContext<CommandSourceStack>
+        ): Int {
             if (RegisterScreen[screenId] == null) throw missingScreenError.create(screenId.toString())
             Minecraft.getInstance().tell {
                 Minecraft.getInstance().setScreen(LuaScriptedScreen(screenId))
@@ -36,16 +41,23 @@ enum class GeneralCommands(
 
             return 1
         }
-    };
 
-    override val id = "general.${name.lowercase()}"
+        override fun register(): CommandRegistrar = literal(literal)
+            .executes(::openSettings)
+            .then(literal("open").executes(::openSettings))
+            .then(literal("get").executes {
+                it.source.sendFailure(Component.literal("\"get\" not yet implemented"))
+                0
+            })
+            .then(literal("set").executes {
+                it.source.sendFailure(Component.literal("\"set\" not yet implemented"))
+                0
+            })
+    }
 
-    /*fun getUsage(sender: ICommandSender): String {
-        return "commands.general.${name.lowercase()}.usage"
-    }*/
-
-    companion object : Command.Commands {
-        override val values = entries.asIterable()
-        val indexedValues = values.associateBy(GeneralCommands::id)
+    companion object {
+        fun register(builder: CommandRegistrar): CommandRegistrar = builder
+            .then(PrintErrors.register())
+            .then(Settings.register())
     }
 }

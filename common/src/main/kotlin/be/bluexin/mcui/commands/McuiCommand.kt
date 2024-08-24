@@ -2,30 +2,29 @@ package be.bluexin.mcui.commands
 
 import be.bluexin.mcui.Constants
 import com.mojang.brigadier.CommandDispatcher
-import com.mojang.brigadier.builder.LiteralArgumentBuilder.literal
+import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands.literal
 
-object McuiCommand {
+typealias CommandRegistrar = LiteralArgumentBuilder<CommandSourceStack>
 
-    private const val ROOT = Constants.MOD_ID
+abstract class McuiCommand(
+    val literal: String
+) {
+    abstract fun register(): CommandRegistrar
+    open val defaultUseCommand: String get() = literal
 
-    private fun CommandDispatcher<CommandSourceStack>.register(
-        vararg commands: Command.Commands
-    ) {
-        register(
-            commands.asSequence()
-                .flatMap(Command.Commands::values)
-                .fold(literal(ROOT)) { builder, command ->
-                    builder.then(command.register())
-                }
-        )
+    companion object {
+        private const val ROOT = Constants.MOD_ID
+
+        fun setup(dispatcher: CommandDispatcher<CommandSourceStack>) {
+            dispatcher.register(
+                literal(ROOT)
+                    .apply(DebugCommands::register)
+                    .apply(GeneralCommands::register)
+            )
+        }
+
+        fun useCommand(command: McuiCommand) = "/$ROOT ${command.defaultUseCommand}"
     }
-
-    fun setup(dispatcher: CommandDispatcher<CommandSourceStack>) {
-        dispatcher.register(GeneralCommands, DebugCommands)
-    }
-
-    fun useCommand(command: GeneralCommands) = "/$ROOT ${command.id}"
-
-//    override fun getUsage(sender: ICommandSender) = "commands.saoui.usage"
 }

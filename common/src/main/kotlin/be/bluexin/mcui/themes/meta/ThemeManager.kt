@@ -85,7 +85,7 @@ class ThemeManager(
                 .withClickEvent(
                     ClickEvent(
                         ClickEvent.Action.RUN_COMMAND,
-                        McuiCommand.useCommand(GeneralCommands.PRINT_ERRORS)
+                        McuiCommand.useCommand(GeneralCommands.PrintErrors)
                     )
                 )
 
