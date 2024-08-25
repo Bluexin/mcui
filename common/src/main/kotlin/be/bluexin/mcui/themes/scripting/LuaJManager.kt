@@ -19,6 +19,9 @@ import org.luaj.vm2.lib.jse.JseStringLib
 import kotlin.jvm.optionals.getOrNull
 
 // TODO : check BCEL for lua-to-(jvm bytecode) compilation -- see LuaJC::install
+// State of LuaJC :
+// - UpValue in nested prototype does not get properly captured (see themeId in addThemeSettings onClick)
+// - JavaLoader needs to use the current class loader as parent to load closures in modded context
 @Single // TODO : scoped ? Or it injects the theme's globals into the scope ?
 class LuaJManager(
     private val themeManager: ThemeManager,
@@ -52,7 +55,9 @@ class LuaJManager(
 
     private fun getEnvFor(theme: ResourceLocation) = scriptGlobals.getOrPut(theme) {
         val globals = Globals().apply {
+            // TODO : verify & lock down file access
             load(JseBaseLib())
+            // TODO : verify this can't be used to access bad files
             load(PackageLib())
             load(Bit32Lib())
             load(TableLib())

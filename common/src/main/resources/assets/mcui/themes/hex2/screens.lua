@@ -232,6 +232,8 @@ local function addThemeSettings(parent)
             xPos = tstatic(0),
             yPos = tframe((index - 1) * 20, 'DOUBLE'),
             initialWidth = tstatic(80, 'INT'),
+            -- for LuaJC
+            --themeId = tstatic(themeId.string)
         })
         if r then
             themeCount = themeCount + 1
@@ -250,6 +252,8 @@ local function addThemeSettings(parent)
                             (--[[---@type Widget]] v).setVariable('isCurrentTheme', tstatic(false))
                         end
                     end
+                    -- for LuaJC
+                    --settings.setTheme(--[[---@type string]] receiver.getVariable('themeId').expression)
                     settings.setTheme(themeId)
                     return true
                 else
