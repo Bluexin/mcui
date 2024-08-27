@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<bl:hud xmlns:bl="http://www.bluexin.be/com/saomc/saoui/hud-schema">
+<bl:hud xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/hud-schema-alpha">
     <version>0.1</version>
     <parts>
         <entry>

@@ -1,5 +1,4 @@
-<bl:fragment xmlns:bl="http://www.bluexin.be/com/saomc/saoui/fragment-schema"
-             name="label fragment">
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="label fragment">
     <expect>
         <variable key="text" type="STRING"/>
         <variable key="centered" type="BOOLEAN" cache="STATIC">false</variable>

@@ -276,7 +276,7 @@ theme.registerScreen("mcui:settings", function(root)
 
     --- @type table<string, table<string, table<string, Setting>>>
     local topCategories = {}
-    for i, v in ipairs(settings.listAll()) do
+    for _, v in ipairs(settings.listAll()) do
         --print("Found setting " .. v.namespace.string .. " / " .. v.key.string)
 
         local topLevel = getOrCreate(topCategories, v.namespace.string)

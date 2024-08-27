@@ -1,4 +1,4 @@
-<widget name="icon_button_expanding_label">
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="icon_button_expanding_label">
     <expect>
         <variable key="text" type="STRING"/>
         <variable key="initialWidth" type="INT" cache="STATIC">21</variable>
@@ -67,4 +67,4 @@
         local button, _, _, entered = ...
         button.setVariable('isHovered', {type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC'})
     </onMouseOverEvent>
-</widget>
+</bl:widget>

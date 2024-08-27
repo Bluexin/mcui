@@ -1,4 +1,4 @@
-<widget name="label_button">
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="label_button">
     <expect>
         <variable key="text" type="STRING"/>
         <variable key="initialWidth" type="INT" cache="STATIC">80</variable>
@@ -72,4 +72,4 @@
         local button, _, _, entered = ...
         button.setVariable('isHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
     </onMouseOverEvent>
-</widget>
+</bl:widget>

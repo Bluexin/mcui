@@ -4,7 +4,7 @@ import be.bluexin.mcui.themes.elements.Fragment
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.elements.Widget
 import be.bluexin.mcui.themes.meta.ThemeFormat
-import nl.adaptivity.xmlutil.StAXReader
+import nl.adaptivity.xmlutil.XmlStreaming
 import nl.adaptivity.xmlutil.serialization.XML
 import nl.adaptivity.xmlutil.serialization.XmlSerializationPolicy
 import org.koin.core.annotation.Single
@@ -18,20 +18,16 @@ class XmlThemeLoader(settingsLoader: SettingsLoader) : AbstractThemeLoader(Theme
             defaultPolicy {
                 encodeDefault = XmlSerializationPolicy.XmlEncodeDefault.NEVER
             }
-            indentString = "    "
+            indent = 4
             autoPolymorphic = true
         }
     }
 
-    override fun InputStream.loadHud(): Hud = use {
-        xml.decodeFromReader(StAXReader(it, "UTF-8"))
+    private inline fun <reified T> InputStream.load(): T = use {
+        xml.decodeFromReader(XmlStreaming.newReader(it, Charsets.UTF_8.name()))
     }
 
-    override fun InputStream.loadFragment(): Fragment = use {
-        xml.decodeFromReader(StAXReader(it, "UTF-8"))
-    }
-
-    override fun InputStream.loadWidget(): Widget = use {
-        xml.decodeFromReader(StAXReader(it, "UTF-8"))
-    }
+    override fun InputStream.loadHud(): Hud = load()
+    override fun InputStream.loadFragment(): Fragment = load()
+    override fun InputStream.loadWidget(): Widget = load()
 }

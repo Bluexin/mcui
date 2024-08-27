@@ -18,33 +18,64 @@
 package be.bluexin.mcui.themes.elements
 
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
+import be.bluexin.mcui.themes.loader.ThemeLoaderModule
+import be.bluexin.mcui.themes.loader.XmlThemeLoader
+import be.bluexin.mcui.themes.meta.ThemeMetaModule
+import be.bluexin.mcui.themes.miniscript.MiniscriptModule
 import be.bluexin.mcui.themes.miniscript.profile
+import be.bluexin.mcui.themes.scripting.ScriptingModule
 import com.mojang.blaze3d.vertex.PoseStack
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlinx.serialization.encodeToString
 import net.minecraft.resources.ResourceLocation
 import nl.adaptivity.xmlutil.ExperimentalXmlUtilApi
+import nl.adaptivity.xmlutil.XmlStreaming
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlNamespaceDeclSpec
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
+import org.koin.core.context.startKoin
+import org.koin.ksp.generated.module
+import org.koin.logger.slf4jLogger
+import java.io.FileReader
+
+fun main() {
+    val ka = startKoin {
+        slf4jLogger()
+        modules(
+            ThemeMetaModule().module,
+            ScriptingModule().module,
+            ThemeLoaderModule().module,
+            MiniscriptModule().module,
+        )
+    }
+
+    val xml = ka.koin.get<XmlThemeLoader>().xml
+
+    val hud =
+        xml.decodeFromReader<Hud>(XmlStreaming.newReader(FileReader("common/src/main/resources/assets/mcui/themes/hex2/hud.xml")))
+
+    println(xml.encodeToString(hud))
+
+    ka.close()
+}
 
 /**
  * Part of saoui by Bluexin.
-
+ *
  * @author Bluexin
  */
 @OptIn(ExperimentalXmlUtilApi::class)
 @Serializable
-@XmlSerialName(
-    value = "bl:hud"
-)
-@XmlNamespaceDeclSpec("bl=https://www.bluexin.be/com/saomc/saoui/hud-schema")
+@SerialName("bl:hud")
+@XmlNamespaceDeclSpec("bl=https://www.bluexin.be/be/bluexin/mcui/hud-schema")
 class Hud(
+    override val name: String = "HUD",
+    @XmlElement
+    val version: String = "1.0",
     @XmlSerialName("parts")
     private val parts: Parts,
-    override val name: String = "MenuDefs",
-    @XmlElement
-    val version: String = "1.0"
 ) : ElementParent {
 
     @Transient

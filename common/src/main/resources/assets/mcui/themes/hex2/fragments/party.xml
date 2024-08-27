@@ -1,5 +1,4 @@
-<bl:fragment xmlns:bl="http://www.bluexin.be/com/saomc/saoui/fragment-schema"
-             name="experience fragment">
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="experience fragment">
     <children>
         <repetitionGroup name="member">
             <x cache="STATIC">2</x>

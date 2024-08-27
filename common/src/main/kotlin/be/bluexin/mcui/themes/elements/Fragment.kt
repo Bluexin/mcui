@@ -7,8 +7,8 @@ import be.bluexin.mcui.themes.miniscript.NamedExpressionIntermediate
 import be.bluexin.mcui.themes.miniscript.serialization.json.ExpectJsonAdapter
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
 import com.google.gson.annotations.JsonAdapter
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import nl.adaptivity.xmlutil.ExperimentalXmlUtilApi
 import nl.adaptivity.xmlutil.serialization.XmlBefore
 import nl.adaptivity.xmlutil.serialization.XmlNamespaceDeclSpec
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
@@ -16,11 +16,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.luaj.vm2.LuaValue
 
-@OptIn(ExperimentalXmlUtilApi::class)
 @Serializable
-@XmlSerialName(
-    value = "bl:fragment"
-)
+@SerialName("bl:fragment")
 @XmlNamespaceDeclSpec("bl=https://www.bluexin.be/com/saomc/saoui/fragment-schema")
 @LuajExpose(LuajExpose.IncludeType.OPT_IN)
 class Fragment(

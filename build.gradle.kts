@@ -60,11 +60,12 @@ subprojects {
         val libs = rootProject.libs
         implementation(libs.kotlin.reflect)
         implementation(libs.bundles.coroutines) {
-            exclude("org.jetbrains.kotlin")
+            exclude(group = "org.jetbrains.kotlin")
         }
         implementation(libs.bundles.serialization)
         implementation(libs.bundles.serialization.xml) {
-            isTransitive = false
+            exclude(group = "org.jetbrains.kotlin")
+            exclude(group = "org.jetbrains.kotlinx")
         }
 
         implementation(libs.jel)

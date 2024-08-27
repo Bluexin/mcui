@@ -1,5 +1,4 @@
-<bl:fragment xmlns:bl="http://www.bluexin.be/com/saomc/saoui/fragment-schema"
-             name="crosshair fragment">
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="crosshair fragment">
     <texture>saoui:textures/hex2/gui_hex.png</texture>
     <children>
         <glRectangle name="hex">

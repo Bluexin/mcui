@@ -1,16 +1,17 @@
 [versions]
-kotlin = { require = "1.9.23" }
-coroutines = "1.7.3"
-serialization = "1.6.1"
+kotlin = { require = "2.0.20" }
+coroutines = "1.8.1"
+serialization = "1.7.1"
+# Stuck on this version for now : https://github.com/pdvrieze/xmlutil/issues/236
 serialization_xml = "0.86.2"
 minecraft = "1.19.4"
 parchment = "2023.06.26"
 architectury = "8.2.89"
 forge = "1.19.4-45.2.6"
-kotlinforforge = "4.6.1"
+kotlinforforge = "4.11.0"
 fabric_loader = "0.14.24"
 fabric_api = "0.78.0+1.19.4"
-fabric_language_kotlin = "1.10.14+kotlin.1.9.20"
+fabric_language_kotlin = "1.12.1+kotlin.2.0.20"
 ftb_lib = "1902.4.1-build.236"
 ftb_teams = "1902.2.14-build.123"
 architectury_plugin = "3.4-SNAPSHOT"
@@ -31,7 +32,7 @@ luaj = "f062b53a34"
 bcel = { require = "6.7.0" }
 
 luajksp = "master-SNAPSHOT"
-ksp = "1.9.23-1.0.19"
+ksp = "2.0.20-1.0.24"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -58,7 +59,6 @@ coroutines_jdk8 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8", ve
 
 serialization_core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm", version.ref = "serialization" }
 serialization_json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm", version.ref = "serialization" }
-serialization_xml_core = { module = "io.github.pdvrieze.xmlutil:core-jvm", version.ref = "serialization_xml" }
 serialization_xml_ser = { module = "io.github.pdvrieze.xmlutil:serialization-jvm", version.ref = "serialization_xml" }
 
 jel = { module = "be.bluexin.gnu.jel:gnu-jel", version.ref = "jel" }
@@ -98,7 +98,6 @@ serialization = [
     "serialization_json",
 ]
 serialization_xml = [
-    "serialization_xml_core",
     "serialization_xml_ser",
 ]
 phcss = [

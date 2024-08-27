@@ -1,5 +1,4 @@
-<bl:fragment xmlns:bl="http://www.bluexin.be/com/saomc/saoui/fragment-schema"
-             name="health box fragment">
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="health box fragment">
     <children>
         <elementGroup name="background">
             <children>

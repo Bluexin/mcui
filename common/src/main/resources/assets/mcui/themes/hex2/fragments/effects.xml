@@ -1,5 +1,4 @@
-<bl:fragment xmlns:bl="http://www.bluexin.be/com/saomc/saoui/fragment-schema"
-             name="effects fragment">
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="effects fragment">
     <children>
         <repetitionGroup name="effectGroup">
             <x>usernamewidth + 179</x>

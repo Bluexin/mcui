@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:bl="http://www.bluexin.be/com/saomc/saoui/hud-schema"
-           targetNamespace="https://www.bluexin.be/com/saomc/saoui/fragment-schema">
+           xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/hud-schema-alpha"
+           targetNamespace="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha">
 
     <xs:element name="fragment" type="Fragment">
         <xs:annotation>

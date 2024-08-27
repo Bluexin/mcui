@@ -1,5 +1,4 @@
-<bl:fragment xmlns:bl="http://www.bluexin.be/com/saomc/saoui/fragment-schema"
-             name="jump bar fragment">
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="jump bar fragment">
     <texture>minecraft:textures/gui/icons.png</texture>
     <children>
         <glRectangle name="bg">
