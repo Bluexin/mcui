@@ -4,8 +4,8 @@ import be.bluexin.mcui.Constants
 import be.bluexin.mcui.MCUICore
 import be.bluexin.mcui.commands.McuiCommand
 import be.bluexin.mcui.screens.McuiGui
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.meta.ThemeManager
-import be.bluexin.mcui.themes.meta.ThemeMetadata
 import be.bluexin.mcui.util.debug
 import fuzs.forgeconfigapiport.api.config.v2.ModConfigEvents
 import net.fabricmc.api.ClientModInitializer
@@ -47,7 +47,7 @@ object MCUIFabricCore : ClientModInitializer, KoinComponent {
         }
 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES)
-            .registerReloadListener(object : SimpleResourceReloadListener<Map<ResourceLocation, ThemeMetadata>> {
+            .registerReloadListener(object : SimpleResourceReloadListener<Map<ResourceLocation, ThemeDefinition>> {
                 private val id = ResourceLocation(Constants.MOD_ID, "theme_reload_listener")
 
                 override fun getFabricId() = id
@@ -61,7 +61,7 @@ object MCUIFabricCore : ClientModInitializer, KoinComponent {
                 }, executor)
 
                 override fun apply(
-                    data: Map<ResourceLocation, ThemeMetadata>,
+                    data: Map<ResourceLocation, ThemeDefinition>,
                     manager: ResourceManager,
                     profiler: ProfilerFiller,
                     executor: Executor

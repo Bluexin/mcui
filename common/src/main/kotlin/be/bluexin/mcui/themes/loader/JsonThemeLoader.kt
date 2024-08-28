@@ -21,7 +21,7 @@ import be.bluexin.mcui.themes.elements.ElementParent
 import be.bluexin.mcui.themes.elements.Fragment
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.elements.Widget
-import be.bluexin.mcui.themes.meta.ThemeFormat
+import be.bluexin.mcui.themes.meta.HudFormat
 import be.bluexin.mcui.themes.miniscript.CInt
 import be.bluexin.mcui.themes.miniscript.serialization.json.AfterUnmarshalAdapterFactory
 import com.google.gson.GsonBuilder
@@ -37,7 +37,7 @@ import java.io.InputStream
  */
 // TODO : convert to kotlinx.serialization
 @Single
-class JsonThemeLoader(settingsLoader: SettingsLoader) : AbstractThemeLoader(ThemeFormat.JSON, settingsLoader) {
+class JsonThemeLoader(settingsLoader: SettingsLoader) : AbstractThemeLoader(HudFormat.JSON, settingsLoader) {
 
     private val gson = GsonBuilder()
         .registerTypeAdapterFactory(AfterUnmarshalAdapterFactory())

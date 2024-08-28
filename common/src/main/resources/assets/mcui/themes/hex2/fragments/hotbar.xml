@@ -19,7 +19,7 @@
                             <slot cache="NONE">i</slot>
                             <itemXoffset cache="STATIC">2</itemXoffset>
                             <itemYoffset cache="STATIC">2</itemYoffset>
-                            <texture>saoui:textures/hex2/hexv.png</texture>
+                            <texture>mcui:themes/hex2/textures/hexv.png</texture>
                         </glHotbarItem>
                     </children>
                 </repetitionGroup>
@@ -38,7 +38,7 @@
                             <itemXoffset cache="STATIC">2</itemXoffset>
                             <itemYoffset cache="STATIC">2</itemYoffset>
                             <hand cache="STATIC">RIGHT</hand>
-                            <texture>saoui:textures/hex2/hexh.png</texture>
+                            <texture>mcui:themes/hex2/textures/hexh.png</texture>
                         </glHotbarItem>
                         <glHotbarItem>
                             <rgba cache="STATIC">0xFFBA66FF</rgba>
@@ -52,7 +52,7 @@
                             <itemXoffset cache="STATIC">2</itemXoffset>
                             <itemYoffset cache="STATIC">2</itemYoffset>
                             <hand cache="STATIC">LEFT</hand>
-                            <texture>saoui:textures/hex2/hexh.png</texture>
+                            <texture>mcui:themes/hex2/textures/hexh.png</texture>
                         </glHotbarItem>
                     </children>
                 </elementGroup>
@@ -77,7 +77,7 @@
                             <slot cache="NONE">i</slot>
                             <itemXoffset cache="STATIC">2</itemXoffset>
                             <itemYoffset cache="STATIC">2</itemYoffset>
-                            <texture>saoui:textures/hex2/hexv.png</texture>
+                            <texture>mcui:themes/hex2/textures/hexv.png</texture>
                         </glHotbarItem>
                     </children>
                 </repetitionGroup>
@@ -96,7 +96,7 @@
                             <itemXoffset cache="STATIC">2</itemXoffset>
                             <itemYoffset cache="STATIC">2</itemYoffset>
                             <hand cache="STATIC">RIGHT</hand>
-                            <texture>saoui:textures/hex2/hexh.png</texture>
+                            <texture>mcui:themes/hex2/textures/hexh.png</texture>
                         </glHotbarItem>
                         <glHotbarItem>
                             <rgba cache="STATIC">0xFFBA66FF</rgba>
@@ -110,7 +110,7 @@
                             <itemXoffset cache="STATIC">2</itemXoffset>
                             <itemYoffset cache="STATIC">2</itemYoffset>
                             <hand cache="STATIC">LEFT</hand>
-                            <texture>saoui:textures/hex2/hexh.png</texture>
+                            <texture>mcui:themes/hex2/textures/hexh.png</texture>
                         </glHotbarItem>
                     </children>
                 </elementGroup>

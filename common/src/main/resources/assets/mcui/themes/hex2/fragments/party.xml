@@ -3,7 +3,7 @@
         <repetitionGroup name="member">
             <x cache="STATIC">2</x>
             <y cache="STATIC">35</y>
-            <texture>saoui:textures/hex2/hex_labels.png</texture>
+            <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
             <amount>ptSize</amount>
             <children>
                 <elementGroup name="bg">
@@ -49,7 +49,7 @@
                         <!-->bar frame</!-->
                         <glRectangle>
                             <rgba cache="STATIC">0x424242FF</rgba>
-                            <texture>saoui:textures/hex2/hexbars.png</texture>
+                            <texture>mcui:themes/hex2/textures/hexbars.png</texture>
                             <x cache="STATIC">42</x>
                             <y cache="NONE">15 * i</y>
                             <w cache="STATIC">100</w>
@@ -63,7 +63,7 @@
                     </children>
                 </elementGroup>
                 <glRectangle name="health bar">
-                    <texture>saoui:textures/hex2/hexbars.png</texture>
+                    <texture>mcui:themes/hex2/textures/hexbars.png</texture>
                     <rgba>healthStep.rgba</rgba>
                     <x cache="STATIC">42</x>
                     <y cache="NONE">15 * i</y>

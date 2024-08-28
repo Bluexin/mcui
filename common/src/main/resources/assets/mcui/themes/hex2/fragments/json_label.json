@@ -63,7 +63,7 @@
             }
           }
         ],
-        "texture": "saoui:textures/hex2/hex_labels.png",
+        "texture": "mcui:themes/hex2/textures/hex_labels.png",
         "name": "background"
       }
     },

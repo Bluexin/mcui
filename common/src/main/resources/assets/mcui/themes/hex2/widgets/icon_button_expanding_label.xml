@@ -18,7 +18,7 @@
     <scale>isHovered? 1.1: 1.0</scale>
     <children>
         <glRectangle name="icon">
-            <texture>saoui:textures/hex2/hexv.png</texture>
+            <texture>mcui:themes/hex2/textures/hexv.png</texture>
             <rgba>isHovered? hoverColour: colour</rgba>
             <srcH cache="STATIC">256.0</srcH>
             <srcW cache="STATIC">224.0</srcW>
@@ -28,7 +28,7 @@
         </glRectangle>
 
         <elementGroup name="label">
-            <texture>saoui:textures/hex2/hex_labels.png</texture>
+            <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
             <enabled cache="PER_FRAME">isHovered</enabled>
             <x>initialWidth</x>
             <y>initialHeight / 2 - 6</y>

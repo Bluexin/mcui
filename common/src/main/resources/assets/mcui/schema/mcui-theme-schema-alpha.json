@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.bluexin.be/be/bluexin/mcui/theme-schema-alpha",
+  "title": "MCUI Theme",
+  "description": "A MCUI Theme metadata definition",
+  "type": "object",
+  "required": [
+    "format"
+  ],
+  "properties": {
+    "version": {
+      "description": "The version of the theme. Can be freely defined by the author, and is not used at the moment.",
+      "type": "string"
+    },
+    "format": {
+      "description": "The theme format. This is a required property.",
+      "enum": [
+        "mcui:alpha"
+      ]
+    },
+    "fragments": {
+      "description": "Path to fragments directory from root. Defaults to 'fragments'.",
+      "type": "string"
+    },
+    "widgets": {
+      "description": "Path to fragments directory from root. Defaults to 'fragments'.",
+      "type": "string"
+    }
+  }
+}

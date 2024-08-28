@@ -3,7 +3,7 @@
         <elementGroup name="background">
             <children>
                 <glRectangle name="uname_bg_left"> <!-- left part of username label -->
-                    <texture>saoui:textures/hex2/hex_labels.png</texture>
+                    <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
                     <rgba cache="STATIC">0x424242FF</rgba>
                     <h cache="STATIC">16.0</h>
                     <w cache="STATIC">11.0</w>
@@ -14,7 +14,7 @@
                 </glRectangle>
 
                 <glRectangle name="uname_bg_mid"> <!-- middle part of username label -->
-                    <texture>saoui:textures/hex2/hex_labels.png</texture>
+                    <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
                     <rgba cache="STATIC">0x424242FF</rgba>
                     <x cache="STATIC">11.0</x>
                     <w>usernamewidth - 2.0</w>
@@ -26,7 +26,7 @@
                 </glRectangle>
 
                 <glRectangle name="uname_bg_right"> <!-- right part of username label -->
-                    <texture>saoui:textures/hex2/hex_labels.png</texture>
+                    <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
                     <rgba cache="STATIC">0x424242FF</rgba>
                     <x>9.0 + usernamewidth</x>
                     <h cache="STATIC">16.0</h>
@@ -38,7 +38,7 @@
                 </glRectangle>
 
                 <glRectangle name="hp_frame"> <!-- health bar frame -->
-                    <texture>saoui:textures/hex2/hexbars.png</texture>
+                    <texture>mcui:themes/hex2/textures/hexbars.png</texture>
                     <rgba cache="STATIC">0x424242FF</rgba>
                     <h cache="STATIC">16.0</h>
                     <srcX cache="STATIC">0.0</srcX>
@@ -50,7 +50,7 @@
                 </glRectangle>
 
                 <glRectangle name="hp_bg"> <!-- health bar background -->
-                    <texture>saoui:textures/hex2/hexbars.png</texture>
+                    <texture>mcui:themes/hex2/textures/hexbars.png</texture>
                     <h cache="STATIC">16.0</h>
                     <srcX cache="STATIC">0.0</srcX>
                     <srcY cache="STATIC">51.2</srcY>
@@ -70,7 +70,7 @@
         </glString>
 
         <glRectangle name="health bar">
-            <texture>saoui:textures/hex2/hexbars.png</texture>
+            <texture>mcui:themes/hex2/textures/hexbars.png</texture>
             <rgba>healthStep.rgba</rgba>
             <srcH cache="STATIC">25.6</srcH>
             <srcW>5.8 + (238.2 * hpPct)</srcW>
@@ -83,7 +83,7 @@
         <!-->
         <glRectangle name="absorption bar">
             <enabled>statusEffects.contains(ABSORPTION)</enabled>
-            <texture>saoui:textures/hex2/hexbars.png</texture>
+            <texture>mcui:themes/hex2/textures/hexbars.png</texture>
             <rgba>0x3E28CCFF</rgba>
             <srcH cache="STATIC">25.6</srcH>
             <srcW>5.8 + 238.2 * ( absorption/maxHp )</srcW>
@@ -96,7 +96,7 @@
         </glRectangle>
         </!-->
         <glRectangle name="hunger bar">
-            <texture>saoui:textures/hex2/hexbars.png</texture>
+            <texture>mcui:themes/hex2/textures/hexbars.png</texture>
             <rgba>
                 healthStep == CREATIVE? 0x4B3F63FF:
                 statusEffects.contains(ROTTEN)? 0x829C40FF:

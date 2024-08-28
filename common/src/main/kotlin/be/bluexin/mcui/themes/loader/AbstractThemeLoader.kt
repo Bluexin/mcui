@@ -8,8 +8,8 @@ import be.bluexin.mcui.themes.elements.ElementGroup
 import be.bluexin.mcui.themes.elements.Fragment
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.elements.Widget
-import be.bluexin.mcui.themes.meta.ThemeFormat
-import be.bluexin.mcui.themes.meta.ThemeMetadata
+import be.bluexin.mcui.themes.meta.HudFormat
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.util.*
 import com.helger.commons.io.IHasInputStream
 import com.helger.css.ECSSVersion
@@ -25,7 +25,7 @@ import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.util.*
 
-abstract class AbstractThemeLoader(protected val type: ThemeFormat, protected val settingsLoader: SettingsLoader) {
+abstract class AbstractThemeLoader(protected val type: HudFormat, protected val settingsLoader: SettingsLoader) {
 
     // TODO : Koinify
     object Reporter {
@@ -36,7 +36,7 @@ abstract class AbstractThemeLoader(protected val type: ThemeFormat, protected va
         }
     }
 
-    fun load(resourceManager: ResourceManager, theme: ThemeMetadata, sink: (Hud) -> Unit) {
+    fun load(resourceManager: ResourceManager, theme: ThemeDefinition, sink: (Hud) -> Unit) {
 //        if (OptionCore.CUSTOM_FONT.isEnabled) GLCore.setFont(Minecraft.getMinecraft(), OptionCore.CUSTOM_FONT.isEnabled)
         Reporter.errors.clear()
 
@@ -84,7 +84,7 @@ abstract class AbstractThemeLoader(protected val type: ThemeFormat, protected va
      * Load [ElementGroup] from File reference
      */
     fun loadFragment(location: File): Fragment =
-        when (val loader = ThemeFormat.fromFileExtension(location.extension)?.loader) {
+        when (val loader = HudFormat.fromFileExtension(location.extension)?.loader) {
             this -> FileInputStream(location).loadFragment()
             null -> error("Unknown fragment format for $location")
             else -> loader.loadFragment(location)
@@ -94,7 +94,7 @@ abstract class AbstractThemeLoader(protected val type: ThemeFormat, protected va
      * Load [ElementGroup] from ResourceLocation reference (using mc ResourceManager)
      */
     fun loadFragment(location: ResourceLocation): Fragment =
-        when (val loader = ThemeFormat.fromFileExtension(location.path)?.loader) {
+        when (val loader = HudFormat.fromFileExtension(location.path)?.loader) {
             this -> Client.resourceManager.getResourceOrThrow(location).open().loadFragment()
             null -> error("Unknown fragment format for $location")
             else -> loader.loadFragment(location)
@@ -104,7 +104,7 @@ abstract class AbstractThemeLoader(protected val type: ThemeFormat, protected va
      * Load [ElementGroup] from ResourceLocation reference (using mc ResourceManager)
      */
     fun loadWidget(location: ResourceLocation): Widget =
-        when (val loader = ThemeFormat.fromFileExtension(location.path)?.loader) {
+        when (val loader = HudFormat.fromFileExtension(location.path)?.loader) {
             this -> Client.resourceManager.getResourceOrThrow(location).open().loadWidget()
             null -> error("Unknown fragment format for $location")
             else -> loader.loadWidget(location)

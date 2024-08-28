@@ -1,5 +1,5 @@
 <bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="crosshair fragment">
-    <texture>saoui:textures/hex2/gui_hex.png</texture>
+    <texture>mcui:themes/hex2/textures/gui_hex.png</texture>
     <children>
         <glRectangle name="hex">
             <enabled>false</enabled>
@@ -7,7 +7,7 @@
             <h cache="STATIC">10</h>
             <x cache="SIZE_CHANGE">-5</x>
             <y cache="SIZE_CHANGE">-5</y>
-            <texture>saoui:textures/hex2/gui_hex.png</texture>
+            <texture>mcui:themes/hex2/textures/gui_hex.png</texture>
             <srcX cache="STATIC">32.0</srcX>
             <srcW cache="STATIC">16.0</srcW>
             <srcH cache="STATIC">16.0</srcH>

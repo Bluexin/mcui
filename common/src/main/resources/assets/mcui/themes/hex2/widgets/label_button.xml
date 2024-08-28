@@ -20,7 +20,7 @@
             <x>isHovered? -initialWidth * 0.05: 0</x>
             <y>isHovered? -initialHeight * 0.05: 0</y>
             <scale>isHovered? 1.1: 1.0</scale>
-            <texture>saoui:textures/hex2/hex_labels.png</texture>
+            <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
             <children>
                 <glRectangle> <!-- left part of label -->
                     <rgba>isHovered? hoverColour: colour</rgba>

@@ -1,7 +1,7 @@
 package be.bluexin.mcui.themes.loader
 
 import be.bluexin.mcui.config.Setting
-import be.bluexin.mcui.themes.meta.ThemeMetadata
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.serialization.json.JsonResourceLocationTypeAdapter
 import be.bluexin.mcui.themes.miniscript.serialization.json.JsonSettingAdapterFactory
 import be.bluexin.mcui.util.append
@@ -17,7 +17,7 @@ class SettingsLoader {
     private val rlType = object : TypeToken<ResourceLocation>() {}.type
     private val listType = object : TypeToken<List<Setting<*>>>() {}.type
 
-    fun loadSettings(resourceManager: ResourceManager, theme: ThemeMetadata): List<Setting<*>>? {
+    fun loadSettings(resourceManager: ResourceManager, theme: ThemeDefinition): List<Setting<*>>? {
         return resourceManager.getResource(theme.themeRoot.append("/settings.json"))
             .map<List<Setting<*>>> { resource ->
                 try {

@@ -11,4 +11,4 @@ object Constants {
     val LOG: Logger = LoggerFactory.getLogger(MOD_ID)
 }
 
-fun Any.logger(): Logger = LoggerFactory.getLogger("$MOD_ID/${javaClass.simpleName}")
+fun Any.logger(): Logger = LoggerFactory.getLogger("$MOD_ID/${this::class.simpleName?.removeSuffix("Impl")}")

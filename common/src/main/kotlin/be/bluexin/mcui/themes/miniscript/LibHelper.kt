@@ -120,6 +120,9 @@ object McuiStaticLib {
     fun format(key: String): String = I18n.get(key)
 
     @JvmStatic
+    fun formatOr(key: String, fallback: String): String = if (I18n.exists(key)) I18n.get(key) else fallback
+
+    @JvmStatic
     fun format(key: String, vararg args: Any): String = I18n.get(key, *args)
 }
 

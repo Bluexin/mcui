@@ -151,7 +151,7 @@ end
 --- @param display? fun(id: string): string
 --- @return Widget|nil
 local function loadCategory(parent, yPos, xPos, label, display)
-    category_frag.name = 'cat_' .. string.gsub(string.lower(label), ':', '_')
+    category_frag.name = 'cat_' .. string.lower(label):gsub(':', '_')
     local r = theme.loadWidget(parent, category_frag, {
         text = tstatic((display and display(label)) or '"' .. label .. '"', "STRING", true),
         xPos = tframe(xPos, 'DOUBLE'),
@@ -210,7 +210,7 @@ end
 
 --- @param id string ResourceLocation.string
 local function settingsTabName(id)
-    return 'format("mcui.screen.settings.theme", format("mcui.theme.' .. string.gsub(id, ':', '.') .. '.name"))'
+    return 'format("mcui.screen.settings.theme", format("mcui.theme.' .. id:gsub(':', '.') .. '.name"))'
 end
 
 --- @param id string ResourceLocation.string
@@ -227,7 +227,7 @@ local function addThemeSettings(parent)
         local r = theme.loadWidget(parent, label_button_frag, {
             isCurrentTheme = tstatic(themeId.string == currentTheme),
             --text = tstatic('tmp'),
-            text = tframe('(isCurrentTheme? "> ": "" ) + format("mcui.theme.' .. themeLocalKey .. '.name")', 'STRING', true),
+            text = tframe('(isCurrentTheme? "> ": "" ) + formatOr("mcui.theme.' .. themeLocalKey .. '.name", "' .. themeId.path .. '")', 'STRING', true),
             --active = tframe('!isCurrentTheme', 'BOOLEAN'),
             xPos = tstatic(0),
             yPos = tframe((index - 1) * 20, 'DOUBLE'),

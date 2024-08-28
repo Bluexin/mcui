@@ -24,8 +24,8 @@ import be.bluexin.mcui.deprecated.screens.MouseButton
 import be.bluexin.mcui.deprecated.screens.menus.IngameMenu
 import be.bluexin.mcui.deprecated.screens.unaryPlus
 import be.bluexin.mcui.deprecated.screens.util.PopupAdvancement
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.meta.ThemeManager
-import be.bluexin.mcui.themes.meta.ThemeMetadata
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.IconCore
 import be.bluexin.mcui.util.delegate
@@ -423,7 +423,7 @@ private fun translateIfExists(key: String, default: String) =
 
 private val ResourceLocation.tl get() = toString().replace(':', '.')
 
-fun INeoParent.themeButton(theme: ThemeMetadata): IconLabelElement {
+fun INeoParent.themeButton(theme: ThemeDefinition): IconLabelElement {
     val realName = translateIfExists(theme.nameTranslationKey, theme.name)
     val themeManager = get<ThemeManager>()
     val but = object :

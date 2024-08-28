@@ -6,7 +6,7 @@
     <children>
         <elementGroup name="centered">
             <enabled>centered</enabled>
-            <texture>saoui:textures/hex2/hex_labels.png</texture>
+            <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
             <children>
                 <glRectangle> <!-- left part of label -->
                     <rgba cache="STATIC">0x424242FF</rgba>
@@ -50,7 +50,7 @@
 
         <elementGroup name="uncentered">
             <enabled>!centered</enabled>
-            <texture>saoui:textures/hex2/hex_labels.png</texture>
+            <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
             <children>
                 <glRectangle> <!-- left part of label -->
                     <rgba cache="STATIC">0x424242FF</rgba>

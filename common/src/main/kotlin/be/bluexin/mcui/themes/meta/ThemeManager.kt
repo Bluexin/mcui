@@ -40,18 +40,25 @@ class ThemeManager(
 ) {
 
     // TODO: tests
-    // TODO: theme versions
+    // TODO: theme format versions
     // TODO: loading reporter (amount of issues, details, missing keys, ..?)
 
     lateinit var HUD: Hud
-    lateinit var themeList: Map<ResourceLocation, ThemeMetadata>
+    lateinit var themeList: Map<ResourceLocation, ThemeDefinition>
         private set
-    var currentTheme: ThemeMetadata = ThemeMetadata(
+
+    // TODO : this should eventually be replaced with a list of loaded themes and the screens they provide
+    // combined with the user setting the theme providing each screen
+    var currentTheme: ThemeDefinition = ThemeDefinition(
         id = ResourceLocation(Constants.MOD_ID, "debug"),
         themeRoot = ResourceLocation(Constants.MOD_ID, "debug"),
         name = "mcui.debug",
-        type = ThemeFormat.XML,
-        fragments = emptyMap()
+        metadata = ThemeMetadata(
+            version = "debug",
+            format = ThemeFormat.ERROR
+        ),
+        type = HudFormat.XML,
+        fragments = emptyMap(),
     )
         private set
     private var isReloading = false
@@ -68,7 +75,7 @@ class ThemeManager(
 //        if (!isReloading) GLCore.setFont(Client.mc, OptionCore.CUSTOM_FONT.isEnabled)
     }
 
-    fun applyData(data: Map<ResourceLocation, ThemeMetadata>, resourceManager: ResourceManager) {
+    fun applyData(data: Map<ResourceLocation, ThemeDefinition>, resourceManager: ResourceManager) {
         RegisterScreen.clear()
         themeList = data
         isReloading = true
@@ -76,7 +83,7 @@ class ThemeManager(
         isReloading = false
     }
 
-    fun loadData(resourceManager: ResourceManager): Map<ResourceLocation, ThemeMetadata> =
+    fun loadData(resourceManager: ResourceManager): Map<ResourceLocation, ThemeDefinition> =
         themeDetector.listThemes(resourceManager)
 
     private fun reportLoading() {
