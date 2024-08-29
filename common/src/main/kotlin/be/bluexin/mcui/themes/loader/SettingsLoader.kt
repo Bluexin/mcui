@@ -2,35 +2,40 @@ package be.bluexin.mcui.themes.loader
 
 import be.bluexin.mcui.config.Setting
 import be.bluexin.mcui.themes.meta.ThemeDefinition
-import be.bluexin.mcui.themes.miniscript.serialization.json.JsonResourceLocationTypeAdapter
-import be.bluexin.mcui.themes.miniscript.serialization.json.JsonSettingAdapterFactory
-import be.bluexin.mcui.util.append
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
-import net.minecraft.resources.ResourceLocation
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import net.minecraft.server.packs.resources.ResourceManager
 import org.koin.core.annotation.Single
 import kotlin.jvm.optionals.getOrNull
 
 @Single
 class SettingsLoader {
-    private val rlType = object : TypeToken<ResourceLocation>() {}.type
-    private val listType = object : TypeToken<List<Setting<*>>>() {}.type
 
-    fun loadSettings(resourceManager: ResourceManager, theme: ThemeDefinition): List<Setting<*>>? {
-        return resourceManager.getResource(theme.themeRoot.append("/settings.json"))
-            .map<List<Setting<*>>> { resource ->
-                try {
-                    JsonSettingAdapterFactory.currentNamespace.set(theme.id)
-                    resource.open().use {
-                        GsonBuilder()
-                            .registerTypeAdapter(rlType, JsonResourceLocationTypeAdapter())
-                            .create()
-                            .fromJson(it.reader(), listType)
-                    }
-                } finally {
-                    JsonSettingAdapterFactory.currentNamespace.remove()
-                }
-            }.getOrNull()
+    @OptIn(ExperimentalSerializationApi::class)
+    private val json = Json {
+        ignoreUnknownKeys = true
+        useAlternativeNames = false
+        allowTrailingComma = true
+        allowComments = true
     }
+
+    // If it is not lazy, Koin doesn't pick up modules anymore. Yeah idk why either.
+    private val serializer by lazy {
+        @Suppress("UNCHECKED_CAST") // generic type is actually not needed for serde
+        ListSerializer(Setting.serializer(String.serializer())) as KSerializer<List<Setting<*>>>
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    fun loadSettings(resourceManager: ResourceManager, theme: ThemeDefinition): List<Setting<*>>? =
+        theme.settings
+            ?.let(resourceManager::getResource)
+            ?.map { resource ->
+                resource.open()
+                    .use { stream -> json.decodeFromStream(serializer, stream) }
+                    .onEach { it.namespace = theme.id }
+            }?.getOrNull()
 }

@@ -19,11 +19,15 @@
       ]
     },
     "fragments": {
-      "description": "Path to fragments directory from root. Defaults to 'fragments'.",
+      "description": "Path to fragments directory from theme root. Defaults to 'fragments'.",
       "type": "string"
     },
     "widgets": {
-      "description": "Path to fragments directory from root. Defaults to 'fragments'.",
+      "description": "Path to widgets directory from theme root. Defaults to 'widgets'.",
+      "type": "string"
+    },
+    "scripts": {
+      "description": "Path to scripts directory from theme root. Defaults to 'scripts'.",
       "type": "string"
     }
   }

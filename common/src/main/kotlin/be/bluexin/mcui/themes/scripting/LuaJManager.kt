@@ -1,11 +1,13 @@
 package be.bluexin.mcui.themes.scripting
 
 import be.bluexin.mcui.Constants
+import be.bluexin.mcui.logger
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.LibHelper
 import be.bluexin.mcui.themes.scripting.lib.SettingsLib
 import be.bluexin.mcui.themes.scripting.lib.ThemeLib
 import be.bluexin.mcui.util.debug
+import be.bluexin.mcui.util.warn
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.Resource
@@ -28,6 +30,8 @@ class LuaJManager(
     private val libHelper: LibHelper
 ) {
     private val scriptInstructionsLimit = LuaValue.valueOf(50_000) // TODO: evaluate proper limit
+
+    private val logger = logger()
 
     private val serverGlobals = Globals().apply {
         load(JseBaseLib())
@@ -56,6 +60,7 @@ class LuaJManager(
     private fun getEnvFor(theme: ResourceLocation) = scriptGlobals.getOrPut(theme) {
         val globals = Globals().apply {
             // TODO : verify & lock down file access
+            // dofile, load, loadfile,
             load(JseBaseLib())
             // TODO : verify this can't be used to access bad files
             load(PackageLib())
@@ -105,8 +110,13 @@ class LuaJManager(
                 } catch (_: Throwable) {
                 }
 
+                if (result.arg1().isboolean() && result.arg1().checkboolean()) {
+                    logger.debug { "Read $rl : $result" }
+                } else {
+                    logger.warn { "Read $rl : $result" }
+                }
+
                 // TODO: currently this doesn't throw, but returns a Lua Vararg with (false, <errorMessage>) in case of failure
-                Constants.LOG.debug { "Read $rl : $result" }
                 result
             }.getOrNull()
     }

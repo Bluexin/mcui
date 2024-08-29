@@ -18,7 +18,7 @@ class JsonSettingAdapterFactory : TypeAdapterFactory {
         else null
 
     companion object {
-        val currentNamespace: ThreadLocal<ResourceLocation> = ThreadLocal.withInitial { ResourceLocation("saoui:error") }
+        val currentNamespace: ThreadLocal<ResourceLocation> = ThreadLocal.withInitial { ResourceLocation("mcui:error") }
     }
 }
 

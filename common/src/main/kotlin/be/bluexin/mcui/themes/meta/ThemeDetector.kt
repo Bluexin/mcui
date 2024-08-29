@@ -1,6 +1,7 @@
 package be.bluexin.mcui.themes.meta
 
 import be.bluexin.mcui.logger
+import be.bluexin.mcui.themes.meta.ThemeDefinition.Companion.themeResource
 import be.bluexin.mcui.util.append
 import be.bluexin.mcui.util.debug
 import be.bluexin.mcui.util.error
@@ -39,52 +40,53 @@ internal class ThemeDetectorImpl : ThemeDetector {
                 rl.path.endsWith("/${it.hudFileSuffix}")
             }
         }.map { (key, value) ->
-            (key to value).extractThemeDefinition(resourceManager)
-        }).filter { (_, it) ->
-            try {
-                it.type.loader
-                    .loadHud(resourceManager, it.themeRoot.append("/${it.type.hudFileSuffix}"))
-                    .setup(emptyMap())
-                true
+            (key to value).extractLegacyThemeDefinition(resourceManager)
+        })/*.filter { (_, it) ->
+            it.hud != null && try {
+                it.hud
+                    .let(HudFormat::fromFile)
+                    ?.loader
+                    ?.loadHud(resourceManager, it.hud)
+                    ?.setup(emptyMap()) != null
             } catch (e: Throwable) {
                 logger.warn(e) { "Could not load HUD for $it !" }
                 false
             }
-        }.toMap()
+        }*/.toMap()
     }
 
     /**
-     *
+     * For legacy SAOUI formats
      */
-    private fun Pair<ResourceLocation, Resource>.extractThemeDefinition(
+    private fun Pair<ResourceLocation, Resource>.extractLegacyThemeDefinition(
         resourceManager: ResourceManager
     ): Pair<ResourceLocation, ThemeDefinition> {
         val (hudRl, hud) = this
         val themeRoot = hudRl.parent
+        var format: ThemeFormat
         val themeName = themeRoot.path.substringAfterLast('/').let {
-            if (it != "themes") it else {
+            if (it != "themes") {
+                format = ThemeFormat.MODERN_LEGACY_SAOUI
+                it
+            } else {
+                format = ThemeFormat.LEGACY_SAOUI
                 val packName = hud.sourcePackId()
-                logger.warn { "Theme pack $packName is using the old theme structure !" }
+                logger.warn { "Theme pack $packName is using a very old theme structure, and will probably not work well" }
                 packName.removeSuffix(".zip")
             }
-        }
+        }.lowercase()
         val themeId = ResourceLocation(themeRoot.namespace, themeName)
         logger.debug { "Found candidate theme $themeId from $themeRoot" }
-        val fragments = resourceManager.listResources(themeRoot.path + "/fragments") {
-            it.namespace == themeRoot.namespace && HudFormat.fromFileExtension(it.path) != null
-        }.map { (rl, _) ->
-            ResourceLocation(
-                themeId.toString().replace(':', '.'),
-                rl.path.substringAfter("/fragments/").substringBeforeLast('.')
-            ) to rl
-        }.toMap()
         return themeId to ThemeDefinition(
             id = themeId,
             themeRoot = themeRoot,
             name = themeName,
-            metadata = ThemeMetadata(format = ThemeFormat.LEGACY_SAOUI /*TODO*/),
-            type = HudFormat.fromFileExtension(hudRl.path)!!,
-            fragments = fragments
+            metadata = ThemeMetadata(format = format),
+            hud = hudRl,
+            settings = if (format == ThemeFormat.MODERN_LEGACY_SAOUI) resourceManager.findThemeSettings(themeRoot) else null,
+            fragments = resourceManager.findThemeResources(themeId, themeRoot, "fragments"),
+            widgets = emptyMap(),
+            scripts = emptyMap(),
         )
     }
 
@@ -97,7 +99,7 @@ internal class ThemeDetectorImpl : ThemeDetector {
     }
 
     /**
-     * For modern format
+     * For modern MCUI format
      */
     @OptIn(ExperimentalSerializationApi::class)
     private fun Map.Entry<ResourceLocation, Resource>.extractMcuiThemeDefinition(
@@ -114,22 +116,52 @@ internal class ThemeDetectorImpl : ThemeDetector {
             ThemeMetadata(format = ThemeFormat.ERROR)
         }
         logger.debug { "Found candidate theme $themeId from $themeRoot and metadata $themeMetadata" }
-        val fragments = resourceManager.listResources("${themeRoot.path}/${themeMetadata.fragments}") {
-            it.namespace == themeRoot.namespace && HudFormat.fromFileExtension(it.path) != null
-        }.map { (rl, _) ->
-            ResourceLocation(
-                themeId.toString().replace(':', '.'),
-                rl.path.substringAfter("/${themeMetadata.fragments}/").substringBeforeLast('.')
-            ) to rl
-        }.toMap()
+        val hudCandidates = HudFormat.entries.asSequence()
+            .map { themeRoot.append("/${it.hudFileSuffix}") }
+            .filter { resourceManager.getResource(it).isPresent }
+            .toList()
+        val hud = when (hudCandidates.size) {
+            0 -> {
+                logger.debug { "No HUD definition found in $themeId" }
+                null
+            }
+
+            1 -> hudCandidates.single()
+            else -> {
+                logger.warn { "Multiple HUD candidates found for $themeId : ${hudCandidates}, none will be loaded." }
+                null
+            }
+        }
         return themeId to ThemeDefinition(
             id = themeId,
             themeRoot = themeRoot,
             name = themeName,
             metadata = themeMetadata,
-            type = HudFormat.XML /* TODO */,
-            fragments = fragments
+            hud = hud,
+            settings = resourceManager.findThemeSettings(themeRoot),
+            fragments = resourceManager.findThemeResources(themeId, themeRoot, themeMetadata.fragments),
+            widgets = resourceManager.findThemeResources(themeId, themeRoot, themeMetadata.widgets),
+            scripts = resourceManager.findThemeResources(themeId, themeRoot, themeMetadata.scripts, setOf("lua")),
         )
+    }
+
+    private fun ResourceManager.findThemeResources(
+        themeId: ResourceLocation,
+        themeRoot: ResourceLocation,
+        path: String,
+        allowedExtensions: Set<String> = setOf("json", "xml"),
+    ): Map<ResourceLocation, ResourceLocation> =
+        listResources("${themeRoot.path}/$path") {
+            it.namespace == themeRoot.namespace && it.path.substringAfterLast('.') in allowedExtensions
+        }.map { (rl, _) ->
+            themeId.themeResource(
+                rl.path.substringAfter("/$path/").substringBeforeLast('.')
+            ) to rl
+        }.toMap()
+
+    private fun ResourceManager.findThemeSettings(themeRoot: ResourceLocation): ResourceLocation? {
+        val settingsLocation = themeRoot.append("/settings.json")
+        return if (getResource(settingsLocation).isPresent) settingsLocation else null
     }
 
     private val String.parent get() = substringBeforeLast('/')

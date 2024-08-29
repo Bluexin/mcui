@@ -3,6 +3,8 @@ package be.bluexin.mcui.themes.miniscript
 import be.bluexin.luajksp.annotations.LKMapper
 import be.bluexin.luajksp.annotations.LuajMapped
 import be.bluexin.mcui.themes.miniscript.serialization.*
+import be.bluexin.mcui.util.RLSerializer
+import kotlinx.serialization.Serializable
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.HumanoidArm
 import org.luaj.vm2.LuaValue
@@ -129,7 +131,7 @@ object ResourceLocationMapper : LKMapper<ResourceLocation> {
 }
 
 @LuajMapped(ResourceLocationMapper::class)
-typealias LKResourceLocation = ResourceLocation
+typealias LKResourceLocation = @Serializable(RLSerializer::class) ResourceLocation
 
 object HumanoidArmMapper : LKMapper<HumanoidArm> {
     override fun fromLua(value: LuaValue): HumanoidArm = when {

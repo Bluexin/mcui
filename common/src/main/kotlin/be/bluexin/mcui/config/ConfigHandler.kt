@@ -33,20 +33,24 @@ object ConfigHandler {
     private fun general(key: String) = ResourceLocation("general", key)
 
     private val allSettings = LinkedList<Setting<*>>()
-    private fun <T : Setting<*>> wrap(setting: T) = setting.also(allSettings::add)
+    private fun <T : Setting<*>> wrap(setting: T) = setting.also {
+        it.namespace = NS_BUILTIN
+        allSettings.add(it)
+    }
 
-    var lastVersion by wrap(StringSetting(NS_BUILTIN, general("last_update"), "nothing"))
-    var ignoreUpdate by wrap(BooleanSetting(NS_BUILTIN, general("ignore_update"), true))
-    var enableDebug by wrap(BooleanSetting(NS_BUILTIN, general("debug"), false))
-    var debugFakePT by wrap(IntSetting(
-        NS_BUILTIN, general("debug_fake_pt"), 0, "Amount of fake party members, 0 to disable.",
-        min = 0, max = 10
-    )
+    var lastVersion by wrap(StringSetting(general("last_update"), "nothing"))
+    var ignoreUpdate by wrap(BooleanSetting(general("ignore_update"), true))
+    var enableDebug by wrap(BooleanSetting(general("debug"), false))
+    var debugFakePT by wrap(
+        IntSetting(
+            general("debug_fake_pt"), 0, "Amount of fake party members, 0 to disable.",
+            min = 0, max = 10
+        )
     )
     var currentTheme by wrap(
         ResourceLocationSetting(
-        NS_BUILTIN, general("current_theme"), DEFAULT_THEME,
-        "The currently selected theme. If invalid or unavailable, this will default to the builtin sao theme"
+            general("current_theme"), DEFAULT_THEME,
+            "The currently selected theme. If invalid or unavailable, this will default to the builtin sao theme"
         )
     )
 

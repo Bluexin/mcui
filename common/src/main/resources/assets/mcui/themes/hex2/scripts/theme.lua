@@ -313,3 +313,16 @@ theme.registerScreen("mcui:settings", function(root)
         yPos = yPos + 20
     end
 end)
+
+-- TODO : properly load scripts from resources
+local test, r = loadfile('assets/mcui/themes/hex2/test.lua')
+
+print('r: ' .. r)
+
+if (test) then
+    test()
+else
+    print('Test was falsy')
+end
+
+print("loaded test")

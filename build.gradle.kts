@@ -84,9 +84,9 @@ subprojects {
 
         implementation(libs.bundles.koin)
         ksp(libs.koin.processor)
+
+        testImplementation(kotlin("test-junit5"))
     }
-
-
 
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -200,6 +200,10 @@ subprojects {
             options.encoding = "UTF-8"
             options.release.set(17)
         }
+
+        test {
+            useJUnitPlatform()
+        }
     }
 
     /*publishing {
@@ -220,4 +224,8 @@ subprojects {
             }
         }
     }*/
+
+    tasks.test {
+        useJUnitPlatform()
+    }
 }

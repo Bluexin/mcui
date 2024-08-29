@@ -3,6 +3,7 @@ package be.bluexin.mcui.commands
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.screens.LuaScriptedScreen
 import be.bluexin.mcui.screens.LuaTestScreen
+import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.scripting.LuaJManager
 import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
 import com.mojang.brigadier.context.CommandContext
@@ -15,25 +16,39 @@ import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.commands.arguments.ResourceLocationArgument
 import net.minecraft.commands.arguments.ResourceLocationArgument.id
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 sealed class DebugCommands(usage: String) : McuiCommand(usage) {
     data object Reload : DebugCommands("reload"), KoinComponent {
         private val luaJManager: LuaJManager by inject()
+        private val themeManager: ThemeManager by inject()
 
         private fun reloadAll(commandContext: CommandContext<CommandSourceStack>): Int =
             reloadScripts(commandContext)
 
         private fun reloadScripts(commandContext: CommandContext<CommandSourceStack>): Int = try {
-            luaJManager.runScript(ResourceLocation("mcui", "themes/hex2/screens.lua"))
+            themeManager.themeList.values.forEach {
+                it.scripts[it.themeResource("theme")]
+                    ?.let(luaJManager::runScript)
+                    ?.let { retVal ->
+                        val result = retVal.arg1().checkboolean()
+                        val resultValue = retVal.arg(2)
+
+                        if (result) commandContext.source.sendSuccess(
+                            Component.literal("Successfully reloaded scripts for ${it.id}, result: $resultValue"),
+                            false
+                        ) else commandContext.source.sendFailure(
+                            Component.literal("Failed to reload scripts for ${it.id} : $resultValue")
+                        )
+                    }
+            }
             commandContext.source.sendSuccess(Component.literal("Reloaded scripts"), false)
 
             1
         } catch (e: Throwable) {
             commandContext.source.sendFailure(Component.literal("Something went wrong : ${e.message}. See console for more info."))
-            Constants.LOG.error("Couldn't evaluate screens.lua", e)
+            Constants.LOG.error("Couldn't reload scripts", e)
 
             0
         }

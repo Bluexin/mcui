@@ -9,7 +9,7 @@
         </xs:annotation>
         <xs:complexType>
             <xs:all>
-                <xs:element name="version" default="1.0" type="xs:string">
+                <xs:element name="version" default="unknown" type="xs:string" minOccurs="0">
                     <xs:annotation>
                         <xs:documentation>Version string</xs:documentation>
                     </xs:annotation>

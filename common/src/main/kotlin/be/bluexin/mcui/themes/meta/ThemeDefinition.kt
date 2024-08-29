@@ -21,8 +21,12 @@ data class ThemeDefinition(
     val themeRoot: ResourceLocation,
     val name: String,
     val metadata: ThemeMetadata,
-    val type: HudFormat,
-    val fragments: Map<ResourceLocation, ResourceLocation>
+    // TODO : modular HUD ?
+    val hud: ResourceLocation?,
+    val settings: ResourceLocation?,
+    val fragments: Map<ResourceLocation, ResourceLocation>,
+    val widgets: Map<ResourceLocation, ResourceLocation>,
+    val scripts: Map<ResourceLocation, ResourceLocation>,
 ) {
     /**
      * Root for the theme's textures
@@ -30,6 +34,14 @@ data class ThemeDefinition(
     val texturesRoot = ResourceLocation(themeRoot.namespace, "textures/${id.path}/")
     val nameTranslationKey = "theme.${id.toString().replace(':', '.')}.name"
     val descTranslationKey = "theme.${id.toString().replace(':', '.')}.description"
+
+    fun themeResource(path: String): ResourceLocation = id.themeResource(path)
+
+    companion object {
+        fun ResourceLocation.themeResource(path: String) = ResourceLocation(
+            this.toString().replace(':', '.'), path
+        )
+    }
 }
 
 // this is actually hud format and should not matter much
@@ -44,7 +56,9 @@ enum class HudFormat(val hudFileSuffix: String, private val loaderP: KoinCompone
         private val fromFileExtension = entries.associateBy { it.hudFileSuffix.substringAfterLast('.') }
 
         fun fromFile(fileName: String): HudFormat? =
-            fromFileExtension.values.firstOrNull { fileName.endsWith(it.hudFileSuffix) }
+            entries.firstOrNull { fileName.endsWith(it.hudFileSuffix) }
+
+        fun fromFile(location: ResourceLocation): HudFormat? = fromFile(location.path)
 
         fun fromFileExtension(fileName: String): HudFormat? = fromFileExtension[fileName.substringAfterLast('.')]
     }
@@ -54,7 +68,9 @@ enum class HudFormat(val hudFileSuffix: String, private val loaderP: KoinCompone
 data class ThemeMetadata(
     val version: String = UNKNOWN_VERSION,
     val format: ThemeFormat,
-    val fragments: String = "fragments"
+    val fragments: String = "fragments",
+    val widgets: String = "widgets",
+    val scripts: String = "scripts",
 ) {
     companion object {
         const val UNKNOWN_VERSION = "unknown"
@@ -65,6 +81,7 @@ data class ThemeMetadata(
 enum class ThemeFormat(val identifier: String) {
     ERROR("mcui:error"),
     LEGACY_SAOUI("mcui:legacy"),
+    MODERN_LEGACY_SAOUI("mcui:modern_legacy"),
     MCUI_ALPHA("mcui:alpha");
 
     companion object {

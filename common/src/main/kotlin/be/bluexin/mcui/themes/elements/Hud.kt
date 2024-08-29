@@ -21,6 +21,7 @@ import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.loader.ThemeLoaderModule
 import be.bluexin.mcui.themes.loader.XmlThemeLoader
 import be.bluexin.mcui.themes.meta.ThemeMetaModule
+import be.bluexin.mcui.themes.meta.ThemeMetadata
 import be.bluexin.mcui.themes.miniscript.MiniscriptModule
 import be.bluexin.mcui.themes.miniscript.profile
 import be.bluexin.mcui.themes.scripting.ScriptingModule
@@ -39,6 +40,7 @@ import org.koin.core.context.startKoin
 import org.koin.ksp.generated.module
 import org.koin.logger.slf4jLogger
 import java.io.FileReader
+import kotlin.jvm.Transient as JvmTransient
 
 fun main() {
     val ka = startKoin {
@@ -73,12 +75,13 @@ fun main() {
 class Hud(
     override val name: String = "HUD",
     @XmlElement
-    val version: String = "1.0",
+    val version: String = ThemeMetadata.UNKNOWN_VERSION,
     @XmlSerialName("parts")
     private val parts: Parts,
 ) : ElementParent {
 
     @Transient
+    @JvmTransient
     private val indexedParts = parts.parts.associate { (k, v) -> k to v }
 
     operator fun get(key: HudPartType) = indexedParts[key]

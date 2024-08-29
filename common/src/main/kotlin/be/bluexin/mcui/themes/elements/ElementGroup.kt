@@ -33,6 +33,7 @@ import kotlinx.serialization.Transient
 import net.minecraft.resources.ResourceLocation
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import org.luaj.vm2.LuaValue
+import kotlin.jvm.Transient as JvmTransient
 
 /**
  * Part of saoui by Bluexin.
@@ -58,6 +59,7 @@ sealed class ElementGroupParent : Element(), ElementParent {
     fun getChildByName(name: String): Element? = elements.find { it.name == name }
 
     @Transient
+    @JvmTransient
     protected var rl: ResourceLocation? = null
 
     @XmlElement

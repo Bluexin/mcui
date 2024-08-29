@@ -32,6 +32,7 @@ import net.minecraft.resources.ResourceLocation
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
 import java.lang.ref.WeakReference
 import javax.annotation.OverridingMethodsMustInvokeSuper
+import kotlin.jvm.Transient as JvmTransient
 
 /**
  * Used to map a xml element with x, y, z coordinates and an "enabled" toggle.
@@ -96,6 +97,7 @@ sealed class Element : LKExposed {
      * Parent element for this element.
      */
     @Transient
+    @JvmTransient
     protected lateinit var parent: WeakReference<ElementParent>
 
     private val parentOrZero get() = parent.get() ?: ElementParent.ZERO

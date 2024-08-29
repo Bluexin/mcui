@@ -57,8 +57,11 @@ class ThemeManager(
             version = "debug",
             format = ThemeFormat.ERROR
         ),
-        type = HudFormat.XML,
+        hud = null,
+        settings = null,
         fragments = emptyMap(),
+        widgets = emptyMap(),
+        scripts = emptyMap(),
     )
         private set
     private var isReloading = false
@@ -69,7 +72,10 @@ class ThemeManager(
 
         ConfigHandler.currentTheme = currentTheme.id
 
-        currentTheme.type.loader.load(resourceManager, currentTheme) { HUD = it }
+        currentTheme.hud
+            ?.let(HudFormat::fromFile)?.loader
+            // FIXME : this should probably not be loading the whole theme this way
+            ?.load(resourceManager, currentTheme) { HUD = it }
         reportLoading()
 
 //        if (!isReloading) GLCore.setFont(Client.mc, OptionCore.CUSTOM_FONT.isEnabled)
@@ -85,6 +91,7 @@ class ThemeManager(
 
     fun loadData(resourceManager: ResourceManager): Map<ResourceLocation, ThemeDefinition> =
         themeDetector.listThemes(resourceManager)
+    // TODO : analyse themes
 
     private fun reportLoading() {
         Client.mc.chatListener.let {

@@ -8,7 +8,7 @@
                 <y cache="SIZE_CHANGE">scaledheight / 1.3</y>
                 <children>
                     <elementGroup name="background">
-                        <texture>saoui:textures/ggo/guiEDT.png</texture>
+                        <texture>saoui:textures/ggo/guiedt.png</texture>
                         <children>
                             <glRectangle>
                                 <h cache="STATIC">15.0</h>
@@ -36,7 +36,7 @@
                         <y cache="STATIC">-2.0</y>
                     </glString>
                     <glRectangle name="health bar">
-                        <texture>saoui:textures/ggo/guiEDT.png</texture>
+                        <texture>saoui:textures/ggo/guiedt.png</texture>
                         <h cache="STATIC">9.0</h>
 						<w cache="STATIC">100.0</w>
                         <rgba>
@@ -81,7 +81,7 @@
                                 <y cache="STATIC">12</y>
                             </glString>
                             <elementGroup name="hp bg">
-                                <texture>saoui:textures/ggo/guiEDT.png</texture>
+                                <texture>saoui:textures/ggo/guiedt.png</texture>
                                 <children>
                                     <glRectangle>
                                         <srcX cache="STATIC">60</srcX>
@@ -130,7 +130,7 @@
                                 <text>format("displayLvShort", level)</text>
                             </glString>
                             <elementGroup name="exp bg">
-                                <texture>saoui:textures/ggo/guiEDT.png</texture>
+                                <texture>saoui:textures/ggo/guiedt.png</texture>
                                 <children>
                                     <glRectangle>
                                         <srcX cache="STATIC">65</srcX>
@@ -186,7 +186,7 @@
                                         <slot cache="NONE">i</slot>
                                         <itemXoffset cache="STATIC">2</itemXoffset>
                                         <itemYoffset cache="STATIC">2</itemYoffset>
-                                        <texture>saoui:textures/ggo/guiEDT.png</texture>
+                                        <texture>saoui:textures/ggo/guiedt.png</texture>
                                     </glHotbarItem>
                                 </children>
                             </repetitionGroup>
@@ -205,7 +205,7 @@
                                         <itemXoffset cache="STATIC">2</itemXoffset>
                                         <itemYoffset cache="STATIC">2</itemYoffset>
                                         <hand cache="STATIC">RIGHT</hand>
-                                        <texture>saoui:textures/ggo/guiEDT.png</texture>
+                                        <texture>saoui:textures/ggo/guiedt.png</texture>
                                     </glHotbarItem>
                                     <glHotbarItem>
                                         <h cache="STATIC">20.0</h>
@@ -219,7 +219,7 @@
                                         <itemXoffset cache="STATIC">2</itemXoffset>
                                         <itemYoffset cache="STATIC">2</itemYoffset>
                                         <hand cache="STATIC">LEFT</hand>
-                                        <texture>saoui:textures/ggo/guiEDT.png</texture>
+                                        <texture>saoui:textures/ggo/guiedt.png</texture>
                                     </glHotbarItem>
                                 </children>
                             </elementGroup>
@@ -248,7 +248,7 @@
         <entry>
             <key>CROSS_HAIR</key>
             <value name="crosshair">
-                <texture>saoui:textures/ggo/guiEDT.png</texture>
+                <texture>saoui:textures/ggo/guiedt.png</texture>
                 <x cache="SIZE_CHANGE">scaledwidth / 2.0</x>
                 <y cache="SIZE_CHANGE">scaledheight / 2.0</y>
                 <children>
@@ -285,7 +285,7 @@
                     <repetitionGroup name="member">
                         <x cache="STATIC">2</x>
                         <y cache="STATIC">6</y>
-                        <texture>saoui:textures/ggo/guiEDT.png</texture>
+                        <texture>saoui:textures/ggo/guiedt.png</texture>
                         <amount>ptSize</amount>
                         <children>
                             <elementGroup name="bg">
@@ -333,7 +333,7 @@
                                 </children>
                             </elementGroup>
                             <glRectangle name="health bar">
-                                <texture>saoui:textures/ggo/guiEDT.png</texture>
+                                <texture>saoui:textures/ggo/guiedt.png</texture>
                                 <rgba>
                                     ptHealthStep(i) == VERY_LOW? 0xFFFFFFFF:
                                     ptHealthStep(i) == LOW? 0xFFFFFFFF:

@@ -59,10 +59,10 @@ class LuaTestScreen : Screen(Component.literal("Lua Test Screen")), WidgetParent
                 Component.translatable("Load widget script")
             ) {
                 try {
-                    luaJManager.runScript(ResourceLocation("mcui", "themes/hex2/screens.lua"))
+                    luaJManager.runScript(ResourceLocation("mcui", "themes/hex2/scripts/theme.lua"))
                 } catch (e: Throwable) {
                     Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Something went wrong : ${e.message}. See console for more info."))
-                    Constants.LOG.error("Couldn't evaluate screens.lua", e)
+                    Constants.LOG.error("Couldn't evaluate theme.lua", e)
                 }
             }.pos(50, 120).build()
         )
