@@ -26,5 +26,5 @@ rootProject.name = "mcui"
 include(
     "common",
     "fabric",
-//    "forge"
+    "forge"
 )
