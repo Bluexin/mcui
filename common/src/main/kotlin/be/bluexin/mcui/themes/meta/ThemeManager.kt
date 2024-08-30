@@ -21,10 +21,14 @@ import be.bluexin.mcui.Constants
 import be.bluexin.mcui.commands.GeneralCommands
 import be.bluexin.mcui.commands.McuiCommand
 import be.bluexin.mcui.config.ConfigHandler
+import be.bluexin.mcui.logger
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
 import be.bluexin.mcui.util.Client
+import be.bluexin.mcui.util.Client.resourceManager
+import be.bluexin.mcui.util.debug
+import be.bluexin.mcui.util.info
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
@@ -36,7 +40,8 @@ import org.koin.core.annotation.Single
 
 @Single
 class ThemeManager(
-    private val themeDetector: ThemeDetector
+    private val themeDetector: ThemeDetector,
+    private val themeAnalyzer: ThemeAnalyzer,
 ) {
 
     // TODO: tests
@@ -46,6 +51,24 @@ class ThemeManager(
     lateinit var HUD: Hud
     lateinit var themeList: Map<ResourceLocation, ThemeDefinition>
         private set
+
+    /**
+     * This is not filtered for "valid" screen IDs !
+     * map<screenId, map<themeId, screenCallback>>
+     */
+    private val themeScreens = mutableMapOf<ResourceLocation, Map<ResourceLocation, (ResourceLocation) -> Unit>>()
+
+    /*
+     * TODO : cache of screen id to screen callback / reference, currently callback to getting the callback
+     */
+    private val screenConfiguration = mutableMapOf(
+        ThemeAnalyzer.MCUI_SETTINGS to {
+            getAllScreens(ThemeAnalyzer.MCUI_SETTINGS)[ResourceLocation(
+                Constants.MOD_ID,
+                "hex2"
+            )]
+        }
+    )
 
     // TODO : this should eventually be replaced with a list of loaded themes and the screens they provide
     // combined with the user setting the theme providing each screen
@@ -63,7 +86,14 @@ class ThemeManager(
         widgets = emptyMap(),
         scripts = emptyMap(),
     )
-        private set
+        private set(value) {
+            field = value
+            if (value.hud != null) {
+                getAllScreens(ThemeAnalyzer.HUD)[value.id]?.let {
+                    screenConfiguration[ThemeAnalyzer.HUD] = { it }
+                }
+            }
+        }
     private var isReloading = false
 
     fun load(resourceManager: ResourceManager, theme: ResourceLocation = ConfigHandler.currentTheme) {
@@ -89,9 +119,56 @@ class ThemeManager(
         isReloading = false
     }
 
+    private val logger = logger()
+
     fun loadData(resourceManager: ResourceManager): Map<ResourceLocation, ThemeDefinition> =
-        themeDetector.listThemes(resourceManager)
-    // TODO : analyse themes
+        themeDetector.listThemes(resourceManager).onEach { (_, themeDefinition) ->
+            analyzeTheme(
+                resourceManager = resourceManager,
+                themeDefinition = themeDefinition,
+                successReport = logger::debug
+            ) {
+                AbstractThemeLoader.Reporter += it()
+            }
+        }
+
+    fun reloadThemes(
+        successReport: (() -> String) -> Unit,
+        failureReport: (() -> String) -> Unit,
+    ) {
+        themeList.forEach { (_, themeDefinition) ->
+            analyzeTheme(
+                resourceManager = resourceManager,
+                themeDefinition = themeDefinition,
+                successReport = successReport,
+                failureReport = failureReport
+            )
+        }
+    }
+
+    private fun analyzeTheme(
+        resourceManager: ResourceManager,
+        themeDefinition: ThemeDefinition,
+        successReport: (() -> String) -> Unit,
+        failureReport: (() -> String) -> Unit,
+    ) {
+        val themeScreens = themeAnalyzer.analyzeThemeScreens(
+            resourceManager = resourceManager,
+            theme = themeDefinition,
+            setHud = ::HUD.setter,
+            successReport = successReport,
+            failureReport = failureReport
+        )
+
+        themeScreens.forEach { (screenId, callback) ->
+            this.themeScreens.compute(screenId) { _, existing ->
+                if (existing != null) existing + (themeDefinition.id to callback)
+                else mapOf(themeDefinition.id to callback)
+            }
+        }
+
+        logger.info { "Found ${themeScreens.size} screens defined in ${themeDefinition.id} : ${themeScreens.keys}" }
+    }
 
     private fun reportLoading() {
         Client.mc.chatListener.let {
@@ -132,4 +209,11 @@ class ThemeManager(
             }
         }
     }
+
+    val allScreenIds get() = themeScreens.keys
+    fun getAllScreens(screenId: ResourceLocation): Map<ResourceLocation, (ResourceLocation) -> Unit> =
+        themeScreens[screenId].orEmpty()
+
+    fun getConfiguredScreen(screenId: ResourceLocation): ((ResourceLocation) -> Unit)? =
+        screenConfiguration[screenId]?.invoke()
 }

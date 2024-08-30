@@ -30,6 +30,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import net.minecraft.resources.ResourceLocation
 import nl.adaptivity.xmlutil.ExperimentalXmlUtilApi
 import nl.adaptivity.xmlutil.XmlStreaming
@@ -55,10 +56,21 @@ fun main() {
 
     val xml = ka.koin.get<XmlThemeLoader>().xml
 
-    val hud =
+    val hud = /*Hud(
+        name = "nice_hud", version = "123", parts = mapOf(
+            HudPartType.ENTITY_HEALTH_HUD to ElementGroup(),
+            HudPartType.AIR to ElementGroup(),
+        )
+    )*/
         xml.decodeFromReader<Hud>(XmlStreaming.newReader(FileReader("common/src/main/resources/assets/mcui/themes/hex2/hud.xml")))
 
     println(xml.encodeToString(hud))
+
+    println(
+        Json {
+            prettyPrint = true
+        }.encodeToString(hud)
+    )
 
     ka.close()
 }

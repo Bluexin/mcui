@@ -2,7 +2,6 @@ package be.bluexin.mcui.themes.scripting
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.logger
-import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.LibHelper
 import be.bluexin.mcui.themes.scripting.lib.SettingsLib
 import be.bluexin.mcui.themes.scripting.lib.ThemeLib
@@ -26,7 +25,6 @@ import kotlin.jvm.optionals.getOrNull
 // - JavaLoader needs to use the current class loader as parent to load closures in modded context
 @Single // TODO : scoped ? Or it injects the theme's globals into the scope ?
 class LuaJManager(
-    private val themeManager: ThemeManager,
     private val libHelper: LibHelper
 ) {
     private val scriptInstructionsLimit = LuaValue.valueOf(50_000) // TODO: evaluate proper limit
@@ -82,11 +80,11 @@ class LuaJManager(
         }
     }
 
-    fun runScript(rl: ResourceLocation): Varargs? {
+    fun runScript(rl: ResourceLocation, themeId: ResourceLocation): Varargs? {
         return Minecraft.getInstance().resourceManager.getResource(rl)
             .map(Resource::open)
             .map { scriptStream ->
-                val (userGlobals, setHook) = getEnvFor(themeManager.currentTheme.id)
+                val (userGlobals, setHook) = getEnvFor(themeId)
                 val chunk = serverGlobals.load(scriptStream, "=$rl", "t", userGlobals)
                 val userThread = LuaThread(userGlobals, chunk)
                 setHook(

@@ -258,5 +258,7 @@ object RegisterScreen : LuaFunction() {
     operator fun get(id: ResourceLocation): ((ResourceLocation) -> Unit)? = registry[id]
     fun allIds(): Set<ResourceLocation> = registry.keys
 
+    fun getAll(): Map<ResourceLocation, (ResourceLocation) -> Unit> = registry.toMap()
+
     fun clear() = registry.clear()
 }

@@ -2,10 +2,9 @@ package be.bluexin.mcui.commands
 
 import be.bluexin.mcui.screens.LuaScriptedScreen
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
-import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
+import be.bluexin.mcui.util.Client
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
-import net.minecraft.client.Minecraft
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.literal
 import net.minecraft.network.chat.Component
@@ -34,9 +33,8 @@ sealed class GeneralCommands(literal: String) : McuiCommand(literal) {
             @Suppress("UNUSED_PARAMETER")
             context: CommandContext<CommandSourceStack>
         ): Int {
-            if (RegisterScreen[screenId] == null) throw missingScreenError.create(screenId.toString())
-            Minecraft.getInstance().tell {
-                Minecraft.getInstance().setScreen(LuaScriptedScreen(screenId))
+            Client.tell {
+                it.setScreen(LuaScriptedScreen(screenId))
             }
 
             return 1

@@ -18,6 +18,14 @@ inline fun Logger.debug(error: Throwable, message: () -> String) {
     if (isDebugEnabled) debug(message(), error)
 }
 
+inline fun Logger.info(message: () -> String) {
+    if (isInfoEnabled) info(message())
+}
+
+inline fun Logger.info(error: Throwable, message: () -> String) {
+    if (isInfoEnabled) info(message(), error)
+}
+
 inline fun Logger.warn(message: () -> String) {
     if (isWarnEnabled) warn(message())
 }

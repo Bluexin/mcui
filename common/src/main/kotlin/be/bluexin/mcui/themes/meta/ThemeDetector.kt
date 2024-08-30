@@ -41,18 +41,7 @@ internal class ThemeDetectorImpl : ThemeDetector {
             }
         }.map { (key, value) ->
             (key to value).extractLegacyThemeDefinition(resourceManager)
-        })/*.filter { (_, it) ->
-            it.hud != null && try {
-                it.hud
-                    .let(HudFormat::fromFile)
-                    ?.loader
-                    ?.loadHud(resourceManager, it.hud)
-                    ?.setup(emptyMap()) != null
-            } catch (e: Throwable) {
-                logger.warn(e) { "Could not load HUD for $it !" }
-                false
-            }
-        }*/.toMap()
+        }).toMap()
     }
 
     /**

@@ -4,11 +4,9 @@ import be.bluexin.mcui.Constants
 import be.bluexin.mcui.screens.LuaScriptedScreen
 import be.bluexin.mcui.screens.LuaTestScreen
 import be.bluexin.mcui.themes.meta.ThemeManager
-import be.bluexin.mcui.themes.scripting.LuaJManager
-import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
+import be.bluexin.mcui.util.Client
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
-import net.minecraft.client.Minecraft
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.argument
 import net.minecraft.commands.Commands.literal
@@ -21,28 +19,18 @@ import org.koin.core.component.inject
 
 sealed class DebugCommands(usage: String) : McuiCommand(usage) {
     data object Reload : DebugCommands("reload"), KoinComponent {
-        private val luaJManager: LuaJManager by inject()
         private val themeManager: ThemeManager by inject()
 
         private fun reloadAll(commandContext: CommandContext<CommandSourceStack>): Int =
             reloadScripts(commandContext)
 
         private fun reloadScripts(commandContext: CommandContext<CommandSourceStack>): Int = try {
-            themeManager.themeList.values.forEach {
-                it.scripts[it.themeResource("theme")]
-                    ?.let(luaJManager::runScript)
-                    ?.let { retVal ->
-                        val result = retVal.arg1().checkboolean()
-                        val resultValue = retVal.arg(2)
-
-                        if (result) commandContext.source.sendSuccess(
-                            Component.literal("Successfully reloaded scripts for ${it.id}, result: $resultValue"),
-                            false
-                        ) else commandContext.source.sendFailure(
-                            Component.literal("Failed to reload scripts for ${it.id} : $resultValue")
-                        )
-                    }
+            themeManager.reloadThemes({
+                commandContext.source.sendSuccess(Component.literal(it()), false)
+            }) {
+                commandContext.source.sendFailure(Component.literal(it()))
             }
+
             commandContext.source.sendSuccess(Component.literal("Reloaded scripts"), false)
 
             1
@@ -59,31 +47,67 @@ sealed class DebugCommands(usage: String) : McuiCommand(usage) {
             .then(literal("scripts").executes(::reloadScripts))
     }
 
-    data object Open : DebugCommands("open") {
+    data object Open : DebugCommands("open"), KoinComponent {
         private val missingScreenError =
             SimpleCommandExceptionType(Component.translatable("mcui.commands.open.missingscreen"))
+        private val conflictingScreenError =
+            SimpleCommandExceptionType(Component.translatable("mcui.commands.open.conflictingscreen"))
+
+        private val themeManager: ThemeManager by inject()
 
         override fun register(): CommandRegistrar = literal(literal).then(
             argument("screen", id())
                 .suggests { _, builder ->
-                    SharedSuggestionProvider.suggestResource(RegisterScreen.allIds(), builder)
+                    SharedSuggestionProvider.suggestResource(themeManager.allScreenIds, builder)
                 }
-                .executes { context: CommandContext<CommandSourceStack> ->
+                .executes { context ->
                     val screenId = ResourceLocationArgument.getId(context, "screen")
-                    if (RegisterScreen[screenId] == null) throw missingScreenError.create()
-                    Minecraft.getInstance().tell {
-                        Minecraft.getInstance().setScreen(LuaScriptedScreen(screenId))
+                    val implementations = themeManager.getAllScreens(screenId)
+
+                    when (implementations.size) {
+                        0 -> throw missingScreenError.create()
+                        1 -> Client.tell {
+                            it.setScreen(LuaScriptedScreen(screenId, implementations.keys.single()))
+                        }
+
+                        else -> {
+                            context.source.sendFailure(Component.literal("Options : ${implementations.keys}"))
+                            throw conflictingScreenError.create()
+                        }
                     }
 
                     1
-                }
+                }.then(
+                    argument("theme", id())
+                        .suggests { context, builder ->
+                            val screenId = ResourceLocationArgument.getId(context, "screen")
+                            val implementations = themeManager.getAllScreens(screenId)
+                            SharedSuggestionProvider.suggestResource(implementations.keys, builder)
+                        }
+                        .executes { context ->
+                            val screenId = ResourceLocationArgument.getId(context, "screen")
+                            val themeId = ResourceLocationArgument.getId(context, "theme")
+                            val implementations = themeManager.getAllScreens(screenId)
+
+                            if (themeId in implementations) {
+                                Client.tell {
+                                    it.setScreen(LuaScriptedScreen(screenId, themeId))
+                                }
+                            } else {
+                                context.source.sendFailure(Component.literal("Screen $screenId not defined by theme $themeId"))
+                                throw missingScreenError.create()
+                            }
+
+                            1
+                        }
+                )
         )
     }
 
     data object TestGui : DebugCommands("testgui") {
         override fun register(): CommandRegistrar = literal(literal).executes {
-            Minecraft.getInstance().tell {
-                Minecraft.getInstance().setScreen(LuaTestScreen())
+            Client.tell {
+                it.setScreen(LuaTestScreen())
             }
             1
         }

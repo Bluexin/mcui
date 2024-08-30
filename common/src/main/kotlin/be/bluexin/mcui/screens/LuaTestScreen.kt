@@ -5,6 +5,7 @@ import be.bluexin.mcui.themes.elements.Element
 import be.bluexin.mcui.themes.elements.ElementGroup
 import be.bluexin.mcui.themes.elements.Widget
 import be.bluexin.mcui.themes.elements.WidgetParent
+import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.HudDrawContext
 import be.bluexin.mcui.themes.scripting.LuaJManager
 import be.bluexin.mcui.themes.scripting.lib.LoadFragment
@@ -23,6 +24,7 @@ import java.util.*
 
 class LuaTestScreen : Screen(Component.literal("Lua Test Screen")), WidgetParent, KoinComponent {
     private val luaJManager: LuaJManager by inject()
+    private val themeManager: ThemeManager by inject()
 
     override val name = this::class.simpleName?.lowercase() ?: Element.DEFAULT_NAME
 
@@ -47,7 +49,7 @@ class LuaTestScreen : Screen(Component.literal("Lua Test Screen")), WidgetParent
                 Component.literal("Load script")
             ) {
                 try {
-                    luaJManager.runScript(ResourceLocation("mcui", "test.lua"))
+                    luaJManager.runScript(ResourceLocation("mcui", "test.lua"), themeManager.currentTheme.id)
                 } catch (e: Throwable) {
                     Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Something went wrong : ${e.message}. See console for more info."))
                     Constants.LOG.error("Couldn't evaluate test.lua", e)
@@ -59,7 +61,10 @@ class LuaTestScreen : Screen(Component.literal("Lua Test Screen")), WidgetParent
                 Component.translatable("Load widget script")
             ) {
                 try {
-                    luaJManager.runScript(ResourceLocation("mcui", "themes/hex2/scripts/theme.lua"))
+                    luaJManager.runScript(
+                        ResourceLocation("mcui", "themes/hex2/scripts/theme.lua"),
+                        themeManager.currentTheme.id
+                    )
                 } catch (e: Throwable) {
                     Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Something went wrong : ${e.message}. See console for more info."))
                     Constants.LOG.error("Couldn't evaluate theme.lua", e)
