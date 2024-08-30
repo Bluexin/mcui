@@ -121,8 +121,9 @@ class ThemeManager(
 
     private val logger = logger()
 
-    fun loadData(resourceManager: ResourceManager): Map<ResourceLocation, ThemeDefinition> =
-        themeDetector.listThemes(resourceManager).onEach { (_, themeDefinition) ->
+    fun loadData(resourceManager: ResourceManager): Map<ResourceLocation, ThemeDefinition> {
+        themeScreens.clear()
+        return themeDetector.listThemes(resourceManager).onEach { (_, themeDefinition) ->
             analyzeTheme(
                 resourceManager = resourceManager,
                 themeDefinition = themeDefinition,
@@ -131,11 +132,13 @@ class ThemeManager(
                 AbstractThemeLoader.Reporter += it()
             }
         }
+    }
 
     fun reloadThemes(
         successReport: (() -> String) -> Unit,
         failureReport: (() -> String) -> Unit,
     ) {
+        themeScreens.clear()
         themeList.forEach { (_, themeDefinition) ->
             analyzeTheme(
                 resourceManager = resourceManager,
