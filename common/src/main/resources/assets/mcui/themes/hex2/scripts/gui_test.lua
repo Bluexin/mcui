@@ -14,7 +14,7 @@ local function colourButtons(colour)
     end
 end
 
-return function(root)
+local function gui(root)
     local b = wl.loadCenteredButton(root, "Orange button", function(_, _, _, mb)
         print("Hit Orange with " .. mb)
         colourButtons("0xDEA51FFFL")
@@ -40,3 +40,7 @@ return function(root)
         table.insert(buttons, --[[---@type Widget]] b)
     end
 end
+
+-- split to avoid tail call, which does not seem to work
+local ok = theme.registerScreen("mcui:testgui", gui)
+return ok

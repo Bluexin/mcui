@@ -127,7 +127,7 @@ local function addThemeSettings(parent)
     centerCategoryContent(parent, themeCount)
 end
 
-return function(root)
+local function gui(root)
     local themes = loadCategory(root, 'scaledheight / 2 - 10', "scaledwidth / 2 - 120", 'themeselection', function()
         return 'format("mcui.screen.settings.themeselection")'
     end)
@@ -175,3 +175,7 @@ return function(root)
         yPos = yPos + 20
     end
 end
+
+-- split to avoid tail call, which does not seem to work
+local ok = theme.registerScreen("mcui:settings", gui)
+return ok
