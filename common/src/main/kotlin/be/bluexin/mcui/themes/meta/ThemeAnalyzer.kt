@@ -30,8 +30,9 @@ class ThemeAnalyzer(
         }
 
         RegisterScreen.clear()
+        luaJManager.clearGlobals(theme)
         theme.scripts[theme.themeResource("theme")]
-            ?.let { luaJManager.runScript(it, theme.id) }
+            ?.let { luaJManager.runMainScript(it, theme) }
             ?.let { retVal ->
                 val result = retVal.arg1().checkboolean()
                 val resultValue = retVal.arg(2)

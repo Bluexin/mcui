@@ -38,3 +38,10 @@ mouse_buttons = {
 --- @field namespace string
 --- @field path string
 --- @field string string text representation in namespace:path format
+
+---@param modname string
+---@param themeId? LKResourceLocation
+---@return any
+function require(modname, themeId)
+    return {}
+end

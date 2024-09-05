@@ -2,9 +2,12 @@ package be.bluexin.mcui.themes.scripting
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.logger
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.LibHelper
+import be.bluexin.mcui.themes.scripting.lib.SafetyLib
 import be.bluexin.mcui.themes.scripting.lib.SettingsLib
 import be.bluexin.mcui.themes.scripting.lib.ThemeLib
+import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.debug
 import be.bluexin.mcui.util.warn
 import net.minecraft.client.Minecraft
@@ -55,7 +58,7 @@ class LuaJManager(
         return setHook
     }
 
-    private fun getEnvFor(theme: ResourceLocation) = scriptGlobals.getOrPut(theme) {
+    private fun getEnvFor(theme: ThemeDefinition) = scriptGlobals.getOrPut(theme.id) {
         val globals = Globals().apply {
             // TODO : verify & lock down file access
             // dofile, load, loadfile,
@@ -68,6 +71,7 @@ class LuaJManager(
             load(JseMathLib())
             load(ThemeLib)
             load(SettingsLib)
+            load(SafetyLib(theme, this@LuaJManager))
         }
         val setHook = globals.enableDebugSafely()
 
@@ -80,11 +84,11 @@ class LuaJManager(
         }
     }
 
-    fun runScript(rl: ResourceLocation, themeId: ResourceLocation): Varargs? {
+    fun runMainScript(rl: ResourceLocation, theme: ThemeDefinition): Varargs? {
         return Minecraft.getInstance().resourceManager.getResource(rl)
             .map(Resource::open)
             .map { scriptStream ->
-                val (userGlobals, setHook) = getEnvFor(themeId)
+                val (userGlobals, setHook) = getEnvFor(theme)
                 val chunk = serverGlobals.load(scriptStream, "=$rl", "t", userGlobals)
                 val userThread = LuaThread(userGlobals, chunk)
                 setHook(
@@ -119,16 +123,26 @@ class LuaJManager(
             }.getOrNull()
     }
 
-    fun compileSnippet(key: String, snippet: String, themeId: ResourceLocation): LuaValue {
-        val (userGlobals, _) = getEnvFor(themeId)
-        val chunk = serverGlobals.load(snippet, "=${themeId.withPath { "$it/$key" }}", userGlobals)
+    fun load(rl: ResourceLocation, theme: ThemeDefinition): LuaValue? = Client.resourceManager
+        .getResource(rl)
+        .map(Resource::open)
+        .map { scriptStream ->
+            val (userGlobals) = getEnvFor(theme)
+            serverGlobals.load(scriptStream, "=$rl", "t", userGlobals)
+        }
+        .filter(LuaValue::isfunction)
+        .getOrNull()
+
+    fun compileSnippet(key: String, snippet: String, theme: ThemeDefinition): LuaValue {
+        val (userGlobals, _) = getEnvFor(theme)
+        val chunk = serverGlobals.load(snippet, "=${theme.id.withPath { "$it/$key" }}", userGlobals)
 
         return chunk
     }
 
-    fun runCallback(themeId: ResourceLocation, closure: LuaValue, args: Varargs) {
+    fun runCallback(theme: ThemeDefinition, closure: LuaValue, args: Varargs) {
         require(closure is LuaClosure)
-        val (userGlobals, setHook) = getEnvFor(themeId)
+        val (userGlobals, setHook) = getEnvFor(theme)
         val userThread = LuaThread(userGlobals, closure)
         setHook(
             LuaValue.varargsOf(
@@ -136,6 +150,10 @@ class LuaJManager(
             )
         )
         userThread.resume(args)
+    }
+
+    fun clearGlobals(theme: ThemeDefinition) {
+        scriptGlobals.remove(theme.id)
     }
 
     private data class ScriptEnvironment(

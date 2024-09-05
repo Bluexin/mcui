@@ -204,7 +204,7 @@ class Widget(
         if (!script.isNullOrBlank()) try {
             access.set(
                 name,
-                luaJManager.compileSnippet("${this.name}/$name".lowercase(), script, themeManager.currentTheme.id)
+                luaJManager.compileSnippet("${this.name}/$name".lowercase(), script, themeManager.currentTheme)
             )
         } catch (e: Throwable) {
             AbstractThemeLoader.Reporter += e.message ?: "Unknown error loading ${this.name}/$name"

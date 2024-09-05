@@ -21,7 +21,6 @@ import be.bluexin.mcui.config.OptionCore
 import be.bluexin.mcui.deprecated.api.screens.IIcon
 import be.bluexin.mcui.deprecated.screens.CoreGUI
 import be.bluexin.mcui.deprecated.screens.MouseButton
-import be.bluexin.mcui.deprecated.screens.menus.IngameMenu
 import be.bluexin.mcui.deprecated.screens.unaryPlus
 import be.bluexin.mcui.deprecated.screens.util.PopupAdvancement
 import be.bluexin.mcui.themes.meta.ThemeDefinition
@@ -439,10 +438,10 @@ fun INeoParent.themeButton(theme: ThemeDefinition): IconLabelElement {
             set(_) = (Unit)
     }
     but.onClick { _, _ ->
-        themeManager.load(Client.mc.resourceManager, theme.id)
+        /*themeManager.load(Client.mc.resourceManager, theme.id)
         OptionCore.VANILLA_UI.disable()
         Client.mc.setScreen(null)
-        Client.mc.setScreen(IngameMenu())
+        Client.mc.setScreen(IngameMenu())*/
         true
     }
     but.parent = this

@@ -11,7 +11,6 @@ import be.bluexin.mcui.themes.scripting.lib.LoadFragment
 import be.bluexin.mcui.themes.scripting.lib.LoadWidget
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
@@ -61,15 +60,9 @@ class LuaScriptedScreen(
         super.setTooltipForNextRenderPass(tooltip)
     }
 
-    override fun init() {
-        super.init()
-
-        addRenderableOnly(Renderable { poseStack: PoseStack, mx: Int, my: Int, _: Float ->
-            root.draw(context, poseStack, mx.toDouble(), my.toDouble())
-        })
-    }
-
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
+        if (widgets.isEmpty()) return onClose()
+
         context.setTime(partialTick)
         widgets.forEach { it.draw(context, poseStack, mouseX.toDouble(), mouseY.toDouble()) }
     }
@@ -108,6 +101,5 @@ class LuaScriptedScreen(
     override fun plusAssign(widget: Widget) {
         widget.setup(this, emptyMap())
         widgets += widget
-        addRenderableWidget(widget)
     }
 }

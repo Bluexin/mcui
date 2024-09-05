@@ -20,6 +20,8 @@ import org.luaj.vm2.LuaValue
 import java.lang.ref.WeakReference
 import java.util.*
 
+// TODO : all of these should use theme internal RLs instead of absolute RLs
+
 object ReadFragment : LuaFunction(), KoinComponent {
     private val xmlThemeLoader: XmlThemeLoader by inject()
 

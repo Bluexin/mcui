@@ -127,10 +127,11 @@ class ThemeManager(
             analyzeTheme(
                 resourceManager = resourceManager,
                 themeDefinition = themeDefinition,
-                successReport = logger::debug
-            ) {
-                AbstractThemeLoader.Reporter += it()
-            }
+                successReport = logger::debug,
+                failureReport = {
+                    AbstractThemeLoader.Reporter += it()
+                }
+            )
         }
     }
 
