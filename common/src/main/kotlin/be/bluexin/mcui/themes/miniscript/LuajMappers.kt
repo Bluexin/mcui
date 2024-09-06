@@ -65,7 +65,8 @@ data object UnknownCValueMapper: LKMapper<CValue<*>> {
     }
 
     override fun toLua(value: CValue<*>): LuaValue {
-        val ei = value.value.expressionIntermediate as NamedExpressionIntermediate
+        val ei = value.value.expressionIntermediate as? NamedExpressionIntermediate
+            ?: return LuaValue.NIL
         return LuaValue.tableOf(
             arrayOf(
                 LuaValue.valueOf("expression"), LuaValue.valueOf(ei.expression),

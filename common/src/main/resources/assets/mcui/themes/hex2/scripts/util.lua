@@ -33,13 +33,37 @@ function util.tprint (tbl, indent)
         elseif (type(v) == "string") then
             toprint = toprint .. "\"" .. v .. "\",\r\n"
         elseif (type(v) == "table") then
-            toprint = toprint .. tprint(v, indent) .. ",\r\n"
+            toprint = toprint .. util.tprint(v, indent) .. ",\r\n"
         else
             toprint = toprint .. "\"" .. tostring(v) .. "\",\r\n"
         end
     end
     toprint = toprint .. string.rep(" ", indent - 2) .. "}"
     return toprint
+end
+
+--- @generic K, V
+--- @param a table<K, V>
+--- @param b table<K, V>
+--- @return table<K, V>
+function util.merge(a, b)
+    local c = util.shallow_copy(a)
+    for k, v in pairs(b) do
+        c[--[[---@type K]] k] = v
+    end
+    return c
+end
+
+--- @generic K, V
+--- @param t table<K, V>
+--- @return table<K, V>
+function util.shallow_copy(t)
+    --- @type table<K, V>
+    local t2 = {}
+    for k, v in pairs(t) do
+        t2[--[[---@type K]] k] = v
+    end
+    return t2
 end
 
 return util

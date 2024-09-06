@@ -2,6 +2,27 @@
 local wl = {}
 
 local theme = require 'theme'
+local util = require 'util'
+
+--- @param parent Widget|nil
+--- @param name string
+function wl.getChildWidget(parent, name)
+    if parent then
+        local child = (--[[---@type Widget]] parent).getChildByName(name)
+        if child and type(child) == 'Widget' then
+            return --[[---@type Widget]] child
+        end
+    end
+    error('No child widget with name ' .. name .. " on " .. ((parent and (--[[---@type Widget]] parent).name) or 'missing parent'))
+end
+
+--- @param categoryContent Widget
+--- @param n number amount of children
+function wl.centerCategoryContent(categoryContent, n)
+    if n > 2 then
+        categoryContent.y = -20 * math.floor((n - 1) / 2)
+    end
+end
 
 function wl.static(value)
     if (type(value) == "string") then
@@ -67,13 +88,105 @@ function wl.loadCenteredButton(root, text, onClick, x, y)
         xPos = wl.tframe("scaledwidth / 2 + " .. tostring(x), 'DOUBLE'),
         yPos = wl.tstatic(y),
     })
-    if (r == false) then
+    if (not r) then
         print('Could not load button')
     else
         local button = --[[---@type Widget]] r
         button.onClick = onClick
     end
     return r
+end
+
+local label_button_frag = theme.readWidget("mcui:themes/hex2/widgets/label_button.xml")
+
+--- @param arg string|number|boolean|CValue
+--- @param default fun(value: string|number|boolean, jtype: JelType|nil, nowrap: boolean): CValue
+--- @param valueType JelType
+--- @return CValue
+local function fromArg(arg, default, valueType)
+    if (type(arg) == 'table') then
+        return --[[---@type CValue]] arg
+    else
+        return default(--[[---@type string|number|boolean]] arg, valueType, false)
+    end
+end
+
+--- @param self table<string, CValue>
+--- @param key string
+--- @param source string|number|boolean|CValue|nil
+--- @param default fun(value: string|number|boolean, jtype: JelType|nil, nowrap: boolean): CValue
+--- @param valueType JelType
+local function bind(self, key, source, default, valueType)
+    if (source) then
+        self[key] = fromArg(source, default, valueType)
+    end
+end
+
+--- @shape buttonArgs
+--- @field xPos string|number|CDouble
+--- @field yPos string|number|CDouble
+--- @field width number|nil
+--- @field label string|CString|nil
+--- @field tooltip string|CString|nil
+--- @field onClick nil|fun(arg: Widget, arg: number, arg: number, arg: number): boolean
+--- @field variables table<string, CValue>|nil
+
+--- @param parent Widget|string
+--- @param args buttonArgs
+--- @return Widget|boolean
+function wl.loadButton(parent, args)
+    --- @type table<string, CValue>
+    local baseArgs = {}
+
+    bind(baseArgs, 'text', args.label, wl.tstatic, 'STRING')
+    bind(baseArgs, 'xPos', args.xPos, wl.tstatic, 'DOUBLE')
+    bind(baseArgs, 'yPos', args.yPos, wl.tstatic, 'DOUBLE')
+    bind(baseArgs, 'initialWidth', args.width or 160, wl.tstatic, 'DOUBLE')
+
+    local allArgs = util.merge(
+            baseArgs,
+            --- @type table<string, CValue>
+            args.variables or {}
+    )
+
+    local r = theme.loadWidget(parent, label_button_frag, allArgs)
+    if (not r) then
+        print('Could not load button ' .. args.label)
+    else
+        local w = --[[---@type Widget]] r
+        if (args.tooltip) then
+            w.tooltip = fromArg(args.tooltip, wl.tstatic, 'STRING')
+        end
+
+        if args.onClick then
+            w.onClick = args.onClick
+        end
+    end
+    return r
+end
+
+local category_frag = theme.readWidget("mcui:themes/hex2/widgets/category_label_button.xml")
+
+--- @param parent string|Widget
+--- @param yPos string|number
+--- @param xPos string|number
+--- @param label string
+--- @param display? fun(id: string): string
+--- @return Widget|nil
+function wl.loadCategory(parent, yPos, xPos, label, display)
+    category_frag.name = 'cat_' .. label:lower():gsub(':', '_')
+    local r = theme.loadWidget(parent, category_frag, {
+        text = wl.tstatic((display and display(label)) or '"' .. label .. '"', "STRING", true),
+        xPos = wl.tframe(xPos, 'DOUBLE'),
+        yPos = wl.tframe(yPos, "DOUBLE"),
+    })
+    if (r == false) then
+        print('Could not load category')
+        return nil
+    else
+        print('Loaded ' .. label .. ' into ' .. tostring(parent) .. " at " .. tostring(xPos) .. ' / ' .. tostring(yPos))
+    end
+    return --[[---@type Widget]] r
 end
 
 return wl

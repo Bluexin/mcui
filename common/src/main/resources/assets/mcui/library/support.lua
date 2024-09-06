@@ -11,7 +11,7 @@ mouse_buttons = {
 --- @alias JelType 'STRING' | 'DOUBLE' | 'INT' | 'BOOLEAN' | 'UNIT' | 'ERROR'
 
 --- @shape TypeSpecificCValue
---- @field expression string|number
+--- @field expression string
 --- @field cache CacheType
 
 --- Represents a MiniScript value computing to generic type
@@ -19,19 +19,19 @@ mouse_buttons = {
 --- @field type JelType
 
 --- Represents a MiniScript value computing to int type
---- @alias CInt TypeSpecificCValue|string|number
+--- @alias CInt CValue|string|number
 
 --- Represents a MiniScript value computing to boolean type
---- @alias CBoolean TypeSpecificCValue|string|number
+--- @alias CBoolean CValue|string|number
 
 --- Represents a MiniScript value computing to double type
---- @alias CDouble TypeSpecificCValue|string|number
+--- @alias CDouble CValue|string|number
 
 --- Represents a MiniScript value computing to string type
---- @alias CString TypeSpecificCValue|string|number
+--- @alias CString CValue|string|number
 
 --- Represents a MiniScript value computing to void type
---- @alias CUnit TypeSpecificCValue|string|number
+--- @alias CUnit CValue|string|number
 
 --- Minecraft ResourceLocation
 --- @shape LKResourceLocation
