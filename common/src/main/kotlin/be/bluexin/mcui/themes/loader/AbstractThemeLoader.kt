@@ -1,8 +1,6 @@
 package be.bluexin.mcui.themes.loader
 
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.config.Setting
-import be.bluexin.mcui.config.Settings
 import be.bluexin.mcui.effects.ColorState
 import be.bluexin.mcui.themes.elements.ElementGroup
 import be.bluexin.mcui.themes.elements.Fragment
@@ -43,9 +41,6 @@ abstract class AbstractThemeLoader(protected val type: HudFormat, protected val 
         val start = System.currentTimeMillis()
 
         runCatching {
-            val old = Settings.clear(theme.id)
-            settingsLoader.loadSettings(resourceManager, theme)?.forEach(Setting<*>::register)
-            Settings.build(theme.id, old)
             val hud = loadHud(resourceManager, theme.themeRoot.append("/${type.hudFileSuffix}"))
             val fragments = theme.fragments.mapValues { (_, path) -> { this.loadFragment(path) } }
 

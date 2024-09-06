@@ -17,7 +17,7 @@ import kotlin.reflect.KProperty
 @LuajExpose(LuajExpose.IncludeType.OPT_IN)
 @JsonAdapter(JsonSettingAdapterFactory::class)
 @Serializable
-// TODO : add schema for settings
+// TODO : add json schema for settings
 sealed class Setting<T : Any> : LKExposed {
 
     @Transient
@@ -79,6 +79,12 @@ open class StringSetting(
     override fun validate(value: String) = validate?.invoke(value) ?: true
     override fun toLua(): LuaValue = StringSettingAccess(this)
 
+    @LuajExpose
+    fun getValue(): String = Settings[this]
+
+    @LuajExpose
+    fun setValue(value: String) = Settings.set(this, value)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -116,6 +122,12 @@ class BooleanSetting(
     override fun write(value: Boolean) = value.toString()
     override fun validate(value: Boolean): Boolean = true
     override fun toLua(): LuaValue = BooleanSettingAccess(this)
+
+    @LuajExpose
+    fun getValue(): Boolean = Settings[this]
+
+    @LuajExpose
+    fun setValue(value: Boolean) = Settings.set(this, value)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -158,6 +170,12 @@ class IntSetting(
     override fun write(value: Int): String = value.toString()
     override fun validate(value: Int): Boolean = validate?.invoke(value) ?: defaultValidate(this, value)
     override fun toLua(): LuaValue = IntSettingAccess(this)
+
+    @LuajExpose
+    fun getValue(): Int = Settings[this]
+
+    @LuajExpose
+    fun setValue(value: Int) = Settings.set(this, value)
 
     override fun toString(): String {
         return "IntSetting(min=$min, max=$max) ${super.toString()}"
@@ -216,6 +234,12 @@ class DoubleSetting(
     override fun validate(value: Double): Boolean = validate?.invoke(value) ?: defaultValidate(this, value)
     override fun toLua(): LuaValue = DoubleSettingAccess(this)
 
+    @LuajExpose
+    fun getValue(): Double = Settings[this]
+
+    @LuajExpose
+    fun setValue(value: Double) = Settings.set(this, value)
+
     override fun toString(): String {
         return "DoubleSetting(min=$min, max=$max) ${super.toString()}"
     }
@@ -268,6 +292,12 @@ class ChoiceSetting(
 
     override fun toLua(): LuaValue = ChoiceSettingAccess(this)
 
+    @LuajExpose
+    fun getValue(): String = Settings[this]
+
+    @LuajExpose
+    fun setValue(value: String) = Settings.set(this, value)
+
     override fun toString(): String {
         return "ChoiceSetting(values=$values) ${super.toString()}"
     }
@@ -309,6 +339,12 @@ class ResourceLocationSetting(
     override fun write(value: LKResourceLocation) = value.toString()
     override fun validate(value: LKResourceLocation) = validate?.invoke(value) ?: true
     override fun toLua(): LuaValue = ResourceLocationSettingAccess(this)
+
+    @LuajExpose
+    fun getValue(): LKResourceLocation = Settings[this]
+
+    @LuajExpose
+    fun setValue(value: LKResourceLocation) = Settings.set(this, value)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -1,0 +1,21 @@
+[
+  {
+    "key": "hud:remove_hpxp",
+    "type": "boolean",
+    "defaultValue": false,
+    "comment": "Whether to remove HP & XP from showing on the HUD"
+  },
+  {
+    "key": "hud:vertical_hotbar",
+    "type": "boolean",
+    "defaultValue": true,
+    "comment": "Whether to show a vertical hotbar (true = vertical, false = horizontal)"
+  },
+  {
+    "key": "hud:health_offset_x",
+    "type": "double",
+    "defaultValue": 4.0,
+    "min": 0.0,
+    "comment": "Offset on the X axis for the health bar"
+  }
+]

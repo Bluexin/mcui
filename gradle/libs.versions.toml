@@ -32,7 +32,7 @@ luaj = "f062b53a34"
 bcel = { require = "6.7.0" }
 
 luajksp = "master-SNAPSHOT"
-ksp = "2.0.20-1.0.24"
+ksp = "2.0.20-1.0.25"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }

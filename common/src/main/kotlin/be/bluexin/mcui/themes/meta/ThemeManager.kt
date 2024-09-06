@@ -24,6 +24,7 @@ import be.bluexin.mcui.config.ConfigHandler
 import be.bluexin.mcui.logger
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
+import be.bluexin.mcui.themes.loader.SettingsLoader
 import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.Client.resourceManager
@@ -42,6 +43,7 @@ import org.koin.core.annotation.Single
 class ThemeManager(
     private val themeDetector: ThemeDetector,
     private val themeAnalyzer: ThemeAnalyzer,
+    private val settingsLoader: SettingsLoader,
 ) {
 
     // TODO: tests
@@ -172,6 +174,8 @@ class ThemeManager(
         }
 
         logger.info { "Found ${themeScreens.size} screens defined in ${themeDefinition.id} : ${themeScreens.keys}" }
+
+        settingsLoader.loadSettings(resourceManager, themeDefinition)
     }
 
     private fun reportLoading() {

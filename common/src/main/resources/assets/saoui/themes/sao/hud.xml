@@ -129,7 +129,7 @@
             <value name="hotbar">
                 <children>
                     <elementGroup name="vertical">
-                        <enabled>isEnabled(VER_HOTBAR)</enabled>
+                        <enabled>booleanSetting("hud:vertical_hotbar")</enabled>
                         <x cache="SIZE_CHANGE">scaledwidth - 24.0</x>
                         <y cache="SIZE_CHANGE">scaledheight / 2.0</y>
                         <children>
@@ -187,7 +187,7 @@
                         </children>
                     </elementGroup>
                     <elementGroup name="horizontal">
-                        <enabled>isEnabled(HOR_HOTBAR)</enabled>
+                        <enabled>!booleanSetting("hud:vertical_hotbar")</enabled>
                         <x cache="SIZE_CHANGE">scaledwidth / 2.0 - 92.0</x>
                         <y cache="SIZE_CHANGE">scaledheight - 23.0</y>
                         <children>

@@ -16,6 +16,8 @@ end
 --- @param receiver Widget
 local function onThemeClick(receiver)
     if receiver.getVariable('isCurrentTheme').expression == 'false' then
+        local themeId, _ = receiver.getVariable('themeId').expression:gsub('"', '')
+        settings.setTheme(themeId)
         receiver.setVariable('isCurrentTheme', wl.tstatic(true))
         --receiver.setVariable('active', tstatic(false))
         for _, v in ipairs(receiver.peers) do
@@ -25,8 +27,6 @@ local function onThemeClick(receiver)
                 (--[[---@type Widget]] v).setVariable('isCurrentTheme', wl.tstatic(false))
             end
         end
-        local themeId, _ = receiver.getVariable('themeId').expression:gsub('"', '')
-        settings.setTheme(themeId)
         return true
     else
         return false
@@ -95,13 +95,36 @@ local function gui(root)
                 if category then
                     local catContent = wl.getChildWidget(category, 'content')
                     for settingName, setting in pairs(catValue) do
-                        wl.loadButton(
-                                catContent, {
-                                    xPos = 0, yPos = catN * 20,
-                                    label = settingName .. ': ' .. type(setting),
-                                    tooltip = setting.comment
-                                }
-                        )
+                        if (type(setting) == 'BooleanSetting') then
+                            local bs = --[[---@type BooleanSetting]] setting
+                            wl.loadButton(
+                                    catContent, {
+                                        xPos = 0, yPos = catN * 20,
+                                        -- miniscript settings currently resolve to "currentTheme" so not great
+                                        label = wl.tframe('"' .. settingName .. ': " + (state? "yes": "no")', 'STRING', true),
+                                        --label = settingName .. ': ' .. tostring(bs.getValue()),
+                                        tooltip = setting.comment,
+                                        onClick = function(widget)
+                                            local newVal = not bs.getValue()
+                                            bs.setValue(newVal)
+                                            widget.setVariable('state', wl.tstatic(newVal))
+                                            return true
+                                        end,
+                                        variables = {
+                                            state = wl.tstatic(bs.getValue())
+                                        }
+                                    }
+                            )
+                        else
+                            wl.loadButton(
+                                    catContent, {
+                                        xPos = 0, yPos = catN * 20,
+                                        label = settingName .. ': ' .. type(setting),
+                                        tooltip = setting.comment
+                                    }
+                            )
+                        end
+
                         catN = catN + 1
                     end
                     wl.centerCategoryContent(catContent, catN)

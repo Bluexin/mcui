@@ -128,7 +128,7 @@ end
 --- @field width number|nil
 --- @field label string|CString|nil
 --- @field tooltip string|CString|nil
---- @field onClick nil|fun(arg: Widget, arg: number, arg: number, arg: number): boolean
+--- @field onClick nil|fun(self: Widget, mouseX: number, mouseY: number, mouseButton: number): boolean
 --- @field variables table<string, CValue>|nil
 
 --- @param parent Widget|string

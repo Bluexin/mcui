@@ -1,6 +1,7 @@
 package be.bluexin.mcui.themes.loader
 
 import be.bluexin.mcui.config.Setting
+import be.bluexin.mcui.config.Settings
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
@@ -10,7 +11,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import net.minecraft.server.packs.resources.ResourceManager
 import org.koin.core.annotation.Single
-import kotlin.jvm.optionals.getOrNull
 
 @Single
 class SettingsLoader {
@@ -30,12 +30,20 @@ class SettingsLoader {
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    fun loadSettings(resourceManager: ResourceManager, theme: ThemeDefinition): List<Setting<*>>? =
+    fun loadSettings(resourceManager: ResourceManager, theme: ThemeDefinition) {
+        val old = Settings.clear(theme.id)
+
         theme.settings
             ?.let(resourceManager::getResource)
             ?.map { resource ->
                 resource.open()
                     .use { stream -> json.decodeFromStream(serializer, stream) }
-                    .onEach { it.namespace = theme.id }
-            }?.getOrNull()
+                    .onEach {
+                        it.namespace = theme.id
+                        it.register()
+                    }
+            }
+
+        Settings.build(theme.id, old)
+    }
 }

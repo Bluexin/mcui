@@ -1,6 +1,7 @@
 package be.bluexin.mcui.screens
 
 import be.bluexin.mcui.Constants
+import be.bluexin.mcui.config.OptionCore
 import be.bluexin.mcui.themes.elements.Element
 import be.bluexin.mcui.themes.elements.ElementGroup
 import be.bluexin.mcui.themes.elements.Widget
@@ -102,4 +103,6 @@ class LuaScriptedScreen(
         widget.setup(this, emptyMap())
         widgets += widget
     }
+
+    override fun isPauseScreen() = OptionCore.GUI_PAUSE.isEnabled
 }
