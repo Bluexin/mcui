@@ -97,8 +97,6 @@ function wl.loadCenteredButton(root, text, onClick, x, y)
     return r
 end
 
-local label_button_frag = theme.readWidget("mcui:themes/hex2/widgets/label_button.xml")
-
 --- @param arg string|number|boolean|CValue
 --- @param default fun(value: string|number|boolean, jtype: JelType|nil, nowrap: boolean): CValue
 --- @param valueType JelType
@@ -121,6 +119,8 @@ local function bind(self, key, source, default, valueType)
         self[key] = fromArg(source, default, valueType)
     end
 end
+
+local label_button_frag = theme.readWidget("mcui:themes/hex2/widgets/label_button.xml")
 
 --- @shape buttonArgs
 --- @field xPos string|number|CDouble

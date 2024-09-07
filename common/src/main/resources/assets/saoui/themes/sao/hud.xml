@@ -5,122 +5,38 @@
         <entry>
             <key>HEALTH_BOX</key>
             <value name="health box">
-                <x cache="STATIC">2.0</x>
-                <y cache="STATIC">2.0</y>
                 <children>
-                    <elementGroup name="background">
-                        <texture>saoui:textures/sao/gui.png</texture>
-                        <children>
-                            <glRectangle>
-                                <h cache="STATIC">15.0</h>
-                                <w cache="STATIC">16.0</w>
-                            </glRectangle>
-                            <glRectangle>
-                                <h cache="STATIC">15.0</h>
-                                <srcW cache="STATIC">5.0</srcW>
-                                <srcX cache="STATIC">16.0</srcX>
-                                <w>usernamewidth</w>
-                                <x cache="STATIC">16.0</x>
-                            </glRectangle>
-                            <glRectangle>
-                                <h cache="STATIC">15.0</h>
-                                <srcX cache="STATIC">21.0</srcX>
-                                <w cache="STATIC">234.0</w>
-                                <x>16.0 + usernamewidth</x>
-                            </glRectangle>
-                        </children>
-                    </elementGroup>
-                    <glString name="username">
-                        <text>username</text>
-                        <h cache="STATIC">15.0</h>
-                        <x cache="STATIC">16.0</x>
-                        <y cache="STATIC">1.0</y>
-                    </glString>
-                    <glRectangle name="health bar">
-                        <texture>saoui:textures/sao/gui.png</texture>
-                        <h cache="STATIC">9.0</h>
-                        <rgba>healthStep.rgba</rgba>
-                        <srcH cache="STATIC">9.0</srcH>
-                        <srcW>215.0 * hpPct</srcW>
-                        <srcY cache="STATIC">188.0</srcY>
-                        <w>215.0 * hpPct</w>
-                        <x>18.0 + usernamewidth</x>
-                        <y cache="STATIC">3.0</y>
-                    </glRectangle>
-                    <glRectangle name="air bar">
-                        <texture>saoui:textures/sao/gui.png</texture>
-                        <h cache="STATIC">9.0</h>
-                        <rgba>healthStep == CREATIVE? 0x00000000:
-                            statusEffects.contains(WET)? 0x2ADDF580:
-                            0x00000000</rgba>
-                        <srcH cache="STATIC">9.0</srcH>
-                        <srcW>215.0 * airPct</srcW>
-                        <srcY cache="STATIC">188.0</srcY>
-                        <w>215.0 * airPct</w>
-                        <x>18.0 + usernamewidth</x>
-                        <y cache="STATIC">3.0</y>
-                    </glRectangle>
-                    <glRectangle name="hunger bar">
-                        <texture>saoui:textures/sao/gui.png</texture>
-                        <h cache="STATIC">2.0</h>
-                        <rgba>healthStep == CREATIVE? 0xCD840400:
-                            statusEffects.contains(ROTTEN)? 0xD045FFFF:
-                            0xF5AB2AFF</rgba>
-                        <srcH cache="STATIC">2.0</srcH>
-                        <srcW>115.0 * foodPct</srcW>
-                        <srcY cache="STATIC">193.0</srcY>
-                        <w>113.0 * foodPct</w>
-                        <x>18.0 + usernamewidth</x>
-                        <y cache="STATIC">10.0</y>
-                    </glRectangle>
-                    <elementGroup name="hp bg and text">
-                        <enabled>!isEnabled(REMOVE_HPXP)</enabled>
-                        <x>usernamewidth + 132.0</x>
-                        <y cache="STATIC">12.0</y>
-                        <children>
-                            <glString name="hp text">
-                                <text>absorption > 0? format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
-                                    "formatHealthAbsorb", ceil(hp), ceil(maxHp), ceil(absorption)):
-                                    format("formatHealth", ceil(hp), ceil(maxHp))
-                                </text>
-                                <x cache="STATIC">5.0</x>
-                                <y cache="STATIC">8.0</y>
-                            </glString>
-                            <elementGroup name="hp bg">
-                                <texture>saoui:textures/sao/gui.png</texture>
-                                <children>
-                                    <glRectangle>
-                                        <srcX cache="STATIC">60.0</srcX>
-                                        <srcY cache="STATIC">15.0</srcY>
-                                        <w cache="STATIC">5.0</w>
-                                        <h cache="STATIC">13.0</h>
-                                    </glRectangle>
-                                    <glRectangle>
-                                        <x cache="STATIC">5.0</x>
-                                        <srcX cache="STATIC">66.0</srcX>
-                                        <srcY cache="STATIC">15.0</srcY>
-                                        <w>strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
-                                            "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(hp), ceil(maxHp),
-                                            ceil(absorption)): format("formatHealth", ceil(hp), ceil(maxHp)))
-                                        </w>
-                                        <h cache="STATIC">13.0</h>
-                                        <srcW cache="STATIC">5.0</srcW>
-                                        <srcH cache="STATIC">13.0</srcH>
-                                    </glRectangle>
-                                    <glRectangle>
-                                        <x>5 + strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
-                                            "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(hp), ceil(maxHp),
-                                            ceil(absorption)): format("formatHealth", ceil(hp), ceil(maxHp)))
-                                        </x>
-                                        <srcX cache="STATIC">70.0</srcX>
-                                        <srcY cache="STATIC">15.0</srcY>
-                                        <w cache="STATIC">5.0</w>
-                                        <h cache="STATIC">13.0</h>
-                                    </glRectangle>
-                                </children>
-                            </elementGroup>
-                        </children>
-                    </elementGroup>
+                    <fragmentReference id="saoui.sao:health_box"/>
+                    <fragmentReference id="saoui.sao:label">
+                        <variables>
+                            <variable key="text" type="STRING" cache="STATIC">"Hello World !"</variable>
+                        </variables>
+                        <x cache="STATIC">80</x>
+                        <y cache="STATIC">100</y>
+                    </fragmentReference>
+                    <fragmentReference id="saoui.sao:label">
+                        <variables>
+                            <variable key="text" type="STRING">"How are you " + username + " ?"</variable>
+                        </variables>
+                        <x cache="STATIC">80</x>
+                        <y cache="STATIC">120</y>
+                    </fragmentReference>
+                    <fragmentReference id="saoui.sao:label">
+                        <variables>
+                            <variable key="text" type="STRING" cache="STATIC">"Hello World !"</variable>
+                            <variable key="centered" type="BOOLEAN" cache="STATIC">true</variable>
+                        </variables>
+                        <x cache="STATIC">80</x>
+                        <y cache="STATIC">200</y>
+                    </fragmentReference>
+                    <fragmentReference id="saoui.sao:label">
+                        <variables>
+                            <variable key="text" type="STRING">"How are you " + username + " ?"</variable>
+                            <variable key="centered" type="BOOLEAN" cache="STATIC">true</variable>
+                        </variables>
+                        <x cache="STATIC">80</x>
+                        <y cache="STATIC">220</y>
+                    </fragmentReference>
                 </children>
             </value>
         </entry>
@@ -128,169 +44,22 @@
             <key>HOTBAR</key>
             <value name="hotbar">
                 <children>
-                    <elementGroup name="vertical">
-                        <enabled>booleanSetting("hud:vertical_hotbar")</enabled>
-                        <x cache="SIZE_CHANGE">scaledwidth - 24.0</x>
-                        <y cache="SIZE_CHANGE">scaledheight / 2.0</y>
-                        <children>
-                            <repetitionGroup name="main inventory">
-                                <amount cache="STATIC">9</amount>
-                                <children>
-                                    <glHotbarItem>
-                                        <h cache="STATIC">20.0</h>
-                                        <rgba cache="NONE">i == selectedslot ? 0xFFBA66FF : 0xCDCDCDAA</rgba>
-                                        <srcH cache="STATIC">20.0</srcH>
-                                        <srcW cache="STATIC">20.0</srcW>
-                                        <srcY cache="STATIC">25.0</srcY>
-                                        <w cache="STATIC">20.0</w>
-                                        <y cache="NONE">-99.0 + 22.0 * i</y>
-                                        <slot cache="NONE">i</slot>
-                                        <itemXoffset cache="STATIC">2</itemXoffset>
-                                        <itemYoffset cache="STATIC">2</itemYoffset>
-                                        <texture>saoui:textures/sao/gui.png</texture>
-                                    </glHotbarItem>
-                                </children>
-                            </repetitionGroup>
-                            <elementGroup name="offhand">
-                                <enabled>!offhandEmpty(0)</enabled>
-                                <children>
-                                    <glHotbarItem>
-                                        <h cache="STATIC">20.0</h>
-                                        <rgba cache="STATIC">0xFFBA66FF</rgba>
-                                        <srcH cache="STATIC">20.0</srcH>
-                                        <srcW cache="STATIC">20.0</srcW>
-                                        <srcY cache="STATIC">25.0</srcY>
-                                        <w cache="STATIC">20.0</w>
-                                        <y cache="STATIC">121.0</y>
-                                        <slot cache="STATIC">0</slot>
-                                        <itemXoffset cache="STATIC">2</itemXoffset>
-                                        <itemYoffset cache="STATIC">2</itemYoffset>
-                                        <hand cache="STATIC">RIGHT</hand>
-                                        <texture>saoui:textures/sao/gui.png</texture>
-                                    </glHotbarItem>
-                                    <glHotbarItem>
-                                        <h cache="STATIC">20.0</h>
-                                        <rgba cache="STATIC">0xFFBA66FF</rgba>
-                                        <srcH cache="STATIC">20.0</srcH>
-                                        <srcW cache="STATIC">20.0</srcW>
-                                        <srcY cache="STATIC">25.0</srcY>
-                                        <w cache="STATIC">20.0</w>
-                                        <y cache="STATIC">121.0</y>
-                                        <slot cache="STATIC">0</slot>
-                                        <itemXoffset cache="STATIC">2</itemXoffset>
-                                        <itemYoffset cache="STATIC">2</itemYoffset>
-                                        <hand cache="STATIC">LEFT</hand>
-                                        <texture>saoui:textures/sao/gui.png</texture>
-                                    </glHotbarItem>
-                                </children>
-                            </elementGroup>
-                        </children>
-                    </elementGroup>
-                    <elementGroup name="horizontal">
-                        <enabled>!booleanSetting("hud:vertical_hotbar")</enabled>
-                        <x cache="SIZE_CHANGE">scaledwidth / 2.0 - 92.0</x>
-                        <y cache="SIZE_CHANGE">scaledheight - 23.0</y>
-                        <children>
-                            <repetitionGroup name="main inventory">
-                                <amount cache="STATIC">9</amount>
-                                <children>
-                                    <glHotbarItem>
-                                        <h cache="STATIC">20.0</h>
-                                        <rgba cache="NONE">i == selectedslot ? 0xFFBA66FF : 0xCDCDCDAA</rgba>
-                                        <srcH cache="STATIC">20.0</srcH>
-                                        <srcW cache="STATIC">20.0</srcW>
-                                        <srcY cache="STATIC">25.0</srcY>
-                                        <w cache="STATIC">20.0</w>
-                                        <x cache="NONE">20 * i</x>
-                                        <slot cache="NONE">i</slot>
-                                        <itemXoffset cache="STATIC">2</itemXoffset>
-                                        <itemYoffset cache="STATIC">2</itemYoffset>
-                                        <texture>saoui:textures/sao/gui.png</texture>
-                                    </glHotbarItem>
-                                </children>
-                            </repetitionGroup>
-                            <elementGroup name="offhand">
-                                <enabled>!offhandEmpty(0)</enabled>
-                                <children>
-                                    <glHotbarItem>
-                                        <h cache="STATIC">20.0</h>
-                                        <rgba cache="STATIC">0xFFBA66FF</rgba>
-                                        <srcH cache="STATIC">20.0</srcH>
-                                        <srcW cache="STATIC">20.0</srcW>
-                                        <srcY cache="STATIC">25.0</srcY>
-                                        <w cache="STATIC">20.0</w>
-                                        <x cache="STATIC">183</x>
-                                        <slot cache="STATIC">0</slot>
-                                        <itemXoffset cache="STATIC">2</itemXoffset>
-                                        <itemYoffset cache="STATIC">2</itemYoffset>
-                                        <hand cache="STATIC">RIGHT</hand>
-                                        <texture>saoui:textures/sao/gui.png</texture>
-                                    </glHotbarItem>
-                                    <glHotbarItem>
-                                        <h cache="STATIC">20.0</h>
-                                        <rgba cache="STATIC">0xFFBA66FF</rgba>
-                                        <srcH cache="STATIC">20.0</srcH>
-                                        <srcW cache="STATIC">20.0</srcW>
-                                        <srcY cache="STATIC">25.0</srcY>
-                                        <w cache="STATIC">20.0</w>
-                                        <x cache="STATIC">-28</x>
-                                        <slot cache="STATIC">0</slot>
-                                        <itemXoffset cache="STATIC">2</itemXoffset>
-                                        <itemYoffset cache="STATIC">2</itemYoffset>
-                                        <hand cache="STATIC">LEFT</hand>
-                                        <texture>saoui:textures/sao/gui.png</texture>
-                                    </glHotbarItem>
-                                </children>
-                            </elementGroup>
-                        </children>
-                    </elementGroup>
+                    <fragmentReference id="saoui.sao:hotbar"/>
                 </children>
             </value>
         </entry>
         <entry>
             <key>EXPERIENCE</key>
             <value name="exp">
-                <enabled>!isEnabled(REMOVE_HPXP)</enabled>
+                <!-- Could be moved to be part of the health fragment -->
+                <enabled>!booleanSetting("hud:remove_hpxp")</enabled>
                 <x>usernamewidth + 144 + strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
                     "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(hp), ceil(maxHp),
                     ceil(absorption)): format("formatHealth", ceil(hp), ceil(maxHp)))
                 </x>
                 <y cache="STATIC">14</y>
                 <children>
-                    <glString name="exp string">
-                        <x cache="STATIC">5</x>
-                        <y cache="STATIC">8</y>
-                        <text>format("displayLvShort", level)</text>
-                    </glString>
-                    <elementGroup name="exp bg">
-                        <texture>saoui:textures/sao/gui.png</texture>
-                        <children>
-                            <glRectangle>
-                                <srcX cache="STATIC">65</srcX>
-                                <srcY cache="STATIC">15</srcY>
-                                <w cache="STATIC">5</w>
-                                <h cache="STATIC">13</h>
-                                <srcW cache="STATIC">2</srcW>
-                            </glRectangle>
-                            <glRectangle>
-                                <x cache="STATIC">5</x>
-                                <srcX cache="STATIC">66</srcX>
-                                <srcY cache="STATIC">15</srcY>
-                                <w>strWidth(format("displayLvShort", level))</w>
-                                <h cache="STATIC">13</h>
-                                <srcW cache="STATIC">5</srcW>
-                                <srcH cache="STATIC">13</srcH>
-                            </glRectangle>
-                            <glRectangle>
-                                <x>5 + strWidth(format("displayLvShort", level))</x>
-                                <srcX cache="STATIC">78</srcX>
-                                <srcY cache="STATIC">15</srcY>
-                                <srcW cache="STATIC">3</srcW>
-                                <w cache="STATIC">5</w>
-                                <h cache="STATIC">13</h>
-                            </glRectangle>
-                        </children>
-                    </elementGroup>
+                    <fragmentReference id="saoui.sao:experience"/>
                 </children>
             </value>
         </entry>
@@ -299,53 +68,17 @@
             <value name="vanilla horse jump bar">
                 <x cache="SIZE_CHANGE">scaledwidth / 2 - 91</x>
                 <y cache="SIZE_CHANGE">scaledheight - 29</y>
-                <texture>minecraft:textures/gui/icons.png</texture>
-                <enabled>hasMount</enabled>
                 <children>
-                    <glRectangle name="bg">
-                        <srcY cache="STATIC">84</srcY>
-                        <w cache="STATIC">182</w>
-                        <h cache="STATIC">5</h>
-                    </glRectangle>
-                    <glRectangle name="fill">
-                        <enabled>horsejump > 0</enabled>
-                        <srcY cache="STATIC">89</srcY>
-                        <w>182 * horsejump</w>
-                        <h cache="STATIC">5</h>
-                    </glRectangle>
+                    <!-- This is the vanilla jump bar, we should move to something sao -->
+                    <fragmentReference id="saoui.sao:jump_bar"/>
                 </children>
             </value>
         </entry>
         <entry>
             <key>CROSS_HAIR</key>
             <value name="crosshair">
-                <texture>saoui:textures/sao/gui.png</texture>
-                <x cache="SIZE_CHANGE">scaledwidth / 2.0</x>
-                <y cache="SIZE_CHANGE">scaledheight / 2.0</y>
                 <children>
-                    <glRectangle name="dot">
-                        <!--<enabled>!isEnabled(CROSS_HAIR)</enabled>-->
-                        <h cache="STATIC">1.0</h>
-                        <w cache="STATIC">1.0</w>
-                    </glRectangle>
-                    <elementGroup>
-                        <enabled cache="STATIC">false</enabled>
-                        <!--<enabled>isEnabled(CROSS_HAIR)</enabled>-->
-                        <children>
-                            <glRectangle name="v">
-                                <h cache="STATIC">10</h>
-                                <w cache="STATIC">2</w>
-                                <x cache="SIZE_CHANGE">-1</x>
-                                <y cache="SIZE_CHANGE">-5</y>
-                            </glRectangle>
-                            <glRectangle name="h">
-                                <h cache="STATIC">2</h>
-                                <w cache="STATIC">10</w>
-                                <x cache="SIZE_CHANGE">-5</x>
-                                <y cache="SIZE_CHANGE">-1</y>
-                            </glRectangle>
-                        </children>
-                    </elementGroup>
+                    <fragmentReference id="saoui.sao:crosshair"/>
                 </children>
             </value>
         </entry>
@@ -353,74 +86,7 @@
             <key>PARTY</key>
             <value name="party">
                 <children>
-                    <repetitionGroup name="member">
-                        <x cache="STATIC">2</x>
-                        <y cache="STATIC">35</y>
-                        <texture>saoui:textures/sao/gui.png</texture>
-                        <amount>ptSize</amount>
-                        <children>
-                            <elementGroup name="bg">
-                                <children>
-                                    <glRectangle>
-                                        <y cache="NONE">15 * i</y>
-                                        <srcX cache="STATIC">86</srcX>
-                                        <srcY cache="STATIC">15</srcY>
-                                        <w cache="STATIC">10</w>
-                                        <h cache="STATIC">13</h>
-                                    </glRectangle>
-                                    <glRectangle>
-                                        <x cache="STATIC">10</x>
-                                        <y cache="NONE">15 * i</y>
-                                        <srcX cache="STATIC">81</srcX>
-                                        <srcY cache="STATIC">15</srcY>
-                                        <w cache="STATIC">4</w>
-                                        <h cache="STATIC">13</h>
-                                    </glRectangle>
-                                    <glRectangle>
-                                        <x cache="STATIC">14</x>
-                                        <y cache="NONE">15 * i</y>
-                                        <srcX cache="STATIC">65</srcX>
-                                        <srcW cache="STATIC">5</srcW>
-                                        <srcY cache="STATIC">15</srcY>
-                                        <w cache="STATIC">43</w>
-                                        <h cache="STATIC">13</h>
-                                    </glRectangle>
-                                    <glRectangle>
-                                        <x cache="STATIC">57</x>
-                                        <y cache="NONE">15 * i</y>
-                                        <srcX cache="STATIC">40</srcX>
-                                        <srcY cache="STATIC">28</srcY>
-                                        <w cache="STATIC">100</w>
-                                        <h cache="STATIC">13</h>
-                                    </glRectangle>
-                                    <glRectangle>
-                                        <x cache="STATIC">157</x>
-                                        <y cache="NONE">15 * i</y>
-                                        <srcX cache="STATIC">70</srcX>
-                                        <srcY cache="STATIC">15</srcY>
-                                        <w cache="STATIC">5</w>
-                                        <h cache="STATIC">13</h>
-                                    </glRectangle>
-                                </children>
-                            </elementGroup>
-                            <glRectangle name="health bar">
-                                <texture>saoui:textures/sao/gui.png</texture>
-                                <rgba cache="NONE">ptHealthStep(i).rgba</rgba>
-                                <srcX cache="STATIC">117</srcX>
-                                <srcY cache="STATIC">197</srcY>
-                                <w cache="NONE">98.0 * ptHpPct(i) + 1</w>
-                                <h cache="STATIC">3.0</h>
-                                <x cache="STATIC">58</x>
-                                <y cache="NONE">15 * i + 5</y>
-                            </glRectangle>
-                            <glString name="pName">
-                                <text cache="NONE">ptName(i).length > 8? ptName(i).substring(0, 8): ptName(i)</text>
-                                <x cache="STATIC">13</x>
-                                <y cache="NONE">15 * i + 8</y>
-                                <rgba>0xFFFFFFFF</rgba>
-                            </glString>
-                        </children>
-                    </repetitionGroup>
+                    <fragmentReference id="saoui.sao:party"/>
                 </children>
             </value>
         </entry>
@@ -428,16 +94,7 @@
             <key>EFFECTS</key>
             <value name="effects">
                 <children>
-                    <repetitionGroup name="effectGroup">
-                        <x>usernamewidth + 248</x>
-                        <y cache="STATIC">2</y>
-                        <amount cache="NONE">statusEffects.size</amount>
-                        <children>
-                            <rawElement name="effect">
-                                <expression cache="NONE">statusEffect(i).glDraw(i * 11, 0, getZ)</expression>
-                            </rawElement>
-                        </children>
-                    </repetitionGroup>
+                    <fragmentReference id="saoui.sao:effects"/>
                 </children>
             </value>
         </entry>
@@ -445,40 +102,7 @@
             <key>ENTITY_HEALTH_HUD</key>
             <value name="entity health hud">
                 <children>
-                    <repetitionGroup name="nearby entities">
-                        <texture>saoui:textures/sao/entities.png</texture>
-                        <x>scaledwidth - 20.0</x>
-                        <y>35.0</y>
-                        <amount cache="NONE">nearbyEntitySize</amount>
-                        <children>
-                            <glRectangle>
-                                <rgba cache="STATIC">0xF40000FF</rgba>
-                                <srcX cache="STATIC">1.0</srcX>
-                                <srcY cache="STATIC">0.0</srcY>
-                                <srcW cache="STATIC">255.0</srcW>
-                                <srcH cache="STATIC">30.0</srcH>
-                                <w cache="NONE">-79.0 * entityHpPct(i)</w>
-                                <h cache="STATIC">14.0</h>
-                                <x cache="SIZE_CHANGE">- 1.0</x>
-                                <y cache="NONE">1.5 + i * 15.0</y>
-                            </glRectangle>
-                            <glRectangle>
-                                <srcX cache="STATIC">1.0</srcX>
-                                <srcY cache="STATIC">30.0</srcY>
-                                <srcW cache="STATIC">255.0</srcW>
-                                <srcH cache="STATIC">30.0</srcH>
-                                <w cache="STATIC">-80.0</w>
-                                <h cache="STATIC">15.0</h>
-                                <y cache="NONE">i * 15.0</y>
-                            </glRectangle>
-                            <glString>
-                                <text cache="NONE">entityName(i)</text>
-                                <x cache="NONE">-strWidth(entityName(i)) - 5</x>
-                                <y cache="NONE">i * 15.0 + strHeight</y>
-                                <rgba>0xFFFFFFFF</rgba>
-                            </glString>
-                        </children>
-                    </repetitionGroup>
+                    <fragmentReference id="saoui.sao:entity_health"/>
                 </children>
             </value>
         </entry>

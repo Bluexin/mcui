@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package be.bluexin.mcui.resources
+package be.bluexin.mcui.deprecated.resources
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.GLCore

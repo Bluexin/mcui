@@ -26,6 +26,7 @@ import be.bluexin.mcui.themes.miniscript.CString
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
 import org.luaj.vm2.LuaValue
 
@@ -42,8 +43,10 @@ class GLString(
     @LuajExpose
     var text: CString,
     @LuajExpose
+    @XmlElement
     var shadow: Boolean = true,
     @LuajExpose
+    @XmlElement
     var centered: Boolean = true
 ) : GLRectangleParent() {
 

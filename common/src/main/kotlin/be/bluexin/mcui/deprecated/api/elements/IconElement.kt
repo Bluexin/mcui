@@ -22,9 +22,9 @@ import be.bluexin.mcui.config.OptionCore
 import be.bluexin.mcui.deprecated.api.elements.animator.Easing
 import be.bluexin.mcui.deprecated.api.elements.registry.DrawType
 import be.bluexin.mcui.deprecated.api.screens.IIcon
+import be.bluexin.mcui.deprecated.resources.StringNames
 import be.bluexin.mcui.deprecated.screens.MouseButton
 import be.bluexin.mcui.deprecated.screens.unaryPlus
-import be.bluexin.mcui.resources.StringNames
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.ColorIntent
 import be.bluexin.mcui.util.ColorUtil

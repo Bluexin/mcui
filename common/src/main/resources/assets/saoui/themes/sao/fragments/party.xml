@@ -1,0 +1,72 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="experience fragment">
+    <children>
+        <repetitionGroup name="member">
+            <x cache="STATIC">2</x>
+            <y cache="STATIC">35</y>
+            <texture>saoui:textures/sao/gui.png</texture>
+            <amount>ptSize</amount>
+            <children>
+                <elementGroup name="bg">
+                    <children>
+                        <glRectangle>
+                            <y cache="NONE">15 * i</y>
+                            <srcX cache="STATIC">86</srcX>
+                            <srcY cache="STATIC">15</srcY>
+                            <w cache="STATIC">10</w>
+                            <h cache="STATIC">13</h>
+                        </glRectangle>
+                        <glRectangle>
+                            <x cache="STATIC">10</x>
+                            <y cache="NONE">15 * i</y>
+                            <srcX cache="STATIC">81</srcX>
+                            <srcY cache="STATIC">15</srcY>
+                            <w cache="STATIC">4</w>
+                            <h cache="STATIC">13</h>
+                        </glRectangle>
+                        <glRectangle>
+                            <x cache="STATIC">14</x>
+                            <y cache="NONE">15 * i</y>
+                            <srcX cache="STATIC">65</srcX>
+                            <srcW cache="STATIC">5</srcW>
+                            <srcY cache="STATIC">15</srcY>
+                            <w cache="STATIC">43</w>
+                            <h cache="STATIC">13</h>
+                        </glRectangle>
+                        <glRectangle>
+                            <x cache="STATIC">57</x>
+                            <y cache="NONE">15 * i</y>
+                            <srcX cache="STATIC">40</srcX>
+                            <srcY cache="STATIC">28</srcY>
+                            <w cache="STATIC">100</w>
+                            <h cache="STATIC">13</h>
+                        </glRectangle>
+                        <glRectangle>
+                            <x cache="STATIC">157</x>
+                            <y cache="NONE">15 * i</y>
+                            <srcX cache="STATIC">70</srcX>
+                            <srcY cache="STATIC">15</srcY>
+                            <w cache="STATIC">5</w>
+                            <h cache="STATIC">13</h>
+                        </glRectangle>
+                    </children>
+                </elementGroup>
+                <glRectangle name="health bar">
+                    <texture>saoui:textures/sao/gui.png</texture>
+                    <rgba cache="NONE">ptHealthStep(i).rgba</rgba>
+                    <srcX cache="STATIC">117</srcX>
+                    <srcY cache="STATIC">197</srcY>
+                    <w cache="NONE">98.0 * ptHpPct(i) + 1</w>
+                    <h cache="STATIC">3.0</h>
+                    <x cache="STATIC">58</x>
+                    <y cache="NONE">15 * i + 5</y>
+                </glRectangle>
+                <glString name="pName">
+                    <text cache="NONE">ptName(i).length > 8? ptName(i).substring(0, 8): ptName(i)</text>
+                    <x cache="STATIC">13</x>
+                    <y cache="NONE">15 * i + 8</y>
+                    <rgba>0xFFFFFFFF</rgba>
+                </glString>
+            </children>
+        </repetitionGroup>
+    </children>
+</bl:fragment>

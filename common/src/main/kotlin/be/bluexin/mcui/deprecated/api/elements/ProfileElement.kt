@@ -3,9 +3,9 @@ package be.bluexin.mcui.deprecated.api.elements
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.config.OptionCore
+import be.bluexin.mcui.deprecated.resources.StringNames
 import be.bluexin.mcui.deprecated.screens.CoreGUI
 import be.bluexin.mcui.deprecated.screens.util.toIcon
-import be.bluexin.mcui.resources.StringNames
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.ColorUtil
 import be.bluexin.mcui.util.IconCore

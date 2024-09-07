@@ -14,8 +14,15 @@
   {
     "key": "hud:health_offset_x",
     "type": "double",
-    "defaultValue": 4.0,
+    "defaultValue": 2.0,
     "min": 0.0,
     "comment": "Offset on the X axis for the health bar"
+  },
+  {
+    "key": "hud:health_offset_y",
+    "type": "double",
+    "defaultValue": 2.0,
+    "min": 0.0,
+    "comment": "Offset on the y axis for the health bar"
   }
 ]

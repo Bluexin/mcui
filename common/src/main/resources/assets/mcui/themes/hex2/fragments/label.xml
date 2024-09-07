@@ -40,7 +40,7 @@
                     <w cache="STATIC">6</w>
                     <h cache="STATIC">16</h>
                 </glRectangle>
-                <glString name="centered-label">
+                <glString name="label">
                     <x>-strWidth(text) / 2.0 + 2.7</x>
                     <y cache="STATIC">9.5</y>
                     <text>text</text>

@@ -1,0 +1,121 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="health box fragment">
+    <x>doubleSetting("hud:health_offset_x")</x>
+    <y>doubleSetting("hud:health_offset_y")</y>
+    <children>
+        <elementGroup name="background">
+            <texture>saoui:textures/sao/gui.png</texture>
+            <children>
+                <glRectangle>
+                    <h cache="STATIC">15.0</h>
+                    <w cache="STATIC">16.0</w>
+                </glRectangle>
+                <glRectangle>
+                    <h cache="STATIC">15.0</h>
+                    <srcW cache="STATIC">5.0</srcW>
+                    <srcX cache="STATIC">16.0</srcX>
+                    <w>usernamewidth</w>
+                    <x cache="STATIC">16.0</x>
+                </glRectangle>
+                <glRectangle>
+                    <h cache="STATIC">15.0</h>
+                    <srcX cache="STATIC">21.0</srcX>
+                    <w cache="STATIC">234.0</w>
+                    <x>16.0 + usernamewidth</x>
+                </glRectangle>
+            </children>
+        </elementGroup>
+        <glString name="username">
+            <text>username</text>
+            <h cache="STATIC">15.0</h>
+            <x cache="STATIC">14.0</x>
+            <y cache="STATIC">1.0</y>
+        </glString>
+        <glRectangle name="health bar">
+            <texture>saoui:textures/sao/gui.png</texture>
+            <h cache="STATIC">9.0</h>
+            <rgba>healthStep.rgba</rgba>
+            <srcH cache="STATIC">9.0</srcH>
+            <srcW>215.0 * hpPct</srcW>
+            <srcY cache="STATIC">188.0</srcY>
+            <w>215.0 * hpPct</w>
+            <x>18.0 + usernamewidth</x>
+            <y cache="STATIC">3.0</y>
+        </glRectangle>
+        <glRectangle name="air bar">
+            <texture>saoui:textures/sao/gui.png</texture>
+            <h cache="STATIC">9.0</h>
+            <rgba>healthStep == CREATIVE? 0x00000000:
+                statusEffects.contains(WET)? 0x2ADDF580:
+                0x00000000
+            </rgba>
+            <srcH cache="STATIC">9.0</srcH>
+            <srcW>215.0 * airPct</srcW>
+            <srcY cache="STATIC">188.0</srcY>
+            <w>215.0 * airPct</w>
+            <x>18.0 + usernamewidth</x>
+            <y cache="STATIC">3.0</y>
+        </glRectangle>
+        <glRectangle name="hunger bar">
+            <texture>saoui:textures/sao/gui.png</texture>
+            <h cache="STATIC">2.0</h>
+            <rgba>healthStep == CREATIVE? 0xCD840400:
+                statusEffects.contains(ROTTEN)? 0xD045FFFF:
+                0xF5AB2AFF
+            </rgba>
+            <srcH cache="STATIC">2.0</srcH>
+            <srcW>115.0 * foodPct</srcW>
+            <srcY cache="STATIC">193.0</srcY>
+            <w>113.0 * foodPct</w>
+            <x>18.0 + usernamewidth</x>
+            <y cache="STATIC">10.0</y>
+        </glRectangle>
+        <elementGroup name="hp bg and text">
+            <enabled>!booleanSetting("hud:remove_hpxp")</enabled>
+            <x>usernamewidth + 132.0</x>
+            <y cache="STATIC">12.0</y>
+            <children>
+                <glString name="hp text">
+                    <text>absorption > 0? format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
+                        "formatHealthAbsorb", ceil(hp), ceil(maxHp), ceil(absorption)):
+                        format("formatHealth", ceil(hp), ceil(maxHp))
+                    </text>
+                    <x cache="STATIC">5.0</x>
+                    <y cache="STATIC">8.0</y>
+                </glString>
+                <elementGroup name="hp bg">
+                    <texture>saoui:textures/sao/gui.png</texture>
+                    <children>
+                        <glRectangle>
+                            <srcX cache="STATIC">60.0</srcX>
+                            <srcY cache="STATIC">15.0</srcY>
+                            <w cache="STATIC">5.0</w>
+                            <h cache="STATIC">13.0</h>
+                        </glRectangle>
+                        <glRectangle>
+                            <x cache="STATIC">5.0</x>
+                            <srcX cache="STATIC">66.0</srcX>
+                            <srcY cache="STATIC">15.0</srcY>
+                            <w>strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
+                                "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(hp), ceil(maxHp),
+                                ceil(absorption)): format("formatHealth", ceil(hp), ceil(maxHp)))
+                            </w>
+                            <h cache="STATIC">13.0</h>
+                            <srcW cache="STATIC">5.0</srcW>
+                            <srcH cache="STATIC">13.0</srcH>
+                        </glRectangle>
+                        <glRectangle>
+                            <x>5 + strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
+                                "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(hp), ceil(maxHp),
+                                ceil(absorption)): format("formatHealth", ceil(hp), ceil(maxHp)))
+                            </x>
+                            <srcX cache="STATIC">70.0</srcX>
+                            <srcY cache="STATIC">15.0</srcY>
+                            <w cache="STATIC">5.0</w>
+                            <h cache="STATIC">13.0</h>
+                        </glRectangle>
+                    </children>
+                </elementGroup>
+            </children>
+        </elementGroup>
+    </children>
+</bl:fragment>

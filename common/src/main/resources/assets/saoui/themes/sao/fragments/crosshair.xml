@@ -1,0 +1,30 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="crosshair fragment">
+    <texture>saoui:textures/sao/gui.png</texture>
+    <x cache="SIZE_CHANGE">scaledwidth / 2.0</x>
+    <y cache="SIZE_CHANGE">scaledheight / 2.0</y>
+    <children>
+        <glRectangle name="dot">
+            <!--<enabled>!isEnabled(CROSS_HAIR)</enabled>-->
+            <h cache="STATIC">1.0</h>
+            <w cache="STATIC">1.0</w>
+        </glRectangle>
+        <elementGroup>
+            <enabled cache="STATIC">false</enabled>
+            <!--<enabled>isEnabled(CROSS_HAIR)</enabled>-->
+            <children>
+                <glRectangle name="v">
+                    <h cache="STATIC">10</h>
+                    <w cache="STATIC">2</w>
+                    <x cache="SIZE_CHANGE">-1</x>
+                    <y cache="SIZE_CHANGE">-5</y>
+                </glRectangle>
+                <glRectangle name="h">
+                    <h cache="STATIC">2</h>
+                    <w cache="STATIC">10</w>
+                    <x cache="SIZE_CHANGE">-5</x>
+                    <y cache="SIZE_CHANGE">-1</y>
+                </glRectangle>
+            </children>
+        </elementGroup>
+    </children>
+</bl:fragment>

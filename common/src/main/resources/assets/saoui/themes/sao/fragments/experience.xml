@@ -1,0 +1,39 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="label fragment">
+    <!-- Should probably be replaced by a label -->
+    <children>
+        <glString name="exp string">
+            <x cache="STATIC">5</x>
+            <y cache="STATIC">8</y>
+            <text>format("displayLvShort", level)</text>
+        </glString>
+        <elementGroup name="exp bg">
+            <texture>saoui:textures/sao/gui.png</texture>
+            <children>
+                <glRectangle>
+                    <srcX cache="STATIC">65</srcX>
+                    <srcY cache="STATIC">15</srcY>
+                    <w cache="STATIC">5</w>
+                    <h cache="STATIC">13</h>
+                    <srcW cache="STATIC">2</srcW>
+                </glRectangle>
+                <glRectangle>
+                    <x cache="STATIC">5</x>
+                    <srcX cache="STATIC">66</srcX>
+                    <srcY cache="STATIC">15</srcY>
+                    <w>strWidth(format("displayLvShort", level))</w>
+                    <h cache="STATIC">13</h>
+                    <srcW cache="STATIC">5</srcW>
+                    <srcH cache="STATIC">13</srcH>
+                </glRectangle>
+                <glRectangle>
+                    <x>5 + strWidth(format("displayLvShort", level))</x>
+                    <srcX cache="STATIC">78</srcX>
+                    <srcY cache="STATIC">15</srcY>
+                    <srcW cache="STATIC">3</srcW>
+                    <w cache="STATIC">5</w>
+                    <h cache="STATIC">13</h>
+                </glRectangle>
+            </children>
+        </elementGroup>
+    </children>
+</bl:fragment>

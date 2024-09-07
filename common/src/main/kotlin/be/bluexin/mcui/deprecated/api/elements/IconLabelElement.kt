@@ -21,8 +21,8 @@ import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.config.OptionCore
 import be.bluexin.mcui.deprecated.api.elements.registry.DrawType
 import be.bluexin.mcui.deprecated.api.screens.IIcon
+import be.bluexin.mcui.deprecated.resources.StringNames
 import be.bluexin.mcui.deprecated.screens.unaryPlus
-import be.bluexin.mcui.resources.StringNames
 import be.bluexin.mcui.util.ColorUtil
 import be.bluexin.mcui.util.math.BoundingBox2D
 import be.bluexin.mcui.util.math.Vec2d

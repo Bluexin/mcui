@@ -1,0 +1,38 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="effects fragment">
+    <children>
+        <repetitionGroup name="nearby entities">
+            <texture>saoui:textures/sao/entities.png</texture>
+            <x>scaledwidth - 20.0</x>
+            <y>35.0</y>
+            <amount cache="NONE">nearbyEntitySize</amount>
+            <children>
+                <glRectangle>
+                    <rgba cache="STATIC">0xF40000FF</rgba>
+                    <srcX cache="STATIC">1.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">255.0</srcW>
+                    <srcH cache="STATIC">30.0</srcH>
+                    <w cache="NONE">-79.0 * entityHpPct(i)</w>
+                    <h cache="STATIC">14.0</h>
+                    <x cache="SIZE_CHANGE">- 1.0</x>
+                    <y cache="NONE">1.5 + i * 15.0</y>
+                </glRectangle>
+                <glRectangle>
+                    <srcX cache="STATIC">1.0</srcX>
+                    <srcY cache="STATIC">30.0</srcY>
+                    <srcW cache="STATIC">255.0</srcW>
+                    <srcH cache="STATIC">30.0</srcH>
+                    <w cache="STATIC">-80.0</w>
+                    <h cache="STATIC">15.0</h>
+                    <y cache="NONE">i * 15.0</y>
+                </glRectangle>
+                <glString>
+                    <text cache="NONE">entityName(i)</text>
+                    <x cache="NONE">-strWidth(entityName(i)) - 5</x>
+                    <y cache="NONE">i * 15.0 + strHeight</y>
+                    <rgba>0xFFFFFFFF</rgba>
+                </glString>
+            </children>
+        </repetitionGroup>
+    </children>
+</bl:fragment>

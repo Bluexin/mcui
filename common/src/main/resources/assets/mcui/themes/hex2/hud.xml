@@ -5,8 +5,6 @@
         <entry>
             <key>HEALTH_BOX</key>
             <value name="health box">
-                <x>doubleSetting("hud:health_offset_x")</x>
-                <y>doubleSetting("hud:health_offset_y")</y>
                 <children>
                     <fragmentReference id="mcui.hex2:health_box"/>
                     <fragmentReference id="mcui.hex2:label">
@@ -37,7 +35,7 @@
         <entry>
             <key>EXPERIENCE</key>
             <value name="exp">
-                <enabled>!isEnabled(REMOVE_HPXP)</enabled>
+                <enabled>!booleanSetting("hud:hide_exp")</enabled>
                 <x cache="SIZE_CHANGE">scaledwidth / 2.0</x>
                 <y cache="SIZE_CHANGE">scaledheight - 64</y>
                 <children>

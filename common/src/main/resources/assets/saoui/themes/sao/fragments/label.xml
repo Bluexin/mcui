@@ -1,0 +1,54 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="label fragment">
+    <expect>
+        <variable key="text" type="STRING"/>
+        <variable key="centered" type="BOOLEAN" cache="STATIC">false</variable>
+    </expect>
+    <children>
+        <elementGroup name="centered">
+            <enabled>centered</enabled>
+            <texture>saoui:themes/sao/textures/slot.png</texture>
+            <children>
+                <glRectangle>
+                    <rgba cache="STATIC">0xFFFFFFFA</rgba>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">40.0</srcY>
+                    <srcW cache="STATIC">84.0</srcW>
+                    <srcH cache="STATIC">18.0</srcH>
+                    <x>-3 - strWidth(text)/2.0</x>
+                    <w>strWidth(text) + 6</w>
+                    <h cache="STATIC">18</h>
+                </glRectangle>
+                <glString name="label">
+                    <x>-strWidth(text) / 2.0</x>
+                    <y cache="STATIC">10</y>
+                    <text>text</text>
+                    <rgba cache="STATIC">0x888888FF</rgba>
+                    <shadow>false</shadow>
+                </glString>
+            </children>
+        </elementGroup>
+
+        <elementGroup name="uncentered">
+            <enabled>!centered</enabled>
+            <texture>saoui:themes/sao/textures/slot.png</texture>
+            <children>
+                <glRectangle>
+                    <rgba cache="STATIC">0xFFFFFFFA</rgba>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">40.0</srcY>
+                    <srcW cache="STATIC">84.0</srcW>
+                    <srcH cache="STATIC">18.0</srcH>
+                    <w>strWidth(text) + 6</w>
+                    <h cache="STATIC">18</h>
+                </glRectangle>
+                <glString name="label">
+                    <x cache="STATIC">3</x>
+                    <y cache="STATIC">10</y>
+                    <text>text</text>
+                    <rgba cache="STATIC">0x888888FF</rgba>
+                    <shadow>false</shadow>
+                </glString>
+            </children>
+        </elementGroup>
+    </children>
+</bl:fragment>

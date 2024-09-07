@@ -144,6 +144,13 @@
                             </xs:documentation>
                         </xs:annotation>
                     </xs:element>
+                    <xs:element name="centered" default="true" minOccurs="0" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Whether the text should be centered along the y axis
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
                 </xs:all>
             </xs:extension>
         </xs:complexContent>
