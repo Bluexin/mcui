@@ -25,6 +25,7 @@ sealed class DebugCommands(usage: String) : McuiCommand(usage) {
             reloadScripts(commandContext)
 
         private fun reloadScripts(commandContext: CommandContext<CommandSourceStack>): Int = try {
+            // TODO : don't reload theme settings here
             themeManager.reloadThemes({
                 commandContext.source.sendSuccess(Component.literal(it()), false)
             }) {

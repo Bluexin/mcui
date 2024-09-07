@@ -32,6 +32,9 @@ sealed class Setting<T : Any> : LKExposed {
     @LuajExpose
     abstract val comment: String?
 
+    @LuajExpose
+    abstract val commentKey: String?
+
     @Transient
     lateinit var property: Property
         private set
@@ -71,6 +74,7 @@ open class StringSetting(
     override val key: LKResourceLocation,
     override val defaultValue: String,
     override val comment: String? = null,
+    override val commentKey: String? = null,
     @Transient
     private val validate: ((String) -> Boolean)? = null
 ) : Setting<String>() {
@@ -114,7 +118,8 @@ open class StringSetting(
 class BooleanSetting(
     override val key: LKResourceLocation,
     override val defaultValue: Boolean,
-    override val comment: String? = null
+    override val comment: String? = null,
+    override val commentKey: String? = null
 ) : Setting<Boolean>() {
     override val type get() = Property.Type.BOOLEAN
 
@@ -157,6 +162,7 @@ class IntSetting(
     override val key: LKResourceLocation,
     override val defaultValue: Int,
     override val comment: String? = null,
+    override val commentKey: String? = null,
     @LuajExpose
     val min: Int? = null,
     @LuajExpose
@@ -220,6 +226,7 @@ class DoubleSetting(
     override val key: LKResourceLocation,
     override val defaultValue: Double,
     override val comment: String? = null,
+    override val commentKey: String? = null,
     @LuajExpose
     val min: Double? = null,
     @LuajExpose
@@ -283,6 +290,7 @@ class ChoiceSetting(
     override val key: LKResourceLocation,
     override val defaultValue: String,
     override val comment: String? = null,
+    override val commentKey: String? = null,
     @LuajExpose
     val values: Set<String>
 ) : Setting<String>() {
@@ -332,6 +340,7 @@ class ResourceLocationSetting(
     override val key: LKResourceLocation,
     override val defaultValue: LKResourceLocation,
     override val comment: String? = null,
+    override val commentKey: String? = null,
     @Transient
     private val validate: ((LKResourceLocation) -> Boolean)? = null
 ) : Setting<LKResourceLocation>() {

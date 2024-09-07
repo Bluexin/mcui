@@ -7,28 +7,6 @@
             <value name="health box">
                 <children>
                     <fragmentReference id="mcui.hex2:health_box"/>
-                    <fragmentReference id="mcui.hex2:label">
-                        <variables>
-                            <variable key="text" type="STRING" cache="STATIC">"Hello World !"</variable>
-                        </variables>
-                        <x cache="STATIC">60</x>
-                        <y cache="STATIC">100</y>
-                    </fragmentReference>
-                    <fragmentReference id="mcui.hex2:label">
-                        <variables>
-                            <variable key="text" type="STRING">"How are you " + username + " ?"</variable>
-                        </variables>
-                        <x cache="STATIC">60</x>
-                        <y cache="STATIC">120</y>
-                    </fragmentReference>
-                    <fragmentReference id="mcui.hex2:label">
-                        <enabled>hasTargetEntity</enabled>
-                        <variables>
-                            <variable key="text" type="STRING">targetName + " (" + format("%.0f", targetHp) + "/" + format("%.0f", targetMaxHp) + ")"</variable>
-                        </variables>
-                        <x cache="SIZE_CHANGE">scaledwidth / 2.0</x>
-                        <y cache="STATIC">80</y>
-                    </fragmentReference>
                 </children>
             </value>
         </entry>

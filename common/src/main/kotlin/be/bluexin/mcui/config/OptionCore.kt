@@ -123,12 +123,16 @@ enum class OptionCore(
 
     override fun toString() = name
 
+    @Deprecated("Should not be used anymore")
     val displayName: String by lazy { I18n.get(unformattedName) }
+
+    @Deprecated("Should not be used anymore")
     val description: List<String> by lazy { listOf(I18n.get("$unformattedName.desc")) }
 
     private val setting = if (isCategory) null else BooleanSetting(
-        ResourceLocation(category?.name?.lowercase() ?: "general", name.lowercase()),
-        defaultValue, description.singleOrNull()
+        key = ResourceLocation(category?.name?.lowercase() ?: "general", name.lowercase()),
+        defaultValue = defaultValue,
+        commentKey = "$unformattedName.desc"
     ).also { it.namespace = Settings.NS_BUILTIN }
 
     private var value: Boolean = defaultValue

@@ -7,36 +7,6 @@
             <value name="health box">
                 <children>
                     <fragmentReference id="saoui.sao:health_box"/>
-                    <fragmentReference id="saoui.sao:label">
-                        <variables>
-                            <variable key="text" type="STRING" cache="STATIC">"Hello World !"</variable>
-                        </variables>
-                        <x cache="STATIC">80</x>
-                        <y cache="STATIC">100</y>
-                    </fragmentReference>
-                    <fragmentReference id="saoui.sao:label">
-                        <variables>
-                            <variable key="text" type="STRING">"How are you " + username + " ?"</variable>
-                        </variables>
-                        <x cache="STATIC">80</x>
-                        <y cache="STATIC">120</y>
-                    </fragmentReference>
-                    <fragmentReference id="saoui.sao:label">
-                        <variables>
-                            <variable key="text" type="STRING" cache="STATIC">"Hello World !"</variable>
-                            <variable key="centered" type="BOOLEAN" cache="STATIC">true</variable>
-                        </variables>
-                        <x cache="STATIC">80</x>
-                        <y cache="STATIC">200</y>
-                    </fragmentReference>
-                    <fragmentReference id="saoui.sao:label">
-                        <variables>
-                            <variable key="text" type="STRING">"How are you " + username + " ?"</variable>
-                            <variable key="centered" type="BOOLEAN" cache="STATIC">true</variable>
-                        </variables>
-                        <x cache="STATIC">80</x>
-                        <y cache="STATIC">220</y>
-                    </fragmentReference>
                 </children>
             </value>
         </entry>
