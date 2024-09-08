@@ -66,6 +66,7 @@ local function settingTooltip(setting)
 end
 
 local function gui(root)
+    print('Starting to analyse settings')
     local themes = wl.loadCategory(root, 'scaledheight / 2 - 10', "scaledwidth / 2 - 120", 'themeselection', function()
         return 'format("mcui.screen.settings.themeselection")'
     end)
@@ -76,7 +77,9 @@ local function gui(root)
 
     --- @type table<string, table<string, table<string, Setting>>>
     local topCategories = {}
-    for _, v in ipairs(settings.listAll()) do
+    local allSettings = settings.listAll()
+    print('Analyzing ' .. tostring(rawlen(allSettings)) .. ' settings')
+    for _, v in ipairs(allSettings) do
         --print("Found setting " .. v.namespace.string .. " / " .. v.key.string)
 
         local topLevel = util.getOrCreate(topCategories, v.namespace.string)
@@ -84,7 +87,7 @@ local function gui(root)
         category[v.key.path] = v
     end
 
-    --print("Organised settings : ")
+    print("Analyzed settings")
     --print(tprint(topCategories))
 
     local yPosBase = 'scaledheight / 2 - 10 + '

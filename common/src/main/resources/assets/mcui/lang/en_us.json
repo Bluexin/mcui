@@ -373,7 +373,8 @@
   "mcui.screen.settings.mcui.builtin/misc": "Miscellaneous",
   "mcui.screen.settings.mcui.hex2/hud": "HUD",
   "mcui.screen.settings.saoui.sao/hud": "HUD",
+  "mcui.screen.back": "Back",
   "# Commands": "",
   "commands.saoui.usage": "/saoui <subCommand>",
-  "commands.general.print_errors.usage": "/saoui general.print_errors"
+  "commands.general.print_errors.usage": "/saoui general print_errors"
 }

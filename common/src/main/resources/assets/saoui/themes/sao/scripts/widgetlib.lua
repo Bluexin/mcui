@@ -158,10 +158,8 @@ function wl.loadCategory(parent, yPos, xPos, label, display)
         yPos = wl.tframe(yPos, "DOUBLE"),
     })
     if (r == false) then
-        print('Could not load category')
+        print('Could not load category ' .. label)
         return nil
-    else
-        print('Loaded ' .. label .. ' into ' .. tostring(parent) .. " at " .. tostring(xPos) .. ' / ' .. tostring(yPos))
     end
     return --[[---@type Widget]] r
 end

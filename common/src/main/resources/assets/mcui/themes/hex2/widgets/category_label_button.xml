@@ -10,61 +10,67 @@
         <variable key="hoverColour" type="INT" cache="STATIC">(int) (0x424242FF &amp; 0xAFAFAFFF)</variable>
         <variable key="isHovered" type="BOOLEAN" cache="STATIC">false</variable>
         <variable key="isOpen" type="BOOLEAN" cache="STATIC">false</variable>
+        <variable key="isPeerOpen" type="BOOLEAN" cache="STATIC">false</variable>
     </expect>
     <contentWidth>initialWidth</contentWidth>
     <contentHeight>initialHeight</contentHeight>
-    <active>active</active>
+    <active>!isPeerOpen</active>
     <x>xPos</x>
     <y>yPos</y>
+    <enabled>!isPeerOpen</enabled>
     <children>
-        <elementGroup name="bg">
-            <x>isHovered? -initialWidth * 0.05: 0</x>
-            <y>isHovered? -initialHeight * 0.05: 0</y>
-            <scale>isHovered? 1.1: 1.0</scale>
-            <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
+        <elementGroup name="button">
+            <enabled>!isOpen</enabled>
             <children>
-                <glRectangle> <!-- left part of label -->
-                    <rgba>isHovered? hoverColour: colour</rgba>
-                    <srcX cache="STATIC">0.0</srcX>
-                    <srcY cache="STATIC">0.0</srcY>
-                    <srcW cache="STATIC">24.0</srcW>
-                    <srcH cache="STATIC">64.0</srcH>
-                    <w cache="STATIC">6</w>
-                    <h>initialHeight</h>
-                </glRectangle>
+                <elementGroup name="bg">
+                    <x>isHovered? -initialWidth * 0.05: 0</x>
+                    <y>isHovered? -initialHeight * 0.05: 0</y>
+                    <scale>isHovered? 1.1: 1.0</scale>
+                    <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
+                    <children>
+                        <glRectangle> <!-- left part of label -->
+                            <rgba>isHovered? hoverColour: colour</rgba>
+                            <srcX cache="STATIC">0.0</srcX>
+                            <srcY cache="STATIC">0.0</srcY>
+                            <srcW cache="STATIC">24.0</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                            <w cache="STATIC">6</w>
+                            <h>initialHeight</h>
+                        </glRectangle>
 
-                <glRectangle> <!-- middle part of label -->
-                    <rgba>isHovered? hoverColour: colour</rgba>
-                    <x cache="STATIC">6</x>
-                    <srcX cache="STATIC">24.0</srcX>
-                    <srcY cache="STATIC">0.0</srcY>
-                    <srcW cache="STATIC">26.0</srcW>
-                    <srcH cache="STATIC">64.0</srcH>
-                    <w>initialWidth - 12</w>
-                    <h>initialHeight</h>
-                </glRectangle>
+                        <glRectangle> <!-- middle part of label -->
+                            <rgba>isHovered? hoverColour: colour</rgba>
+                            <x cache="STATIC">6</x>
+                            <srcX cache="STATIC">24.0</srcX>
+                            <srcY cache="STATIC">0.0</srcY>
+                            <srcW cache="STATIC">26.0</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                            <w>initialWidth - 12</w>
+                            <h>initialHeight</h>
+                        </glRectangle>
 
-                <glRectangle> <!-- right part of label -->
-                    <rgba>isHovered? hoverColour: colour</rgba>
-                    <x>initialWidth - 6</x>
-                    <srcX cache="STATIC">50.0</srcX>
-                    <srcY cache="STATIC">0.0</srcY>
-                    <srcW cache="STATIC">24.0</srcW>
-                    <srcH cache="STATIC">64.0</srcH>
-                    <w cache="STATIC">6</w>
-                    <h>initialHeight</h>
-                </glRectangle>
+                        <glRectangle> <!-- right part of label -->
+                            <rgba>isHovered? hoverColour: colour</rgba>
+                            <x>initialWidth - 6</x>
+                            <srcX cache="STATIC">50.0</srcX>
+                            <srcY cache="STATIC">0.0</srcY>
+                            <srcW cache="STATIC">24.0</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                            <w cache="STATIC">6</w>
+                            <h>initialHeight</h>
+                        </glRectangle>
+                    </children>
+                </elementGroup>
+                <glString name="label">
+                    <x>initialWidth / 2 - strWidth(text) / 2</x>
+                    <y cache="STATIC">9.5</y>
+                    <text>text</text>
+                </glString>
             </children>
         </elementGroup>
 
-        <glString name="label">
-            <x>initialWidth / 2 - strWidth(text) / 2</x>
-            <y cache="STATIC">9.5</y>
-            <text>isOpen ? text + " >" : text</text>
-        </glString>
-
         <widget name="content">
-            <x>initialWidth + 10</x>
+            <x cache="STATIC">0</x>
             <y cache="STATIC">0</y>
             <enabled>isOpen</enabled>
             <contentWidth cache="STATIC">0</contentWidth>
@@ -74,17 +80,14 @@
 
     <onClick>
         local self = ...
-        local isOpen = self.getVariable('isOpen')
-        isOpen.expression = string.gsub('!' .. isOpen.expression, '!!', '')
-        self.setVariable('isOpen', isOpen)
+        local wl = require 'widgetlib'
+        self.setVariable('isOpen', wl.tstatic(true))
         --- @type Element[]
         local peers = self.peers
         for _, peer in ipairs(peers) do
             if type(peer) == 'Widget' then
-                local peerIsOpen = peer.getVariable('isOpen')
-                if peerIsOpen and peerIsOpen.expression ~= 'false' then
-                    peer.setVariable('isOpen', { type = 'BOOLEAN', expression = 'false', cache = 'STATIC' })
-                end
+                print('Setting isPeerOpen on ' .. peer.name)
+                peer.setVariable('isPeerOpen', wl.tstatic(true))
             end
         end
         return true

@@ -123,6 +123,7 @@ end
 local label_button_frag = theme.readWidget("mcui:themes/hex2/widgets/label_button.xml")
 
 --- @shape buttonArgs
+--- @field key string|nil mapped to the widget's name
 --- @field xPos string|number|CDouble
 --- @field yPos string|number|CDouble
 --- @field width number|nil
@@ -150,7 +151,7 @@ function wl.loadButton(parent, args)
     )
 
     local r = theme.loadWidget(parent, label_button_frag, allArgs)
-    if (not r) then
+    if not r then
         print('Could not load button ' .. args.label)
     else
         local w = --[[---@type Widget]] r
@@ -161,8 +162,28 @@ function wl.loadButton(parent, args)
         if args.onClick then
             w.onClick = args.onClick
         end
+
+        if args.key then
+            w.name = args.key
+        end
     end
     return r
+end
+
+--- @param self Widget
+local function onClickBackButton(self)
+    local cat = --[[--- @type Widget]] self.parentElement.parentElement
+
+    cat.setVariable('isOpen', wl.tstatic(false))
+    --- @type Element[]
+    local peers = cat.peers
+    for _, peer in ipairs(peers) do
+        if type(peer) == 'Widget' then
+            --print('Setting isPeerOpen on ' .. peer.name)
+            peer.setVariable('isPeerOpen', wl.tstatic(false))
+        end
+    end
+    return true
 end
 
 local category_frag = theme.readWidget("mcui:themes/hex2/widgets/category_label_button.xml")
@@ -172,20 +193,41 @@ local category_frag = theme.readWidget("mcui:themes/hex2/widgets/category_label_
 --- @param xPos string|number
 --- @param label string
 --- @param display? fun(id: string): string
+--- @param noBackButton? boolean
 --- @return Widget|nil
-function wl.loadCategory(parent, yPos, xPos, label, display)
-    category_frag.name = 'cat_' .. label:lower():gsub(':', '_')
+function wl.loadCategory(parent, yPos, xPos, label, display, noBackButton)
     local r = theme.loadWidget(parent, category_frag, {
         text = wl.tstatic((display and display(label)) or '"' .. label .. '"', "STRING", true),
         xPos = wl.tframe(xPos, 'DOUBLE'),
         yPos = wl.tframe(yPos, "DOUBLE"),
     })
-    if (r == false) then
-        print('Could not load category')
+    if not r then
+        print('Could not load category ' .. label)
         return nil
     else
-        print('Loaded ' .. label .. ' into ' .. tostring(parent) .. " at " .. tostring(xPos) .. ' / ' .. tostring(yPos))
+        local w = --[[---@type Widget]] r
+        w.name = 'cat_' .. label:lower():gsub(':', '_')
+
+        if not noBackButton then
+            local content = wl.getChildWidget(w, 'content')
+            local bk = w.name .. '_back'
+            local backButton = wl.loadButton(content, {
+                key = bk,
+                xPos = 0,
+                yPos = -20,
+                label = wl.tstatic('format("mcui.screen.back")', 'STRING', true),
+                onClick = onClickBackButton,
+                tooltip = bk,
+                variables = {
+                    isPeerOpen = wl.tstatic(false),
+                },
+            })
+            if backButton then
+                (--[[---@type Widget]] backButton).enabled = wl.tframe('!isPeerOpen', 'BOOLEAN')
+            end
+        end
     end
+
     return --[[---@type Widget]] r
 end
 

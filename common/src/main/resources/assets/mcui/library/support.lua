@@ -22,7 +22,7 @@ mouse_buttons = {
 --- @alias CInt CValue|string|number
 
 --- Represents a MiniScript value computing to boolean type
---- @alias CBoolean CValue|string|number
+--- @alias CBoolean CValue|string|number|boolean
 
 --- Represents a MiniScript value computing to double type
 --- @alias CDouble CValue|string|number
@@ -31,7 +31,7 @@ mouse_buttons = {
 --- @alias CString CValue|string|number
 
 --- Represents a MiniScript value computing to void type
---- @alias CUnit CValue|string|number
+--- @alias CUnit CValue|string
 
 --- Minecraft ResourceLocation
 --- @shape LKResourceLocation
