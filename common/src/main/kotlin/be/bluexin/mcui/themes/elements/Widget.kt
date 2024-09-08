@@ -1,5 +1,7 @@
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.AfterSet
+import be.bluexin.luajksp.annotations.BeforeSet
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
@@ -7,6 +9,7 @@ import be.bluexin.mcui.themes.elements.access.WidgetAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.*
+import be.bluexin.mcui.themes.miniscript.serialization.JelType
 import be.bluexin.mcui.themes.scripting.LuaJManager
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
 import be.bluexin.mcui.util.Client
@@ -24,9 +27,22 @@ import nl.adaptivity.xmlutil.serialization.XmlBefore
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.luaj.vm2.LuaValue
+import kotlin.collections.Map
+import kotlin.collections.MutableMap
+import kotlin.collections.any
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.emptyMap
+import kotlin.collections.filter
+import kotlin.collections.isNotEmpty
+import kotlin.collections.mapValues
+import kotlin.collections.minus
+import kotlin.collections.mutableMapOf
+import kotlin.collections.onEach
+import kotlin.collections.orEmpty
+import kotlin.collections.set
 
 /**
  * Widget
@@ -68,10 +84,12 @@ class Widget(
     @XmlSerialName
     @LuajExpose
     var tooltip: CString? = null,
-) : ElementGroupParent(), GuiEventListener, Renderable, NarratableEntry, WidgetParent, KoinComponent {
+) : ElementGroupParent(), GuiEventListener, Renderable, NarratableEntry, WidgetParent, KoinComponent, BeforeSet,
+    AfterSet {
 
     private val themeManager: ThemeManager by inject()
     private val luaJManager: LuaJManager by inject()
+    private val libHelper: LibHelper by inject()
 
     @Transient
     private var focused = false
@@ -123,7 +141,7 @@ class Widget(
     private val variables: MutableMap<String, CValue<*>?> = mutableMapOf()
 
     init {
-        if (expect != null) get<LibHelper>().popContext()
+        if (expect != null) libHelper.popContext()
     }
 
     private inline fun <T> IHudDrawContext.withContext(crossinline body: (IHudDrawContext) -> T): T {
@@ -304,5 +322,15 @@ class Widget(
     override fun plusAssign(widget: Widget) {
         widget.setup(this, emptyMap() /*TODO: frags*/)
         add(widget)
+    }
+
+    override fun beforeSet() {
+        libHelper.pushContext(
+            variables.mapValues { (_, value) -> value.type ?: JelType.ERROR }
+        )
+    }
+
+    override fun afterSet() {
+        libHelper.popContext()
     }
 }
