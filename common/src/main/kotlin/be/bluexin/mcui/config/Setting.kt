@@ -33,7 +33,7 @@ sealed class Setting<T : Any> : LKExposed {
     abstract val comment: String?
 
     @LuajExpose
-    abstract val commentKey: String?
+    abstract val commentKey: String? // TODO: actually this should probably be calculated
 
     @Transient
     lateinit var property: Property

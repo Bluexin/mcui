@@ -224,8 +224,4 @@ subprojects {
             }
         }
     }*/
-
-    tasks.test {
-        useJUnitPlatform()
-    }
 }

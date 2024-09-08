@@ -20,6 +20,12 @@ sealed class CValueMapper<CValueType : CValue<T>, T : Any>(
     private val expressionAdapter: BasicExpressionAdapter<CValueType, T>
 ) : LKMapper<CValueType> {
     override fun fromLua(value: LuaValue): CValueType = when {
+        value.isboolean() -> expressionAdapter.compile(
+            AnonymousExpressionIntermediate(
+                value.tojstring(),
+                cacheType = CacheType.STATIC
+            )
+        )
         value.isnumber() -> expressionAdapter.compile(AnonymousExpressionIntermediate(value.checkjstring(), cacheType = CacheType.STATIC))
         value.isstring() -> expressionAdapter.compile(AnonymousExpressionIntermediate(value.checkjstring()))
         value.istable() -> {

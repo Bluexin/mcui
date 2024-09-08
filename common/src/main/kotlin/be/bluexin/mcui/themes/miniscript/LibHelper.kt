@@ -26,6 +26,7 @@ import be.bluexin.mcui.effects.StatusEffects
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
 import be.bluexin.mcui.util.ColorUtil
 import be.bluexin.mcui.util.HealthStep
+import be.bluexin.mcui.util.LayeredMap
 import be.bluexin.mcui.util.math.ceilInt
 import be.bluexin.mcui.util.math.floorInt
 import be.bluexin.mcui.util.trace
@@ -43,8 +44,7 @@ import org.koin.core.annotation.Single
  */
 @Single
 class LibHelper {
-    private val emptyContext = mapOf("__empty_marker" to JelType.ERROR)
-    private val contextResolver = ContextAwareDVMap(emptyContext)
+    private val contextResolver = ContextAwareDVMap()
 
     val jelLibrary: Library by lazy {
         val staticLib = arrayOf(
@@ -82,14 +82,12 @@ class LibHelper {
     // TODO : would be nice to have a cleaner way to do this with less side effects in init {}, maybe move compiling to setup ?
     fun pushContext(context: Map<String, JelType>) {
         Constants.LOG.trace { "Context pushed $context from $stack" }
-        check(emptyContext === contextResolver.context) { "Context already pushed !" }
-        contextResolver.context = context
+        contextResolver.push(context)
     }
 
     fun popContext() {
         Constants.LOG.trace { "Context popped from $stack" }
-        check(emptyContext !== contextResolver.context) { "Context not pushed !" }
-        contextResolver.context = emptyContext
+        contextResolver.pop()
     }
 
     private val stack
@@ -99,6 +97,26 @@ class LibHelper {
                 .limit(6)
                 .toList()
                 .joinToString(separator = "\n\t at ")
+    }
+
+    private class ContextAwareDVMap : DVMap() {
+        private val contexts = LayeredMap<String, JelType>()
+
+        fun push(context: Map<String, JelType>) {
+            contexts += context
+        }
+
+        fun pop() {
+            check(contexts.canPop) { "Context stack underflow !" }
+            contexts.pop()
+        }
+
+        override fun getTypeName(name: String): String? = contexts[name]?.let {
+            if (it == JelType.ERROR) {
+                Constants.LOG.error("Variable $name was not read properly !")
+                null
+            } else it
+        }?.typeName
     }
 }
 
@@ -124,15 +142,4 @@ object McuiStaticLib {
 
     @JvmStatic
     fun format(key: String, vararg args: Any): String = I18n.get(key, *args)
-}
-
-private class ContextAwareDVMap(
-    var context: Map<String, JelType>
-) : DVMap() {
-    override fun getTypeName(name: String): String? = context[name]?.let {
-        if (it == JelType.ERROR) {
-            Constants.LOG.error("Variable $name was not read properly !")
-            null
-        } else it
-    }?.typeName
 }

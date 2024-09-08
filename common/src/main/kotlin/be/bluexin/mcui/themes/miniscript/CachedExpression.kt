@@ -32,8 +32,12 @@ import net.minecraft.world.entity.LivingEntity
 sealed class CachedExpression<out T: Any>(
     val expression: CompiledExpressionWrapper<T>,
     val expressionIntermediate: ExpressionIntermediate
-) : Function1<IHudDrawContext, T> {
+) : (IHudDrawContext) -> T {
     protected abstract val cache: T?
+
+    override fun toString(): String {
+        return "${javaClass.simpleName}(expressionIntermediate=$expressionIntermediate, cache=$cache)"
+    }
 }
 
 class FrameCachedExpression<T: Any>(

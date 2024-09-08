@@ -6,13 +6,13 @@ class LayeredMap<K, V> : Map<K, V> {
     private val stack = LinkedList<Map<K, V>>()
 
     override val entries: Set<Map.Entry<K, V>>
-        get() = TODO("Not yet implemented")
+        get() = stack.flatMap { it.entries }.toSet()
     override val keys: Set<K>
         get() = stack.flatMap { it.keys }.toSet()
     override val size: Int
-        get() = TODO("Not yet implemented")
+        get() = keys.size
     override val values: Collection<V>
-        get() = TODO("Not yet implemented")
+        get() = stack.flatMap { it.values }
 
     override fun containsKey(key: K): Boolean = stack.any { it.containsKey(key) }
 
@@ -32,4 +32,6 @@ class LayeredMap<K, V> : Map<K, V> {
     fun pop() {
         stack.pop()
     }
+
+    val canPop get() = stack.isNotEmpty()
 }
