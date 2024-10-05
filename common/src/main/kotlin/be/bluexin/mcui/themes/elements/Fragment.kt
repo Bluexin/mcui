@@ -39,6 +39,8 @@ data class Expect(
     val variables: Map<String, NamedExpressionIntermediate> = emptyMap()
 ) : KoinComponent {
     init {
-        get<LibHelper>().pushContext(variables.mapValues { (_, value) -> value.type })
+        pushContext()
     }
+
+    fun pushContext() = get<LibHelper>().pushContext(variables.mapValues { (_, value) -> value.type })
 }

@@ -20,6 +20,10 @@ object SettingsLib : TwoArgFunction() {
         settingsTable["themes"] = Themes
         settingsTable["currentTheme"] = CurrentTheme
         settingsTable["setTheme"] = SetTheme
+        settingsTable["allScreenIds"] = AllScreenIds
+        settingsTable["getThemesImplementingScreenId"] = GetThemesImplementingScreenId
+        settingsTable["getScreenConfiguration"] = GetScreenConfiguration
+        settingsTable["setScreenConfiguration"] = SetScreenConfiguration
         env["settings"] = settingsTable
         if (!env["package"].isnil()) {
             env["package"]["loaded"]["settings"] = settingsTable
@@ -60,6 +64,53 @@ object SettingsLib : TwoArgFunction() {
             Client.mc.tell {
                 themeManager.load(Client.mc.resourceManager, themeId)
             }
+
+            return LuaValue.NONE
+        }
+    }
+
+    private object AllScreenIds : ZeroArgFunction(), KoinComponent {
+        private val themeManager by inject<ThemeManager>()
+        override fun call(): LuaValue = LuaValue.tableOf(
+            /* namedValues = */ emptyArray(),
+            /* unnamedValues = */ themeManager.allScreenIds.map(ResourceLocationMapper::toLua).toTypedArray()
+        )
+
+    }
+
+    private object GetThemesImplementingScreenId : OneArgFunction(), KoinComponent {
+        private val themeManager by inject<ThemeManager>()
+
+        override fun call(p0: LuaValue): LuaValue {
+            val screenId = ResourceLocationMapper.fromLua(p0)
+
+            return LuaValue.tableOf(
+                /* namedValues = */ emptyArray(),
+                /* unnamedValues = */ themeManager.getAllScreens(screenId).keys
+                    .map(ResourceLocationMapper::toLua).toTypedArray()
+            )
+        }
+    }
+
+    private object GetScreenConfiguration : OneArgFunction(), KoinComponent {
+        private val themeManager by inject<ThemeManager>()
+
+        override fun call(p0: LuaValue): LuaValue {
+            val screenId = ResourceLocationMapper.fromLua(p0)
+
+            return themeManager.getScreenConfiguration(screenId)
+                ?.let(ResourceLocationMapper::toLua)
+                ?: LuaValue.NIL
+        }
+    }
+
+    private object SetScreenConfiguration : TwoArgFunction(), KoinComponent {
+        private val themeManager by inject<ThemeManager>()
+
+        override fun call(p0: LuaValue, p1: LuaValue): LuaValue {
+            val screenId = ResourceLocationMapper.fromLua(p0)
+            val themeId = ResourceLocationMapper.fromLua(p1)
+            themeManager.setScreenConfiguration(screenId, themeId)
 
             return LuaValue.NONE
         }

@@ -28,20 +28,10 @@ import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.luaj.vm2.LuaTable
 import org.luaj.vm2.LuaValue
-import kotlin.collections.Map
-import kotlin.collections.MutableMap
-import kotlin.collections.any
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.collections.emptyMap
-import kotlin.collections.filter
-import kotlin.collections.isNotEmpty
-import kotlin.collections.mapValues
-import kotlin.collections.minus
-import kotlin.collections.mutableMapOf
-import kotlin.collections.onEach
-import kotlin.collections.orEmpty
 import kotlin.collections.set
 
 /**
@@ -140,6 +130,13 @@ class Widget(
     @Transient
     private val variables: MutableMap<String, CValue<*>?> = mutableMapOf()
 
+    /**
+     * Table to store arbitrary Lua data.
+     */
+    @LuajExpose
+    @Transient // TODO : be able to include these in deserialization ?
+    var extra: LuaTable = LuaTable()
+
     init {
         if (expect != null) libHelper.popContext()
     }
@@ -196,19 +193,23 @@ class Widget(
     override fun setup(parent: ElementParent, fragments: Map<ResourceLocation, () -> Fragment>): Boolean {
         val anonymous = super.setup(parent, fragments)
 
-        val missing = expect?.variables.orEmpty().filter { (key, it) ->
-            val inContext = variables[key]
-            inContext == null || inContext.type != it.type
-        }
-        val defaults = missing.onEach { (key, it) ->
-            if (it.hasDefault()) variables[key] = it.type.expressionAdapter.compile(it)
-        }.keys
-        val realMissing = missing - defaults
-        if (realMissing.isNotEmpty()) {
-            val present = variables.mapValues { (_, value) -> value?.value?.expressionIntermediate }
-            val message = "Missing variables $realMissing for (present : $present) in "
-            Constants.LOG.warn(message + hierarchyName)
-            AbstractThemeLoader.Reporter += message + nameOrParent()
+        if (expect != null) {
+            val missing = expect.variables.filter { (key, it) ->
+                val inContext = variables[key]
+                inContext == null || inContext.type != it.type
+            }
+            expect.pushContext()
+            val defaults = missing.onEach { (key, it) ->
+                if (it.hasDefault()) variables[key] = it.type.expressionAdapter.compile(it)
+            }.keys
+            libHelper.popContext()
+            val realMissing = missing - defaults
+            if (realMissing.isNotEmpty()) {
+                val present = variables.mapValues { (_, value) -> value?.value?.expressionIntermediate }
+                val message = "Missing variables $realMissing for (present : $present) in "
+                Constants.LOG.warn(message + hierarchyName)
+                AbstractThemeLoader.Reporter += message + nameOrParent()
+            }
         }
 
         val access = toLua()

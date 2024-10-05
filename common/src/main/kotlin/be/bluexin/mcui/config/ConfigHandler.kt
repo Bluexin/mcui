@@ -47,10 +47,12 @@ object ConfigHandler {
             min = 0, max = 10
         )
     )
+
+    @Deprecated("Should migrate away from this, to screen-based config")
     var currentTheme by wrap(
         ResourceLocationSetting(
             general("current_theme"), DEFAULT_THEME,
-            "The currently selected theme. If invalid or unavailable, this will default to the builtin sao theme"
+            "The currently selected theme. If invalid or unavailable, this will default to the built-in $DEFAULT_THEME theme"
         )
     )
 

@@ -3,6 +3,8 @@ package be.bluexin.mcui.config
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.logger
 import be.bluexin.mcui.platform.Services
+import be.bluexin.mcui.themes.meta.ThemeAnalyzer
+import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.util.trace
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -12,6 +14,8 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.selects.onTimeout
 import kotlinx.coroutines.selects.select
 import net.minecraft.resources.ResourceLocation
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 object Settings {
     val NS_BUILTIN = ResourceLocation(Constants.MOD_ID, "builtin")
@@ -155,14 +159,17 @@ object Settings {
     }
 
     @Suppress("unused", "MemberVisibilityCanBePrivate") // Exposed to JEL
-    object JelWrappers {
+    object JelWrappers : KoinComponent {
+        private val themeManager by inject<ThemeManager>()
+
         /**
          * Easy getters to use with JEL.
          *
          * @param key the key of the setting to get
          * @return the current setting value
          */
-        fun setting(key: String): Any? = Settings[ConfigHandler.currentTheme, ResourceLocation(key)]
+        fun setting(key: String): Any? =
+            Settings[themeManager.getScreenConfiguration(ThemeAnalyzer.HUD)!!, ResourceLocation(key)]
 
         fun stringSetting(key: String): String = setting(key) as String
 

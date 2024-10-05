@@ -14,6 +14,8 @@ local function colourButtons(colour)
     end
 end
 
+local dropdownSupport = require 'choice_dropdown_support'
+
 local function gui(root)
     local b = wl.loadCenteredButton(root, "Orange button", function(_, _, _, mb)
         print("Hit Orange with " .. mb)
@@ -39,6 +41,21 @@ local function gui(root)
     if b then
         table.insert(buttons, --[[---@type Widget]] b)
     end
+
+    dropdownSupport.createDropdown(root, {
+        currentValue = 'default',
+        key = 'myDropdown',
+        xPos = 50,
+        yPos = 50,
+        options = {
+            { key = 'one' },
+            { key = 'two' },
+            { key = 'three' },
+        },
+        setValue = function(newValue)
+            print('Selected ' .. newValue.expression)
+        end
+    })
 end
 
 -- split to avoid tail call, which does not seem to work

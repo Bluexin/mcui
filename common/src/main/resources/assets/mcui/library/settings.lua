@@ -23,4 +23,30 @@ end
 --- @param themeId LKResourceLocation|string
 function settings.setTheme(themeId) end
 
+--- Lists all registered screen IDs
+--- @return LKResourceLocation[]
+function settings.allScreenIds()
+    return {}
+end
+
+--- Lists the IDs of themes implementing a given screen
+--- @param screenId LKResourceLocation|string
+--- @return LKResourceLocation[]
+function settings.getThemesImplementingScreenId(screenId)
+    return {}
+end
+
+--- Lists the IDs of themes implementing a given screen
+--- @param screenId LKResourceLocation|string
+--- @return LKResourceLocation|nil
+function settings.getScreenConfiguration(screenId)
+    return nil
+end
+
+--- Configures the theme to use for specified screen
+--- @param screenId LKResourceLocation|string
+--- @param themeId LKResourceLocation|string
+function settings.setScreenConfiguration(screenId, themeId)
+end
+
 return settings

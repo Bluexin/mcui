@@ -17,7 +17,7 @@ sealed class BasicExpressionAdapter<CValueType : CValue<T>, T : Any> : KoinCompo
 //        Constants.LOG.debug("Compiling ${v.expression}")
         value(v.cacheType.cacheExpression(wrap(Evaluator.compile(v.expression, libHelper.jelLibrary, type)), v))
     } catch (ce: CompilationException) {
-        val sb = StringBuilder("An error occurred during theme loading. See more info below.\n")
+        val sb = StringBuilder("A compilation error occurred during theme loading. See more info below.\n")
             .append("–––COMPILATION ERROR :\n")
             .append(ce.message).append('\n')
             .append("  ")
@@ -33,7 +33,7 @@ sealed class BasicExpressionAdapter<CValueType : CValue<T>, T : Any> : KoinCompo
         AbstractThemeLoader.Reporter += message.substringAfterLast("–––COMPILATION ERROR :\n")
         default
     } catch (e: Exception) {
-        val message = "An error occurred while compiling '${v.expression}'"
+        val message = "An unknown error occurred while compiling '${v.expression}'"
         logger.error(message, e)
         AbstractThemeLoader.Reporter += (e.message ?: "unknown error") + " in ${v.expression}"
         default

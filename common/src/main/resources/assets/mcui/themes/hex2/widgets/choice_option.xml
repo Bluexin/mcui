@@ -1,26 +1,23 @@
-<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="category_label_button">
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="choice_option">
     <expect>
-        <variable key="text" type="STRING"/>
+        <variable key="thisValue" type="STRING"/>
+        <variable key="translateValue" type="STRING">format(thisValue.replace(":", ".") + ".name")</variable>
+        <variable key="valueTooltip" type="STRING">format(thisValue.replace(":", ".") + ".description")</variable>
         <variable key="initialWidth" type="INT" cache="STATIC">120</variable>
         <variable key="initialHeight" type="INT" cache="STATIC">16</variable>
         <variable key="xPos" type="DOUBLE" cache="STATIC">0.0</variable>
         <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
-        <variable key="active" type="BOOLEAN" cache="STATIC">true</variable>
         <variable key="colour" type="INT" cache="STATIC">0x424242FF</variable>
         <variable key="hoverColour" type="INT" cache="STATIC">(int) (0x424242FF &amp; 0xAFAFAFFF)</variable>
         <variable key="isHovered" type="BOOLEAN" cache="STATIC">false</variable>
-        <variable key="isOpen" type="BOOLEAN" cache="STATIC">false</variable>
-        <variable key="isPeerOpen" type="BOOLEAN" cache="STATIC">false</variable>
     </expect>
     <contentWidth>initialWidth</contentWidth>
     <contentHeight>initialHeight</contentHeight>
-    <active>!isPeerOpen</active>
     <x>xPos</x>
     <y>yPos</y>
-    <enabled>!isPeerOpen</enabled>
+    <tooltip>valueTooltip</tooltip>
     <children>
         <elementGroup name="button">
-            <enabled>!isOpen</enabled>
             <children>
                 <elementGroup name="bg">
                     <x>isHovered? -initialWidth * 0.05: 0</x>
@@ -62,33 +59,24 @@
                     </children>
                 </elementGroup>
                 <glString name="label">
-                    <x>initialWidth / 2 - strWidth(text) / 2</x>
+                    <x>initialWidth / 2 - strWidth(translateValue) / 2</x>
                     <y cache="STATIC">9.5</y>
-                    <text>text</text>
+                    <text>translateValue</text>
                 </glString>
             </children>
         </elementGroup>
-
-        <widget name="content">
-            <x cache="STATIC">0</x>
-            <y cache="STATIC">0</y>
-            <enabled>isOpen</enabled>
-            <contentWidth cache="STATIC">0</contentWidth>
-            <contentHeight cache="STATIC">0</contentHeight>
-        </widget>
     </children>
 
     <onClick>
-        local self = ...
+        local self = --[[---@type Widget]]...
         local wl = require 'widgetlib'
-        self.setVariable('isOpen', wl.tstatic(true))
-        --- @type Element[]
-        local peers = self.peers
-        for _, peer in ipairs(peers) do
-            if type(peer) == 'Widget' then
-                peer.setVariable('isPeerOpen', wl.tstatic(true))
-            end
+        -- direct parent is the content widget of the choice button
+        local parent = --[[---@type Widget]] self.parentElement.parentElement
+        -- safety check to make sure this wasn't included in some odd place
+        if type(parent) == 'Widget' and parent.extra.setValue then
+            parent.extra.setValue(self.getVariable('thisValue'))
         end
+
         return true
     </onClick>
 

@@ -55,21 +55,17 @@ class ThemeManager(
         private set
 
     /**
-     * This is not filtered for "valid" screen IDs !
+     * TODO: This is not filtered for "valid" screen IDs !
      * map<screenId, map<themeId, screenCallback>>
      */
     private val themeScreens = mutableMapOf<ResourceLocation, Map<ResourceLocation, (ResourceLocation) -> Unit>>()
 
     /*
      * TODO : cache of screen id to screen callback / reference, currently callback to getting the callback
+     * TODO : this needs to be stored
      */
     private val screenConfiguration = mutableMapOf(
-        ThemeAnalyzer.MCUI_SETTINGS to {
-            getAllScreens(ThemeAnalyzer.MCUI_SETTINGS)[ResourceLocation(
-                Constants.MOD_ID,
-                "hex2"
-            )]
-        }
+        ThemeAnalyzer.MCUI_SETTINGS to ResourceLocation(Constants.MOD_ID, "hex2")
     )
 
     // TODO : this should eventually be replaced with a list of loaded themes and the screens they provide
@@ -90,11 +86,7 @@ class ThemeManager(
     )
         private set(value) {
             field = value
-            if (value.hud != null) {
-                getAllScreens(ThemeAnalyzer.HUD)[value.id]?.let {
-                    screenConfiguration[ThemeAnalyzer.HUD] = { it }
-                }
-            }
+            if (value.hud != null) screenConfiguration[ThemeAnalyzer.HUD] = value.id
         }
     private var isReloading = false
 
@@ -161,7 +153,10 @@ class ThemeManager(
         val themeScreens = themeAnalyzer.analyzeThemeScreens(
             resourceManager = resourceManager,
             theme = themeDefinition,
-            setHud = ::HUD.setter,
+            setHud = {
+                logger.info("Setting HUD to ${themeDefinition.id}")
+                HUD = it
+            },
             successReport = successReport,
             failureReport = failureReport
         )
@@ -219,9 +214,22 @@ class ThemeManager(
     }
 
     val allScreenIds get() = themeScreens.keys
+
     fun getAllScreens(screenId: ResourceLocation): Map<ResourceLocation, (ResourceLocation) -> Unit> =
         themeScreens[screenId].orEmpty()
 
     fun getConfiguredScreen(screenId: ResourceLocation): ((ResourceLocation) -> Unit)? =
-        screenConfiguration[screenId]?.invoke()
+        themeScreens[screenId]?.get(getScreenConfiguration(screenId))
+
+    fun getScreenConfiguration(screenId: ResourceLocation): ResourceLocation? =
+        screenConfiguration[screenId]
+
+    fun setScreenConfiguration(screenId: ResourceLocation, themeId: ResourceLocation) {
+        val registeredScreen = themeScreens[screenId]?.get(themeId)
+        if (registeredScreen != null) {
+            screenConfiguration[screenId] = themeId
+            // tmp callback to setting the HUD ref...
+            if (screenId == ThemeAnalyzer.HUD) registeredScreen(ThemeAnalyzer.HUD)
+        }
+    }
 }
