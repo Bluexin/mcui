@@ -20,6 +20,7 @@ package be.bluexin.mcui.themes.elements
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.loader.ThemeLoaderModule
 import be.bluexin.mcui.themes.loader.XmlThemeLoader
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.meta.ThemeMetaModule
 import be.bluexin.mcui.themes.meta.ThemeMetadata
 import be.bluexin.mcui.themes.miniscript.MiniscriptModule
@@ -92,14 +93,17 @@ class Hud(
     private val parts: Parts,
 ) : ElementParent {
 
+    override val rootElement: ElementParent
+        get() = this
+
     @Transient
     @JvmTransient
     private val indexedParts = parts.parts.associate { (k, v) -> k to v }
 
     operator fun get(key: HudPartType) = indexedParts[key]
 
-    fun setup(fragments: Map<ResourceLocation, () -> Fragment>) =
-        this.indexedParts.values.forEach { it.setup(this, fragments) }
+    fun setup(fragments: Map<ResourceLocation, () -> Fragment>, themeDefinition: ThemeDefinition) =
+        this.indexedParts.values.forEach { it.setup(this, fragments, themeDefinition) }
 
     override val elements: Iterable<Element> = emptyList() // this could be populated if we open up HUD to scripting
 

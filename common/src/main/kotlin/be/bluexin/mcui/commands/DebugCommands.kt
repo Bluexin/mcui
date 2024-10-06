@@ -2,7 +2,6 @@ package be.bluexin.mcui.commands
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.screens.LuaScriptedScreen
-import be.bluexin.mcui.screens.LuaTestScreen
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.util.Client
 import com.mojang.brigadier.context.CommandContext
@@ -105,15 +104,6 @@ sealed class DebugCommands(usage: String) : McuiCommand(usage) {
         )
     }
 
-    data object TestGui : DebugCommands("testgui") {
-        override fun register(): CommandRegistrar = literal(literal).executes {
-            Client.tell {
-                it.setScreen(LuaTestScreen())
-            }
-            1
-        }
-    }
-
     override val defaultUseCommand = "$DEBUG_LITERAL $literal"
 
     companion object {
@@ -123,7 +113,6 @@ sealed class DebugCommands(usage: String) : McuiCommand(usage) {
             literal(DEBUG_LITERAL)
                 .then(Reload.register())
                 .then(Open.register())
-                .then(TestGui.register())
         )
     }
 }

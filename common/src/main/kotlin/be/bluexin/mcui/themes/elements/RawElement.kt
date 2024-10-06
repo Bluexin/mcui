@@ -20,6 +20,7 @@ package be.bluexin.mcui.themes.elements
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.elements.access.RawElementAccess
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.CUnit
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
@@ -47,8 +48,12 @@ class RawElement(
     private var rl: ResourceLocation? = null
     private val texture: String? = null
 
-    override fun setup(parent: ElementParent, fragments: Map<ResourceLocation, () -> Fragment>): Boolean {
-        val anonymous = super.setup(parent, fragments)
+    override fun setup(
+        parent: ElementParent,
+        fragments: Map<ResourceLocation, () -> Fragment>,
+        theme: ThemeDefinition
+    ): Boolean {
+        val anonymous = super.setup(parent, fragments, theme)
         if (this.texture != null) this.rl = ResourceLocation(this.texture)
         return anonymous
     }

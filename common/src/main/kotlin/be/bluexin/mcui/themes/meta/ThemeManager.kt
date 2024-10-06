@@ -155,6 +155,7 @@ class ThemeManager(
             theme = themeDefinition,
             setHud = {
                 logger.info("Setting HUD to ${themeDefinition.id}")
+                ConfigHandler.currentTheme = themeDefinition.id
                 HUD = it
             },
             successReport = successReport,

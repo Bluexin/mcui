@@ -29,7 +29,7 @@
                     <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
                     <children>
                         <glRectangle> <!-- left part of label -->
-                            <rgba>isHovered? hoverColour: colour</rgba>
+                            <rgba>(isHovered || isOpen)? hoverColour: colour</rgba>
                             <srcX cache="STATIC">0.0</srcX>
                             <srcY cache="STATIC">0.0</srcY>
                             <srcW cache="STATIC">24.0</srcW>
@@ -39,7 +39,7 @@
                         </glRectangle>
 
                         <glRectangle> <!-- middle part of label -->
-                            <rgba>isHovered? hoverColour: colour</rgba>
+                            <rgba>(isHovered || isOpen)? hoverColour: colour</rgba>
                             <x cache="STATIC">6</x>
                             <srcX cache="STATIC">24.0</srcX>
                             <srcY cache="STATIC">0.0</srcY>
@@ -50,7 +50,7 @@
                         </glRectangle>
 
                         <glRectangle> <!-- right part of label -->
-                            <rgba>isHovered? hoverColour: colour</rgba>
+                            <rgba>(isHovered || isOpen)? hoverColour: colour</rgba>
                             <x>initialWidth - 6</x>
                             <srcX cache="STATIC">50.0</srcX>
                             <srcY cache="STATIC">0.0</srcY>
@@ -76,40 +76,20 @@
             <contentWidth cache="STATIC">0</contentWidth>
             <contentHeight cache="STATIC">0</contentHeight>
         </widget>
-
-        <widget name="hit_outside">
-            <x cache="STATIC">-10000</x>
-            <y cache="STATIC">-10000</y>
-            <enabled>isOpen</enabled>
-            <contentWidth cache="STATIC">20000</contentWidth>
-            <contentHeight cache="STATIC">200000</contentHeight>
-            <onClick>
-                local self = --[[---@type Widget]]...
-                local wl = require 'widgetlib'
-                local parent = --[[---@type Widget]] self.parentElement
-                parent.setVariable('isOpen', wl.tstatic(false))
-
-                return true
-            </onClick>
-        </widget>
     </children>
 
     <onClick>
         local self = --[[---@type Widget]]...
         local wl = require 'widgetlib'
+        local util = require 'util'
 
         local isOpen = self.getVariable('isOpen')
-        local newExpr, replaced = string.gsub('!' .. isOpen.expression, '!!', '')
-        isOpen.expression = newExpr
-        self.setVariable('isOpen', isOpen)
 
-        -- replaced will be 1 when result is false (replaced !!), 0 when result is true
-        if not replaced then
-            for _, peer in ipairs(self.peers) do
-                if type(peer) == 'Widget' then
-                    peer.setVariable('isOpen', wl.tstatic(false))
-                end
-            end
+        if util.string_to_boolean(isOpen.expression) then
+            self.setVariable('isOpen', wl.tstatic(false))
+        else
+            self.setVariable('isOpen', wl.tstatic(true))
+            self.setFocus()
         end
 
         return true
@@ -119,4 +99,11 @@
         local button, _, _, entered = ...
         button.setVariable('isHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
     </onMouseOverEvent>
+
+    <onLoseFocus>
+        local self = --[[---@type Widget]]...
+        local wl = require 'widgetlib'
+
+        self.setVariable('isOpen', wl.tstatic(false))
+    </onLoseFocus>
 </bl:widget>

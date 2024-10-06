@@ -4,6 +4,7 @@ import be.bluexin.mcui.Constants
 import be.bluexin.mcui.themes.elements.*
 import be.bluexin.mcui.themes.elements.access.WidgetAccess
 import be.bluexin.mcui.themes.loader.XmlThemeLoader
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.LibHelper
 import be.bluexin.mcui.themes.miniscript.Variables
 import be.bluexin.mcui.themes.scripting.serialization.AbstractLuaDecoder
@@ -74,7 +75,7 @@ object ReadWidget : LuaFunction(), KoinComponent {
     ) = loadWidget(ResourceLocation(rl))
 }
 
-object LoadFragment : LuaFunction(), KoinComponent {
+class LoadFragment(private val theme: ThemeDefinition) : LuaFunction(), KoinComponent {
     private val libHelper: LibHelper by inject()
 
     private fun generateId() = "mcuigenerated:${UUID.randomUUID()}"
@@ -84,7 +85,7 @@ object LoadFragment : LuaFunction(), KoinComponent {
             val (target, fragment) = internalLoad(arg1, arg2)
             val id = generateId()
             val fragmentRef = FragmentReference(id = id).also {
-                it.setup(target, mapOf(ResourceLocation(id) to { fragment }))
+                it.setup(target, mapOf(ResourceLocation(id) to { fragment }), theme)
             }
             Minecraft.getInstance().tell {
                 target.add(fragmentRef)
@@ -111,7 +112,7 @@ object LoadFragment : LuaFunction(), KoinComponent {
                 AbstractLuaDecoder.LuaMapDecoder(arg3.checktable(), null, serializer.descriptor.getElementDescriptor(0))
                 .decodeSerializableValue(serializer).let { variables ->
                     FragmentReference(id = id, serializedVariables = variables).also {
-                        it.setup(target, mapOf(ResourceLocation(id) to { fragment }))
+                        it.setup(target, mapOf(ResourceLocation(id) to { fragment }), theme)
                     }
                 }
 
@@ -137,21 +138,23 @@ object LoadFragment : LuaFunction(), KoinComponent {
             .decodeSerializableValue(Fragment.serializer())
     }
 
-    private val roots = mutableMapOf<ResourceLocation, WeakReference<ElementGroupParent>>()
+    companion object {
+        private val roots = mutableMapOf<ResourceLocation, WeakReference<ElementGroupParent>>()
 
-    operator fun set(id: ResourceLocation, root: ElementGroupParent) {
-        roots.remove(id)?.clear()
-        roots[id] = WeakReference(root)
-    }
+        operator fun set(id: ResourceLocation, root: ElementGroupParent) {
+            roots.remove(id)?.clear()
+            roots[id] = WeakReference(root)
+        }
 
-    private fun find(id: ResourceLocation) = roots[id]?.let {
-        val root = it.get()
-        if (root == null) roots.remove(id)
-        root
-    }
+        private fun find(id: ResourceLocation) = roots[id]?.let {
+            val root = it.get()
+            if (root == null) roots.remove(id)
+            root
+        }
 
-    fun clear(id: ResourceLocation) {
-        roots.remove(id)?.clear()
+        fun clear(id: ResourceLocation) {
+            roots.remove(id)?.clear()
+        }
     }
 }
 

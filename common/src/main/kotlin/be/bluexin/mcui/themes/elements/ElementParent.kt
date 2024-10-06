@@ -28,10 +28,13 @@ interface ElementParent {
 
     val elements: Iterable<Element>
 
+    val rootElement: ElementParent
+
     companion object {
         val ZERO = object : ElementParent {
             override val name = "__ZERO"
             override val elements = emptyList<Element>()
+            override val rootElement = this
         }
     }
 }

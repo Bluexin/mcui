@@ -19,8 +19,8 @@ end
 --- @param categoryContent Widget
 --- @param n number amount of children
 function wl.centerCategoryContent(categoryContent, n)
-    if n > 2 then
-        categoryContent.y = -20 * math.floor((n - 1) / 2)
+    if n > 1 then
+        categoryContent.y = -20 * math.floor((n - 2) / 2)
     end
 end
 

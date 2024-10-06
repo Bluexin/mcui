@@ -27,6 +27,7 @@ class LayeredMap<K, V> : Map<K, V> {
 
     operator fun plusAssign(context: Map<K, V>) {
         stack.push(context)
+        stack.iterator()
     }
 
     fun pop() {

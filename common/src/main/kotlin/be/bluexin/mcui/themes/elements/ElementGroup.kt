@@ -23,6 +23,7 @@ import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.platform.Services
 import be.bluexin.mcui.themes.elements.access.ElementGroupAccess
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.profile
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.debug
@@ -37,6 +38,8 @@ import kotlin.jvm.Transient as JvmTransient
 
 /**
  * Part of saoui by Bluexin.
+ * Incremental compilation bug : https://youtrack.jetbrains.com/issue/KT-46681/JVM-IR-kotlinx-serialization-IllegalStateException-Null-argument-in-ExpressionCodegen-for-parameter-VALUEPARAMETER
+ * Need to clean before compiling changes to any class in this hierarchy.
  *
  * @author Bluexin
  */
@@ -57,6 +60,9 @@ sealed class ElementGroupParent : Element(), ElementParent {
 
     @LuajExpose
     fun getChildByName(name: String): Element? = elements.find { it.name == name }
+
+    override val rootElement: ElementParent
+        get() = root.get() ?: this
 
     @Transient
     @JvmTransient
@@ -108,7 +114,7 @@ sealed class ElementGroupParent : Element(), ElementParent {
         val relMouseY = mouseY - y(ctx)
 
         if (Services.PLATFORM.isDevelopmentEnvironment /* TODO : debug setting ? */) {
-            this.children = this.children.filter {
+            children = children.filter {
                 ctx.profile(it.name) {
                     try {
                         it.draw(ctx, poseStack, relMouseX, relMouseY)
@@ -120,7 +126,7 @@ sealed class ElementGroupParent : Element(), ElementParent {
                 }
             }.let(::Children)
         } else {
-            this.children.forEach {
+            children.forEach {
                 ctx.profile(it.name) {
                     it.draw(ctx, poseStack, relMouseX, relMouseY)
                 }
@@ -128,11 +134,15 @@ sealed class ElementGroupParent : Element(), ElementParent {
         }
     }
 
-    override fun setup(parent: ElementParent, fragments: Map<ResourceLocation, () -> Fragment>): Boolean {
-        val res = super.setup(parent, fragments)
+    override fun setup(
+        parent: ElementParent,
+        fragments: Map<ResourceLocation, () -> Fragment>,
+        theme: ThemeDefinition
+    ): Boolean {
+        val res = super.setup(parent, fragments, theme)
         this.rl = this.texture?.let(::ResourceLocation)
         var anonymous = 0
-        this.children.forEach { if (it.name == DEFAULT_NAME) ++anonymous; it.setup(this, fragments) }
+        this.children.forEach { if (it.name == DEFAULT_NAME) ++anonymous; it.setup(this, fragments, theme) }
         if (anonymous > 0) Constants.LOG.debug { "Set up $anonymous anonymous elements in $name." }
         return res
     }

@@ -77,9 +77,11 @@ local function settingTooltip(setting)
     return (setting.commentKey and wl.tstatic('format("' .. setting.commentKey .. '")', 'STRING', true)) or setting.comment
 end
 
+local xPos = 'scaledwidth / 2 - 60'
+
 local function gui(root)
     print('Starting to analyse settings')
-    local themes = wl.loadCategory(root, 'scaledheight / 2 - 10', "scaledwidth / 2 - 120", 'themeselection', function()
+    local themes = wl.loadCategory(root, 'scaledheight / 2 - 10', xPos, 'themeselection', function()
         return 'format("mcui.screen.settings.themeselection")'
     end)
     if (themes) then
@@ -109,7 +111,7 @@ local function gui(root)
     local yPos = 20
 
     for topLevelName, topLevelValue in pairs(topCategories) do
-        local topLevel = wl.loadCategory(root, yPosBase .. tostring(yPos), "scaledwidth / 2 - 120", topLevelName, settingsTabName)
+        local topLevel = wl.loadCategory(root, yPosBase .. tostring(yPos), xPos, topLevelName, settingsTabName)
         if topLevel then
             local tlN = 0
             local tlContent = wl.getChildWidget(topLevel, 'content')

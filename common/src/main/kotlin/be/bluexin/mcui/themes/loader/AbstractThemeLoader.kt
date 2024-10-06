@@ -46,7 +46,7 @@ abstract class AbstractThemeLoader(protected val type: HudFormat, protected val 
 
             hud to fragments
         }.onSuccess { (hud, fragments) ->
-            hud.setup(fragments)
+            hud.setup(fragments, theme)
             sink(hud)
         }.onFailure {
             Constants.LOG.warn("Failed to load $theme", it)

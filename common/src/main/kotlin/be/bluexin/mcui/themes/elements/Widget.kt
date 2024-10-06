@@ -5,14 +5,17 @@ import be.bluexin.luajksp.annotations.BeforeSet
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
+import be.bluexin.mcui.logger
 import be.bluexin.mcui.themes.elements.access.WidgetAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.*
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
 import be.bluexin.mcui.themes.scripting.LuaJManager
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
 import be.bluexin.mcui.util.Client
+import be.bluexin.mcui.util.info
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -74,6 +77,9 @@ class Widget(
     @XmlSerialName
     @LuajExpose
     var tooltip: CString? = null,
+    @XmlElement
+    @XmlSerialName("onLoseFocus")
+    val onLoseFocusScript: String? = null,
 ) : ElementGroupParent(), GuiEventListener, Renderable, NarratableEntry, WidgetParent, KoinComponent, BeforeSet,
     AfterSet {
 
@@ -93,6 +99,7 @@ class Widget(
         private set
 
     /**
+     * Called when the mouse is clicked inside this widget.
      * Basic check against contentWidth/contentHeight already performed.
      * Returning false will let the parent handle the event.
      *
@@ -106,6 +113,7 @@ class Widget(
     var onClick: Widget.(Double, Double, Int) -> Boolean = { _, _, _ -> false }
 
     /**
+     * Called when the mouse wheel is scrolled over this widget.
      * Basic check against contentWidth/contentHeight already performed.
      * Returning false will let the parent handle the event.
      *
@@ -119,6 +127,8 @@ class Widget(
     var onScroll: Widget.(Double, Double, Double) -> Boolean = { _, _, _ -> false }
 
     /**
+     * Called when the mouse enters or leaves the widget
+     *
      * @param self Widget the receiver widget
      * @param mouseX number the mouse's X position, relative to this widget
      * @param mouseY number the mouse's Y position, relative to this widget
@@ -126,6 +136,14 @@ class Widget(
      */
     @LuajExpose
     var onMouseOverEvent: Widget.(Double, Double, Boolean) -> Unit = { _, _, _ -> }
+
+    /**
+     * Called when the widget isn't being focused anymore
+     *
+     * @param self Widget the receiver widget
+     */
+    @LuajExpose
+    var onLoseFocus: Widget.() -> Unit = { }
 
     @Transient
     private val variables: MutableMap<String, CValue<*>?> = mutableMapOf()
@@ -136,6 +154,9 @@ class Widget(
     @LuajExpose
     @Transient // TODO : be able to include these in deserialization ?
     var extra: LuaTable = LuaTable()
+
+    @Transient
+    private lateinit var theme: ThemeDefinition
 
     init {
         if (expect != null) libHelper.popContext()
@@ -190,8 +211,13 @@ class Widget(
         }
     }
 
-    override fun setup(parent: ElementParent, fragments: Map<ResourceLocation, () -> Fragment>): Boolean {
-        val anonymous = super.setup(parent, fragments)
+    override fun setup(
+        parent: ElementParent,
+        fragments: Map<ResourceLocation, () -> Fragment>,
+        theme: ThemeDefinition
+    ): Boolean {
+        this.theme = theme
+        val anonymous = super.setup(parent, fragments, theme)
 
         if (expect != null) {
             val missing = expect.variables.filter { (key, it) ->
@@ -213,17 +239,18 @@ class Widget(
         }
 
         val access = toLua()
-        loadCallbackFromScript(access, onClickScript, ::onClick.name)
-        loadCallbackFromScript(access, onMouseOverEventScript, ::onMouseOverEvent.name)
+        loadCallbackFromScript(access, onClickScript, ::onClick.name, theme)
+        loadCallbackFromScript(access, onMouseOverEventScript, ::onMouseOverEvent.name, theme)
+        loadCallbackFromScript(access, onLoseFocusScript, ::onLoseFocus.name, theme)
 
         return anonymous
     }
 
-    private fun loadCallbackFromScript(access: LuaValue, script: String?, name: String) {
+    private fun loadCallbackFromScript(access: LuaValue, script: String?, name: String, theme: ThemeDefinition) {
         if (!script.isNullOrBlank()) try {
             access.set(
                 name,
-                luaJManager.compileSnippet("${this.name}/$name".lowercase(), script, themeManager.currentTheme)
+                luaJManager.compileSnippet("${this.name}/$name".lowercase(), script, theme)
             )
         } catch (e: Throwable) {
             AbstractThemeLoader.Reporter += e.message ?: "Unknown error loading ${this.name}/$name"
@@ -321,8 +348,27 @@ class Widget(
     override fun toLua(): LuaValue = WidgetAccess(this)
 
     override fun plusAssign(widget: Widget) {
-        widget.setup(this, emptyMap() /*TODO: frags*/)
+        widget.setup(this, emptyMap(), theme)
         add(widget)
+    }
+
+    @LuajExpose
+    fun setFocus() {
+        logger.info { "Setting focus to self ($hierarchyName)" }
+        (rootElement as? WidgetParent)?.setFocus(this)
+    }
+
+    private val logger = logger()
+
+    fun loseFocus() {
+        logger.info { "$hierarchyName loses focus" }
+        onLoseFocus()
+    }
+
+    override fun setFocus(target: Widget) {
+        logger.info { "Setting focus on self ($hierarchyName) to ${target.hierarchyName}" }
+        val root = rootElement
+        if (root != this && root is WidgetParent) root.setFocus(target)
     }
 
     override fun beforeSet() {

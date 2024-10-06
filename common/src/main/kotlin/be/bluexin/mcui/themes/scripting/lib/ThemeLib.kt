@@ -1,14 +1,15 @@
 package be.bluexin.mcui.themes.scripting.lib
 
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import org.luaj.vm2.LuaTable
 import org.luaj.vm2.LuaValue
 import org.luaj.vm2.lib.TwoArgFunction
 
-object ThemeLib : TwoArgFunction() {
+class ThemeLib(private val theme: ThemeDefinition) : TwoArgFunction() {
     override fun call(modname: LuaValue, env: LuaValue): LuaValue {
         val themeTable = LuaTable()
         themeTable["readFragment"] = ReadFragment
-        themeTable["loadFragment"] = LoadFragment
+        themeTable["loadFragment"] = LoadFragment(theme)
         themeTable["readWidget"] = ReadWidget
         themeTable["loadWidget"] = LoadWidget
         themeTable["registerScreen"] = RegisterScreen

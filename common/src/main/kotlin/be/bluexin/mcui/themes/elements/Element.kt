@@ -21,6 +21,7 @@ import be.bluexin.luajksp.annotations.LKExposed
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.CBoolean
 import be.bluexin.mcui.themes.miniscript.CDouble
 import be.bluexin.mcui.util.debug
@@ -100,6 +101,10 @@ sealed class Element : LKExposed {
     @JvmTransient
     protected lateinit var parent: WeakReference<ElementParent>
 
+    @LuajExpose
+    @Transient
+    protected lateinit var root: WeakReference<ElementParent>
+
     private val parentOrZero get() = parent.get() ?: ElementParent.ZERO
 
     @LuajExpose
@@ -130,8 +135,13 @@ sealed class Element : LKExposed {
      * @return whether this is an anonymous element
      */
     @OverridingMethodsMustInvokeSuper
-    open fun setup(parent: ElementParent, fragments: Map<ResourceLocation, () -> Fragment>): Boolean {
+    open fun setup(
+        parent: ElementParent,
+        fragments: Map<ResourceLocation, () -> Fragment>,
+        theme: ThemeDefinition
+    ): Boolean {
         this.parent = WeakReference(parent)
+        this.root = WeakReference(parent.rootElement)
         return if (name != DEFAULT_NAME) {
             Constants.LOG.debug { "Set up $this in ${parent.name}" }
             false

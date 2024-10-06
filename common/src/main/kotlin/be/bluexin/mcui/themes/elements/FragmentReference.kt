@@ -5,6 +5,7 @@ import be.bluexin.mcui.Constants
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.elements.access.FragmentReferenceAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
+import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.*
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
 import com.mojang.blaze3d.vertex.PoseStack
@@ -29,6 +30,9 @@ class FragmentReference(
         if (serializedVariables !== Variables.EMPTY) get<LibHelper>().popContext()
     }
 
+    override val rootElement: ElementParent
+        get() = root.get() ?: this
+
     @Transient
     private val variables: MutableMap<String, CValue<*>?> =
         serializedVariables.variable.mapValuesTo(mutableMapOf()) { (_, it) ->
@@ -38,15 +42,19 @@ class FragmentReference(
     @Transient
     private var fragment: Fragment? = null
 
-    override fun setup(parent: ElementParent, fragments: Map<ResourceLocation, () -> Fragment>): Boolean {
-        val anonymous = super.setup(parent, fragments)
+    override fun setup(
+        parent: ElementParent,
+        fragments: Map<ResourceLocation, () -> Fragment>,
+        theme: ThemeDefinition
+    ): Boolean {
+        val anonymous = super.setup(parent, fragments, theme)
         if (id == MISSING_ID) {
             val message = "Missing id in fragment reference "
             Constants.LOG.warn(message + hierarchyName)
             AbstractThemeLoader.Reporter += message + nameOrParent()
         } else {
             fragment = fragments[ResourceLocation(id)]?.invoke()
-                ?.also { it.setup(this, fragments) }
+                ?.also { it.setup(this, fragments, theme) }
             if (fragment == null) {
                 val message = "Missing fragment with id $id referenced in "
                 Constants.LOG.warn(message + hierarchyName)

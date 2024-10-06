@@ -9,6 +9,7 @@ import be.bluexin.mcui.themes.scripting.lib.SettingsLib
 import be.bluexin.mcui.themes.scripting.lib.ThemeLib
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.debug
+import be.bluexin.mcui.util.info
 import be.bluexin.mcui.util.warn
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
@@ -69,7 +70,7 @@ class LuaJManager(
             load(TableLib())
             load(JseStringLib())
             load(JseMathLib())
-            load(ThemeLib)
+            load(ThemeLib(theme))
             load(SettingsLib)
             load(SafetyLib(theme, this@LuaJManager))
         }
@@ -153,6 +154,7 @@ class LuaJManager(
     }
 
     fun clearGlobals(theme: ThemeDefinition) {
+        logger.info { "Clearing globals for ${theme.id}" }
         scriptGlobals.remove(theme.id)
     }
 

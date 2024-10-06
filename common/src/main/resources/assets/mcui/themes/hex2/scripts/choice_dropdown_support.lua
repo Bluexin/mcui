@@ -65,7 +65,7 @@ local function loadDropdownOption(parent, args, index)
     --- @type table<string, CValue>
     local baseArgs = {
         thisValue = wl.tstatic(args.key),
-        yPos = wl.tstatic((index - 1) * 18)
+        yPos = wl.tstatic((index - 1) * 16)
     }
 
     if args.labelLocalization then
@@ -81,7 +81,10 @@ local function loadDropdownOption(parent, args, index)
             args.variables or {}
     )
 
-    theme.loadWidget(parent, option_frag, allArgs)
+    local r = theme.loadWidget(parent, option_frag, allArgs)
+    if r then
+        r.name = 'option_' .. args.key:gsub(':', '.')
+    end
 end
 
 --- @shape dropdownArgs

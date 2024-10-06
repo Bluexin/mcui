@@ -1,7 +1,7 @@
 [versions]
 kotlin = { require = "2.0.20" }
 coroutines = "1.8.1"
-serialization = "1.7.1"
+serialization = "1.7.3"
 # Stuck on this version for now : https://github.com/pdvrieze/xmlutil/issues/236
 serialization_xml = "0.86.2"
 minecraft = "1.19.4"

@@ -79,4 +79,10 @@ function util.map(from, mapper)
     return r
 end
 
+--- @param input string
+--- @return boolean
+function util.string_to_boolean(input)
+    return input and (input:lower() == 'true')
+end
+
 return util

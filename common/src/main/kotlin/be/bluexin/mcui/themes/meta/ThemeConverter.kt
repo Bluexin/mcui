@@ -1,5 +1,6 @@
 package be.bluexin.mcui.themes.meta
 
+import be.bluexin.mcui.Constants
 import be.bluexin.mcui.themes.elements.Widget
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.loader.JsonThemeLoader
@@ -34,6 +35,18 @@ object ThemeConverter {
         val toWrite = File(args[1])
         val settingsLoader = SettingsLoader()
         val xmlThemeLoader = XmlThemeLoader(settingsLoader)
+        val dummyRl = ResourceLocation(Constants.MOD_ID, "dummy")
+        val themeDefinition = ThemeDefinition(
+            id = dummyRl,
+            themeRoot = dummyRl,
+            name = dummyRl.path,
+            metadata = ThemeMetadata(format = ThemeFormat.ERROR),
+            hud = null,
+            settings = null,
+            fragments = emptyMap(),
+            widgets = emptyMap(),
+            scripts = emptyMap(),
+        )
         val (hud, fragments) = try {
             logger.info("Loading $toRead")
             clearAndLogErrors {
@@ -52,7 +65,7 @@ object ThemeConverter {
                         }
                     }
                 }
-                hud.setup(fragments)
+                hud.setup(fragments, themeDefinition)
 
                 hud to fragments
             }
@@ -100,7 +113,7 @@ object ThemeConverter {
                     }
                 }
 
-                read.setup(readFragments)
+                read.setup(readFragments, themeDefinition)
             }
         }
         logger.info("Read in $time ms.")

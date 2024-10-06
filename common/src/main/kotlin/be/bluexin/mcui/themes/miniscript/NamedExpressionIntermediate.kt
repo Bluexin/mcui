@@ -1,9 +1,6 @@
-@file:OptIn(ExperimentalSerializationApi::class)
-
 package be.bluexin.mcui.themes.miniscript
 
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlOtherAttributes
@@ -12,6 +9,7 @@ import nl.adaptivity.xmlutil.serialization.XmlValue
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
+// TODO : maybe add some reference to the location for debugging info ? https://github.com/Bluexin/saoui/issues/26
 @SerialName("variable")
 @Serializable
 data class NamedExpressionIntermediate(
