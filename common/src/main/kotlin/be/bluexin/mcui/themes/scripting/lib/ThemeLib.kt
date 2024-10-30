@@ -8,9 +8,9 @@ import org.luaj.vm2.lib.TwoArgFunction
 class ThemeLib(private val theme: ThemeDefinition) : TwoArgFunction() {
     override fun call(modname: LuaValue, env: LuaValue): LuaValue {
         val themeTable = LuaTable()
-        themeTable["readFragment"] = ReadFragment
+        themeTable["readFragment"] = ReadFragment(theme)
         themeTable["loadFragment"] = LoadFragment(theme)
-        themeTable["readWidget"] = ReadWidget
+        themeTable["readWidget"] = ReadWidget(theme)
         themeTable["loadWidget"] = LoadWidget
         themeTable["registerScreen"] = RegisterScreen
         env["theme"] = themeTable

@@ -97,7 +97,7 @@ local function bind(self, key, source, default, valueType)
     end
 end
 
-local label_button_frag = theme.readWidget("saoui:themes/sao/widgets/label_button.xml")
+local label_button_frag = theme.readWidget("saoui.sao:label_button")
 
 --- @shape buttonArgs
 --- @field xPos string|number|CDouble
@@ -142,7 +142,7 @@ function wl.loadButton(parent, args)
     return r
 end
 
-local category_frag = theme.readWidget("saoui:themes/sao/widgets/category_label_button.xml")
+local category_frag = theme.readWidget("saoui.sao:category_label_button")
 
 --- @param parent string|Widget
 --- @param yPos string|number

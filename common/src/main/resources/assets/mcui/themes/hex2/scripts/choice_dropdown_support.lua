@@ -5,8 +5,8 @@ local theme = require 'theme'
 local util = require 'util'
 local wl = require 'widgetlib'
 
-local dropdown_frag = theme.readWidget("mcui:themes/hex2/widgets/choice_dropdown.xml")
-local option_frag = theme.readWidget("mcui:themes/hex2/widgets/choice_option.xml")
+local dropdown_frag = theme.readWidget("mcui.hex2:choice_dropdown")
+local option_frag = theme.readWidget("mcui.hex2:choice_option")
 
 --- @param self Widget
 --- @param setValue nil|fun(newValue: CValue): void

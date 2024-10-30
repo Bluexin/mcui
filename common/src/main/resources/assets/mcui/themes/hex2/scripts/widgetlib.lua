@@ -74,7 +74,7 @@ function wl.tframe(value, jtype, nowrap)
     return basic
 end
 
-local icon_label_button_frag = theme.readWidget("mcui:themes/hex2/widgets/icon_button_expanding_label.xml")
+local icon_label_button_frag = theme.readWidget("mcui.hex2:icon_button_expanding_label")
 
 --- @param root string|Widget root id of a Screen, or reference to an already loaded Widget
 --- @param text string
@@ -120,7 +120,7 @@ function wl.bind(self, key, source, default, valueType)
     end
 end
 
-local label_button_frag = theme.readWidget("mcui:themes/hex2/widgets/label_button.xml")
+local label_button_frag = theme.readWidget("mcui.hex2:label_button")
 
 --- @shape buttonArgs
 --- @field key string|nil mapped to the widget's name
@@ -189,7 +189,7 @@ local function onClickBackButton(self)
     return true
 end
 
-local category_frag = theme.readWidget("mcui:themes/hex2/widgets/category_label_button.xml")
+local category_frag = theme.readWidget("mcui.hex2:category_label_button")
 
 --- @param parent string|Widget
 --- @param yPos string|number

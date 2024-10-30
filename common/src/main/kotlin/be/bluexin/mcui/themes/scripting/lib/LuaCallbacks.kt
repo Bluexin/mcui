@@ -21,9 +21,9 @@ import org.luaj.vm2.LuaValue
 import java.lang.ref.WeakReference
 import java.util.*
 
-// TODO : all of these should use theme internal RLs instead of absolute RLs
-
-object ReadFragment : LuaFunction(), KoinComponent {
+class ReadFragment(
+    private val themeDefinition: ThemeDefinition
+) : LuaFunction(), KoinComponent, LuaErrorHook {
     private val xmlThemeLoader: XmlThemeLoader by inject()
 
     override fun call(arg: LuaValue) = call(arg.checkjstring())
@@ -42,14 +42,18 @@ object ReadFragment : LuaFunction(), KoinComponent {
 
     private fun loadFragment(
         rl: ResourceLocation
-    ): Fragment = xmlThemeLoader.loadFragment(rl)
+    ): Fragment = themeDefinition.fragments[rl]
+        ?.let(xmlThemeLoader::loadFragment)
+        ?: luaError("Unknown fragment : $rl")
 
     private fun loadFragment(
         rl: String
     ) = loadFragment(ResourceLocation(rl))
 }
 
-object ReadWidget : LuaFunction(), KoinComponent {
+class ReadWidget(
+    private val themeDefinition: ThemeDefinition
+) : LuaFunction(), KoinComponent, LuaErrorHook {
     private val xmlThemeLoader: XmlThemeLoader by inject()
 
     override fun call(arg: LuaValue) = call(arg.checkjstring())
@@ -68,7 +72,9 @@ object ReadWidget : LuaFunction(), KoinComponent {
 
     private fun loadWidget(
         rl: ResourceLocation
-    ): Widget = xmlThemeLoader.loadWidget(rl)
+    ): Widget = themeDefinition.widgets[rl]
+        ?.let(xmlThemeLoader::loadWidget)
+        ?: luaError("Unknown widget : $rl")
 
     private fun loadWidget(
         rl: String
