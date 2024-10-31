@@ -1,7 +1,7 @@
 <bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="hotbar fragment">
     <children>
         <elementGroup name="vertical">
-            <enabled>booleanSetting("hud:vertical_hotbar")</enabled>
+            <enabled>settings.boolean("hud:vertical_hotbar")</enabled>
             <x cache="SIZE_CHANGE">scaledwidth - 24</x>
             <y cache="SIZE_CHANGE">scaledheight / 2.0</y>
             <children>
@@ -9,7 +9,7 @@
                     <amount cache="STATIC">9</amount>
                     <children>
                         <glHotbarItem>
-                            <rgba cache="NONE">i == selectedslot ? 0xFFBA66FF : 0x424242FF</rgba>
+                            <rgba cache="NONE">i == player.selectedSlot ? 0xFFBA66FF : 0x424242FF</rgba>
                             <srcH cache="STATIC">256.0</srcH>
                             <srcW cache="STATIC">256.0</srcW>
                             <srcX cache="STATIC">0.0</srcX>
@@ -24,7 +24,7 @@
                     </children>
                 </repetitionGroup>
                 <elementGroup name="offhand">
-                    <enabled>!offhandEmpty(0)</enabled>
+                    <enabled>!player.isOffhandEmpty(0)</enabled>
                     <children>
                         <glHotbarItem>
                             <rgba cache="STATIC">0xFFBA66FF</rgba>
@@ -59,7 +59,7 @@
             </children>
         </elementGroup>
         <elementGroup name="horizontal">
-            <enabled>!(booleanSetting("hud:vertical_hotbar"))</enabled>
+            <enabled>!(settings.boolean("hud:vertical_hotbar"))</enabled>
             <x cache="SIZE_CHANGE">scaledwidth / 2.0</x>
             <y cache="SIZE_CHANGE">scaledheight - 24</y>
             <children>
@@ -67,7 +67,7 @@
                     <amount cache="STATIC">9</amount>
                     <children>
                         <glHotbarItem>
-                            <rgba cache="NONE">i == selectedslot ? 0xFFBA66FF : 0x424242FF</rgba>
+                            <rgba cache="NONE">i == player.selectedSlot ? 0xFFBA66FF : 0x424242FF</rgba>
                             <srcH cache="STATIC">256.0</srcH>
                             <srcW cache="STATIC">256.0</srcW>
                             <srcX cache="STATIC">0.0</srcX>
@@ -82,7 +82,7 @@
                     </children>
                 </repetitionGroup>
                 <elementGroup name="offhand">
-                    <enabled>!offhandEmpty(0)</enabled>
+                    <enabled>!player.isOffhandEmpty(0)</enabled>
                     <children>
                         <glHotbarItem>
                             <rgba cache="STATIC">0xFFBA66FF</rgba>

@@ -4,7 +4,7 @@
             <x cache="STATIC">2</x>
             <y cache="STATIC">35</y>
             <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
-            <amount>ptSize</amount>
+            <amount>party.length</amount>
             <children>
                 <elementGroup name="bg">
                     <children>
@@ -64,19 +64,19 @@
                 </elementGroup>
                 <glRectangle name="health bar">
                     <texture>mcui:themes/hex2/textures/hexbars.png</texture>
-                    <rgba>healthStep.rgba</rgba>
+                    <rgba>party[i].healthStep.rgba</rgba>
                     <x cache="STATIC">42</x>
                     <y cache="NONE">15 * i</y>
-                    <w cache="NONE">1.796875 + 96.154*ptHpPct(i)</w>
+                    <w cache="NONE">1.796875 + 96.154 * party[i].healthPercent</w>
                     <h cache="STATIC">13</h>
 
                     <srcX cache="STATIC">0.0</srcX>
                     <srcY cache="STATIC">25.6</srcY>
-                    <srcW cache="NONE">4.6 + 240.0*ptHpPct(i)</srcW>
+                    <srcW cache="NONE">4.6 + 240.0 * party[i].healthPercent</srcW>
                     <srcH cache="STATIC">25.6</srcH>
                 </glRectangle>
                 <glString name="pName">
-                    <text>ptName(i).length > 5? ptName(i).substring(0, 5): ptName(i)</text>
+                    <text>party[i].username.length > 5? party[i].username.substring(0, 5): party[i].username</text>
                     <x cache="STATIC">8</x>
                     <y cache="NONE">15 * i + 7</y>
                     <rgba>0xFFFFFFFF</rgba>

@@ -1,8 +1,10 @@
 package be.bluexin.mcui.commands
 
+import be.bluexin.mcui.logger
 import be.bluexin.mcui.screens.LuaScriptedScreen
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.util.Client
+import be.bluexin.mcui.util.error
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
 import net.minecraft.commands.CommandSourceStack
@@ -12,11 +14,17 @@ import net.minecraft.resources.ResourceLocation
 
 sealed class GeneralCommands(literal: String) : McuiCommand(literal) {
     data object PrintErrors : GeneralCommands("print_errors") {
+        private val logger = logger()
+
         override fun register(): CommandRegistrar =
             literal(literal)
                 .executes { context ->
-                    AbstractThemeLoader.Reporter.errors.forEach {
-                        context.source.sendSystemMessage(Component.literal(it))
+                    if (AbstractThemeLoader.Reporter.errors.any()) {
+                        context.source.sendSystemMessage(Component.literal("(See console with monospaced fonts for precise error markup)"))
+                        AbstractThemeLoader.Reporter.errors.forEach {
+                            context.source.sendSystemMessage(Component.literal(it))
+                            logger.error { it }
+                        }
                     }
                     AbstractThemeLoader.Reporter.errors.size
                 }

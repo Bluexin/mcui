@@ -20,6 +20,7 @@ package be.bluexin.mcui.deprecated.api.themes;
 
 import be.bluexin.mcui.effects.StatusEffects;
 import be.bluexin.mcui.themes.miniscript.CValue;
+import be.bluexin.mcui.themes.miniscript.api.DrawContext;
 import be.bluexin.mcui.util.HealthStep;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -35,9 +36,12 @@ import java.util.Map;
  * Getters to use in JEL (for access in xml themes).
  * <p>
  * These are accessible in the HUD xml.
- *
+ * <p>
  * Everywhere "percent" or "scale of 1" is mentioned, it means the value will be a decimal ranging from 0.0 (included)
  * to 1.0 (included).
+ * <p>
+ * Deprecation notice : things are being deprecated and moved to a more structured place.
+ * @see DrawContext replacement implementation
  *
  * @author Bluexin
  */
@@ -46,37 +50,51 @@ public interface IHudDrawContext {
 
     /**
      * @return the player's username
+     * @deprecated use player.username instead
      */
+    @Deprecated
     String username();
 
     /**
      * @return the width of the player's username (in pixel, with the current font)
+     * @deprecated use strWidth(player.username) instead
      */
+    @Deprecated
     double usernamewidth();
 
     /**
      * @return the current hp of the player, in percentage of 1
+     * @deprecated use player.healthPercent instead
      */
+    @Deprecated
     double hpPct();
 
     /**
      * @return the current hp of the player (1 heart = 2 HP)
+     * @deprecated use player.health instead
      */
+    @Deprecated
     float hp();
 
     /**
      * @return the current maximum hp of the player (1 heart = 2 HP)
+     * @deprecated use player.maxHealth instead
      */
+    @Deprecated
     float maxHp();
 
     /**
      * @return the health step the player is currently at
+     * @deprecated use player.healthStep instead
      */
+    @Deprecated
     HealthStep healthStep();
 
     /**
      * @return the id of the hotbar slot the player is using (from 0 to 8)
+     * @deprecated use player.selectedSlot instead
      */
+    @Deprecated
     int selectedslot();
 
     /**
@@ -95,7 +113,9 @@ public interface IHudDrawContext {
      *
      * @param slot offhand slot to query
      * @return whether the specified offhand slot is empty
+     * @deprecated use player.isOffhandEmpty instead
      */
+    @Deprecated
     boolean offhandEmpty(int slot);
 
     /**
@@ -115,18 +135,23 @@ public interface IHudDrawContext {
 
     /**
      * @return the current absorption amount the player has
+     * @deprecated use player.absorption instead
      */
+    @Deprecated
     float absorption();
-
 
     /**
      * @return the current experience level of the player
+     * @deprecated use player.level instead
      */
+    @Deprecated
     int level();
 
     /**
      * @return the current experience percent of the player (scale of 1)
+     * @deprecated use player.experience instead
      */
+    @Deprecated
     float experience();
 
     /**
@@ -146,7 +171,9 @@ public interface IHudDrawContext {
 
     /**
      * @return current player. Useless in themes for now
+     * @deprecated in favour of `player` -- should not be in use by themes atm
      */
+    @Deprecated
     Player getPlayer();
 
     /**
@@ -172,36 +199,48 @@ public interface IHudDrawContext {
     /**
      * @param index the index of the party member to check
      * @return username of the party member at given index
+     * @deprecated use party[index].username instead
      */
+    @Deprecated
     String ptName(int index);
 
     /**
      * @param index the index of the party member to check
      * @return hp of the party member at given index
+     * @deprecated use party[index].health instead
      */
+    @Deprecated
     float ptHp(int index);
 
     /**
      * @param index the index of the party member to check
      * @return max hp of the party member at given index
+     * @deprecated use party[index].maxHealth instead
      */
+    @Deprecated
     float ptMaxHp(int index);
 
     /**
      * @param index the index of the party member to check
      * @return hp percent of the party member at given index
+     * @deprecated use party[index].healthPercent instead
      */
+    @Deprecated
     float ptHpPct(int index);
 
     /**
      * @param index the index of the party member to check
      * @return health step of the party member at given index
+     * @deprecated use party[index].healthStep instead
      */
+    @Deprecated
     HealthStep ptHealthStep(int index);
 
     /**
      * @return current party size
+     * @deprecated use party.length instead
      */
+    @Deprecated
     int ptSize();
 
     /**
@@ -244,12 +283,15 @@ public interface IHudDrawContext {
 
     /**
      * @return player's current status effects
+     * @deprecated use player.statusEffects instead (array instead of list -> size becomes length)
      */
+    @Deprecated
     List<StatusEffects> statusEffects();
 
     /**
      * @param i index to check
      * @return status effect at given index
+     * @deprecated use player.statusEffects[i] instead
      */
     default StatusEffects statusEffect(int i) {
         return statusEffects().get(i);

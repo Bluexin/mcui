@@ -13,7 +13,7 @@
         <entry>
             <key>EXPERIENCE</key>
             <value name="exp">
-                <enabled>!booleanSetting("hud:hide_exp")</enabled>
+                <enabled>!settings.boolean("hud:hide_exp")</enabled>
                 <x cache="SIZE_CHANGE">scaledwidth / 2.0</x>
                 <y cache="SIZE_CHANGE">scaledheight - 64</y>
                 <children>

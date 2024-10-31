@@ -1,7 +1,7 @@
 <bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="hotbar fragment">
     <children>
         <elementGroup name="vertical">
-            <enabled>booleanSetting("hud:vertical_hotbar")</enabled>
+            <enabled>settings.boolean("hud:vertical_hotbar")</enabled>
             <x cache="SIZE_CHANGE">scaledwidth - 24.0</x>
             <y cache="SIZE_CHANGE">scaledheight / 2.0</y>
             <children>
@@ -59,7 +59,7 @@
             </children>
         </elementGroup>
         <elementGroup name="horizontal">
-            <enabled>!booleanSetting("hud:vertical_hotbar")</enabled>
+            <enabled>!settings.boolean("hud:vertical_hotbar")</enabled>
             <x cache="SIZE_CHANGE">scaledwidth / 2.0 - 92.0</x>
             <y cache="SIZE_CHANGE">scaledheight - 23.0</y>
             <children>

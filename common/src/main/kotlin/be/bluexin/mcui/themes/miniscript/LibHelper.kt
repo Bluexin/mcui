@@ -19,10 +19,12 @@ package be.bluexin.mcui.themes.miniscript
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.config.OptionCore
-import be.bluexin.mcui.config.Settings
 import be.bluexin.mcui.deprecated.api.info.IOption
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.effects.StatusEffects
+import be.bluexin.mcui.themes.miniscript.api.DrawContext
+import be.bluexin.mcui.themes.miniscript.api.MiniscriptPlayer
+import be.bluexin.mcui.themes.miniscript.api.MiniscriptSettings
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
 import be.bluexin.mcui.util.ColorUtil
 import be.bluexin.mcui.util.HealthStep
@@ -34,14 +36,15 @@ import gnu.jel.CompilationException
 import gnu.jel.DVMap
 import gnu.jel.Library
 import net.minecraft.client.resources.language.I18n
-import net.minecraft.locale.Language
 import org.koin.core.annotation.Single
+import java.lang.reflect.Member
 
 /**
  * Part of saoui by Bluexin.
  *
  * @author Bluexin
  */
+// TODO : check injected statics (access$next and other access$..., getKoin, pushContext, getClass
 @Single
 class LibHelper {
     private val contextResolver = ContextAwareDVMap()
@@ -57,7 +60,7 @@ class LibHelper {
         )
         val dynLib = arrayOf(
             IHudDrawContext::class.java,
-            Settings.JelWrappers::class.java
+            DrawContext::class.java,
         )
         val dotClasses = arrayOf(
             String::class.java,
@@ -66,9 +69,19 @@ class LibHelper {
             StatusEffects::class.java,
             HealthStep::class.java,
             ColorUtil::class.java,
-            Language::class.java
+
+            MiniscriptPlayer::class.java,
+            MiniscriptSettings::class.java,
         )
-        Library(staticLib, dynLib, dotClasses, contextResolver, null)
+        // FIXME : currently Array#length is not supported
+        // This probably needs to be fixed in JEL. `dotClasses.map(Class<*>::arrayType)` does not expose "length"
+        object : Library(staticLib, dynLib, dotClasses, contextResolver, null) {
+            override fun getMember(container: Class<*>?, name: String, params: Array<out Class<*>>?): Member {
+                return /*if (container != null && container.isArray && name == "length") {
+                    TODO()
+                } else*/ super.getMember(container, name, params)
+            }
+        }
     }
 
     init {

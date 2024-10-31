@@ -1,6 +1,6 @@
 <bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="health box fragment">
-    <x>doubleSetting("hud:health_offset_x")</x>
-    <y>doubleSetting("hud:health_offset_y")</y>
+    <x>settings.double("hud:health_offset_x")</x>
+    <y>settings.double("hud:health_offset_y")</y>
     <children>
         <elementGroup name="background">
             <texture>saoui:textures/sao/gui.png</texture>
@@ -70,7 +70,7 @@
             <y cache="STATIC">10.0</y>
         </glRectangle>
         <elementGroup name="hp bg and text">
-            <enabled>!booleanSetting("hud:remove_hpxp")</enabled>
+            <enabled>!settings.boolean("hud:remove_hpxp")</enabled>
             <x>usernamewidth + 132.0</x>
             <y cache="STATIC">12.0</y>
             <children>

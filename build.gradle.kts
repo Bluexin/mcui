@@ -68,7 +68,10 @@ subprojects {
             exclude(group = "org.jetbrains.kotlinx")
         }
 
-        implementation(libs.jel)
+        implementation(variantOf(libs.jel) {
+            // TODO : check this does not get included in the final jar
+            classifier("debug")
+        })
         implementation(libs.bundles.phcss)
         implementation(libs.slf4j)
 

@@ -17,8 +17,10 @@
 
 package be.bluexin.mcui.themes.miniscript
 
+import be.bluexin.mcui.Constants
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.effects.StatusEffects
+import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.util.HealthStep
 import net.minecraft.util.profiling.InactiveProfiler
 import net.minecraft.util.profiling.ProfilerFiller
@@ -29,11 +31,20 @@ import net.minecraft.world.entity.LivingEntity
  *
  * @author Bluexin
  */
-sealed class CachedExpression<out T: Any>(
-    val expression: CompiledExpressionWrapper<T>,
+sealed class CachedExpression<T : Any>(
+    var expression: (IHudDrawContext) -> T,
     val expressionIntermediate: ExpressionIntermediate
 ) : (IHudDrawContext) -> T {
+
     protected abstract val cache: T?
+
+    protected fun warn(e: Throwable) {
+        val message = "An error occurred while executing the expression \"${expressionIntermediate.expression}\""
+        Constants.LOG.warn(message, e)
+        AbstractThemeLoader.Reporter += e.message ?: message
+        // let ElementGroup handle it
+//        throw RuntimeException(message, e)
+    }
 
     override fun toString(): String {
         return "${javaClass.simpleName}(expressionIntermediate=$expressionIntermediate, cache=$cache)"
@@ -54,16 +65,26 @@ class FrameCachedExpression<T: Any>(
     }
 
     override fun invoke(ctx: IHudDrawContext): T {
-        if (checkUpdateTime(ctx)) cache = expression.invoke(ctx)
+        if (checkUpdateTime(ctx)) cache = try {
+            expression(ctx)
+        } catch (e: Exception) {
+            warn(e)
+            val expr = expression
+            require(expr is CompiledExpressionWrapper<T>) {
+                "An error occurred while executing a default expression !"
+            }
+            expression = { expr.default }
+            expr.default
+        }
         return cache!!
     }
 }
 
-class StaticCachedExpression<out T: Any>(
+class StaticCachedExpression<T : Any>(
     expression: CompiledExpressionWrapper<T>,
     expressionIntermediate: ExpressionIntermediate
 ) : CachedExpression<T>(expression, expressionIntermediate) {
-    override val cache: T by lazy { expression.invoke(StubContext) }
+    override val cache: T by lazy { expression(StubContext) }
 
     companion object StubContext : IHudDrawContext {
         override fun hasMount() = false
@@ -144,17 +165,17 @@ class SizeCachedExpression<T: Any>(
         }
 
     override fun invoke(ctx: IHudDrawContext): T {
-        if (checkUpdateSize(ctx)) cache = expression.invoke(ctx)
+        if (checkUpdateSize(ctx)) cache = expression(ctx)
         return cache!!
     }
 }
 
-class UnCachedExpression<out T: Any>(
+class UnCachedExpression<T : Any>(
     expression: CompiledExpressionWrapper<T>,
     expressionIntermediate: ExpressionIntermediate
 ) : CachedExpression<T>(expression, expressionIntermediate) {
     override val cache: T
         get() = throw UnsupportedOperationException()
 
-    override fun invoke(ctx: IHudDrawContext) = expression.invoke(ctx)
+    override fun invoke(ctx: IHudDrawContext) = expression(ctx)
 }

@@ -335,7 +335,7 @@ class ChoiceSetting(
 
 @LuajExpose(LuajExpose.IncludeType.OPT_IN)
 @Serializable
-@SerialName("resource_location")
+@SerialName("resourceLocation")
 class ResourceLocationSetting(
     override val key: LKResourceLocation,
     override val defaultValue: LKResourceLocation,

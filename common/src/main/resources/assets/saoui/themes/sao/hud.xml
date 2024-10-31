@@ -22,7 +22,7 @@
             <key>EXPERIENCE</key>
             <value name="exp">
                 <!-- Could be moved to be part of the health fragment -->
-                <enabled>!booleanSetting("hud:remove_hpxp")</enabled>
+                <enabled>!settings.boolean("hud:remove_hpxp")</enabled>
                 <x>usernamewidth + 144 + strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
                     "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(hp), ceil(maxHp),
                     ceil(absorption)): format("formatHealth", ceil(hp), ceil(maxHp)))

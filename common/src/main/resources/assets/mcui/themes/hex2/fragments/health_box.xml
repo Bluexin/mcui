@@ -1,6 +1,6 @@
 <bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="health box fragment">
-    <x>doubleSetting("hud:health_offset_x")</x>
-    <y>doubleSetting("hud:health_offset_y")</y>
+    <x>settings.double("hud:health_offset_x")</x>
+    <y>settings.double("hud:health_offset_y")</y>
     <children>
         <elementGroup name="background">
             <children>
@@ -19,7 +19,7 @@
                     <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
                     <rgba cache="STATIC">0x424242FF</rgba>
                     <x cache="STATIC">11.0</x>
-                    <w>usernamewidth - 2.0</w>
+                    <w>strWidth(player.username) - 2.0</w>
                     <h cache="STATIC">16.0</h>
                     <srcX cache="STATIC">48.0</srcX>
                     <srcY cache="STATIC">128.0</srcY>
@@ -30,7 +30,7 @@
                 <glRectangle name="uname_bg_right"> <!-- right part of username label -->
                     <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
                     <rgba cache="STATIC">0x424242FF</rgba>
-                    <x>9.0 + usernamewidth</x>
+                    <x>9.0 + strWidth(player.username)</x>
                     <h cache="STATIC">16.0</h>
                     <w cache="STATIC">11.0</w>
                     <srcX cache="STATIC">97.5</srcX>
@@ -48,7 +48,7 @@
                     <srcW cache="STATIC">249.6</srcW>
                     <srcH cache="STATIC">25.6</srcH>
                     <w cache="STATIC">160.0</w>
-                    <x>17.0 + usernamewidth</x>
+                    <x>17.0 + strWidth(player.username)</x>
                 </glRectangle>
 
                 <glRectangle name="hp_bg"> <!-- health bar background -->
@@ -59,13 +59,13 @@
                     <srcW cache="STATIC">249.6</srcW>
                     <srcH cache="STATIC">25.6</srcH>
                     <w cache="STATIC">160.0</w>
-                    <x>17.0 + usernamewidth</x>
+                    <x>17.0 + strWidth(player.username)</x>
                 </glRectangle>
             </children>
         </elementGroup>
 
         <glString name="username">
-            <text>username</text>
+            <text>player.username</text>
             <h cache="STATIC">16.0</h>
             <x cache="STATIC">10.0</x>
             <y cache="STATIC">1.0</y>
@@ -75,12 +75,12 @@
             <texture>mcui:themes/hex2/textures/hexbars.png</texture>
             <rgba>healthStep.rgba</rgba>
             <srcH cache="STATIC">25.6</srcH>
-            <srcW>5.8 + (238.2 * hpPct)</srcW>
+            <srcW>5.8 + (238.2 * player.healthPercent)</srcW>
             <srcX cache="STATIC">0.0</srcX>
             <srcY cache="STATIC">76.8</srcY>
             <h cache="STATIC">16.0</h>
-            <w>3.25 + (153.5 * hpPct)</w>
-            <x>17.0 + usernamewidth</x>
+            <w>3.25 + (153.5 * player.healthPercent)</w>
+            <x>17.0 + strWidth(player.username)</x>
         </glRectangle>
         <!-->
         <glRectangle name="absorption bar">
@@ -93,7 +93,7 @@
             <srcY cache="STATIC">76.8</srcY>
             <h cache="STATIC">16.0</h>
             <w>3.25 + 153.5 * (absorption/maxHp)</w>
-            <x>22.0 + usernamewidth -3.0</x>
+            <x>22.0 + strWidth(player.username) -3.0</x>
             <z cache="STATIC">1</z>
         </glRectangle>
         </!-->
@@ -110,53 +110,60 @@
             <srcY cache="STATIC">102.4</srcY>
             <h cache="STATIC">16.0</h>
             <w>3.25 + (153.5 * foodPct)</w>
-            <x>17.0 + usernamewidth</x>
+            <x>17.0 + strWidth(player.username)</x>
         </glRectangle>
 
         <elementGroup name="hp text">
-            <enabled>!booleanSetting("hud:hide_hp")</enabled>
+            <enabled>!settings.boolean("hud:hide_hp")</enabled>
             <children>
                 <elementGroup name="hp text w/o absorption"> <!-- display hp text in middle of health bar -->
                     <enabled>absorption == 0</enabled>
-                    <x>20.0 + usernamewidth -3.0 + 76.75 - (strWidth(format("formatHealth", iceil(hp), iceil(maxHp))) /
+                    <x>20.0 + strWidth(player.username) -3.0 + 76.75 - (strWidth(format("formatHealth",
+                        iceil(player.health), iceil(player.maxHealth))) /
                         2.0)
                     </x>
                     <y cache="STATIC">9</y>
                     <children>
                         <glString name="hp text">
-                            <text>format("formatHealth", iceil(hp), iceil(maxHp))</text>
+                            <text>format("formatHealth", iceil(player.health), iceil(player.maxHealth))</text>
                         </glString>
                     </children>
                 </elementGroup>
 
                 <elementGroup name="hp text w/ absorption"> <!-- display hp text in middle of health bar -->
-                    <enabled>!booleanSetting("hud:hide_hp") &amp;&amp; absorption > 0 &amp;&amp;
+                    <enabled>!settings.boolean("hud:hide_hp") &amp;&amp; absorption > 0 &amp;&amp;
                         !isEnabled(ALT_ABSORB_POS)
                     </enabled>
-                    <x>20.0 + usernamewidth -3.0 + 76.75 - (strWidth(format("formatHealthAbsorb", iceil(hp),
-                        iceil(maxHp),
+                    <x>20.0 + strWidth(player.username) -3.0 + 76.75 - (strWidth(format("formatHealthAbsorb",
+                        iceil(player.health),
+                        iceil(player.maxHealth),
                         iceil(absorption))) / 2.0)
                     </x>
                     <y cache="STATIC">9</y>
                     <children>
                         <glString name="hp text">
-                            <text>format("formatHealthAbsorb", iceil(hp), iceil(maxHp), iceil(absorption))</text>
+                            <text>format("formatHealthAbsorb", iceil(player.health), iceil(player.maxHealth),
+                                iceil(absorption))
+                            </text>
                         </glString>
                     </children>
                 </elementGroup>
 
                 <elementGroup name="hp text w/ alt absorption"> <!-- display hp text in middle of health bar -->
-                    <enabled>!booleanSetting("hud:hide_hp") &amp;&amp; absorption > 0 &amp;&amp;
+                    <enabled>!settings.boolean("hud:hide_hp") &amp;&amp; absorption > 0 &amp;&amp;
                         isEnabled(ALT_ABSORB_POS)
                     </enabled>
-                    <x>20.0 + usernamewidth -3.0 + 76.75 - (strWidth(format("formatHealthAbsorbAlt", iceil(hp),
-                        iceil(maxHp),
+                    <x>20.0 + strWidth(player.username) -3.0 + 76.75 - (strWidth(format("formatHealthAbsorbAlt",
+                        iceil(player.health),
+                        iceil(player.maxHealth),
                         iceil(absorption))) / 2.0)
                     </x>
                     <y cache="STATIC">9</y>
                     <children>
                         <glString name="hp text">
-                            <text>format("formatHealthAbsorbAlt", iceil(hp), iceil(maxHp), iceil(absorption))</text>
+                            <text>format("formatHealthAbsorbAlt", iceil(player.health), iceil(player.maxHealth),
+                                iceil(absorption))
+                            </text>
                         </glString>
                     </children>
                 </elementGroup>
