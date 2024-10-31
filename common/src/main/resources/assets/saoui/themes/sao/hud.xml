@@ -23,9 +23,10 @@
             <value name="exp">
                 <!-- Could be moved to be part of the health fragment -->
                 <enabled>!settings.boolean("hud:remove_hpxp")</enabled>
-                <x>usernamewidth + 144 + strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
-                    "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(hp), ceil(maxHp),
-                    ceil(absorption)): format("formatHealth", ceil(hp), ceil(maxHp)))
+                <x>strWidth(player.displayName) + 144 + strWidth(player.absorption > 0?
+                    format(isEnabled(ALT_ABSORB_POS)?
+                    "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(player.health), ceil(player.maxHealth),
+                    ceil(player.absorption)): format("formatHealth", ceil(player.health), ceil(player.maxHealth)))
                 </x>
                 <y cache="STATIC">14</y>
                 <children>

@@ -24,7 +24,7 @@
 								<texture>saoui:textures/hex/hex_labels.png</texture>
 								<rgba cache="STATIC">0x424242FF</rgba>
 								<x cache="STATIC">11.0</x>
-								<w>usernamewidth</w>
+                                <w>strWidth(player.displayName)</w>
                                 <h cache="STATIC">16.0</h>
                                 <srcX cache="STATIC">48.0</srcX>
 								<srcY cache="STATIC">128.0</srcY>
@@ -35,7 +35,7 @@
 							<glRectangle> <!-- right part of username label -->
 								<texture>saoui:textures/hex/hex_labels.png</texture>
 								<rgba cache="STATIC">0x424242FF</rgba>
-								<x>11.0 + usernamewidth</x>
+                                <x>11.0 + strWidth(player.displayName)</x>
                                 <h cache="STATIC">16.0</h>
                                 <w cache="STATIC">11.0</w>
 								<srcX cache="STATIC">97.5</srcX>
@@ -53,7 +53,8 @@
 								<srcW cache="STATIC">249.6</srcW>
 								<srcH cache="STATIC">25.6</srcH>
                                 <w cache="STATIC">160.0</w>
-                                <x>22.0 + usernamewidth -3.0</x> <!-- shifted to the left cuz hexagons -->
+                                <x>22.0 + strWidth(player.displayName) -3.0
+                                </x> <!-- shifted to the left cuz hexagons -->
                             </glRectangle>
 							
 							 <glRectangle> <!-- health bar background -->
@@ -64,14 +65,15 @@
 								<srcW cache="STATIC">249.6</srcW>
 								<srcH cache="STATIC">25.6</srcH>
                                 <w cache="STATIC">160.0</w>
-                                <x>22.0 + usernamewidth -3.0</x> <!-- shifted to the left cuz hexagons -->
+                                 <x>22.0 + strWidth(player.displayName) -3.0
+                                 </x> <!-- shifted to the left cuz hexagons -->
                             </glRectangle>
 							
                         </children>
                     </elementGroup>
 					
                     <glString name="username">
-                        <text>username</text>
+                        <text>player.displayName</text>
                         <h cache="STATIC">15.0</h>
                         <x cache="STATIC">13.0</x>
                         <y cache="STATIC">0.0</y>
@@ -79,27 +81,27 @@
 					
                     <glRectangle name="health bar">
                         <texture>saoui:textures/hex/hexbars.png</texture>
-                        <rgba>healthStep.rgba</rgba>
+                        <rgba>player.healthStep.rgba</rgba>
                         <srcH cache="STATIC">25.6</srcH>
-                        <srcW>5.8 + (238.2 * hpPct)</srcW>
+                        <srcW>5.8 + (238.2 * player.healthPercent)</srcW>
 						<srcX cache="STATIC">0.0</srcX>
                         <srcY cache="STATIC">76.8</srcY>
 						<h cache="STATIC">16.0</h>
-                        <w>3.25 + (153.5 * hpPct)</w>
-                        <x>22.0 + usernamewidth -3.0</x>
+                        <w>3.25 + (153.5 * player.healthPercent)</w>
+                        <x>22.0 + strWidth(player.displayName) -3.0</x>
                     </glRectangle>
 					<!-->
-					<glRectangle name="absorption bar">
-						<enabled>statusEffects.contains(ABSORPTION)</enabled>
+					<glRectangle name="player.absorption bar">
+						<enabled>player.statusEffects.contains(ABSORPTION)</enabled>
                         <texture>saoui:textures/hex/hexbars.png</texture>
                         <rgba>0x3E28CCFF</rgba>
                         <srcH cache="STATIC">25.6</srcH>
-                        <srcW>5.8 + 238.2 * ( absorption/maxHp )</srcW>
+                        <srcW>5.8 + 238.2 * ( player.absorption/maxHp )</srcW>
 						<srcX cache="STATIC">0.0</srcX>
                         <srcY cache="STATIC">76.8</srcY>
 						<h cache="STATIC">16.0</h>
-                        <w>3.25 + 153.5 * (absorption/maxHp)</w>
-                        <x>22.0 + usernamewidth -3.0</x>
+                        <w>3.25 + 153.5 * (player.absorption/player.maxHealth)</w>
+                        <x>22.0 + strWidth(player.displayName) -3.0</x>
 						<z cache="STATIC">1</z>
 					</glRectangle>
 					</!-->
@@ -111,25 +113,28 @@
 							0xCD8404FF
 						</rgba>
                         <srcH cache="STATIC">25.6</srcH>
-                        <srcW>5.8 + (238.2 * foodPct)</srcW>
+                        <srcW>5.8 + (238.2 * player.foodPercent)</srcW>
 						<srcX cache="STATIC">0.0</srcX>
                         <srcY cache="STATIC">102.4</srcY>
 						<h cache="STATIC">16.0</h>
-                        <w>3.25 + (153.5 * foodPct)</w>
-                        <x>22.0 + usernamewidth -3.0</x>
+                        <w>3.25 + (153.5 * player.foodPercent)</w>
+                        <x>22.0 + strWidth(player.displayName) -3.0</x>
                     </glRectangle>
 					
                     <elementGroup name="hp bg and text"> <!-- display hp text in middle of health bar -->
                         <enabled>!isEnabled(REMOVE_HPXP)</enabled>
-                        <x>22.0 + usernamewidth -3.0 + 76.75 - (strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
-                                    "formatHealthAbsorb", ceil(hp), ceil(maxHp), ceil(absorption)):
-                                    format("formatHealth", ceil(hp), ceil(maxHp))) / 2.0)</x>
+                        <x>22.0 + strWidth(player.displayName) -3.0 + 76.75 - (strWidth(player.absorption > 0?
+                            format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
+                            "formatHealthAbsorb", ceil(player.health), ceil(player.maxHealth), ceil(player.absorption)):
+                            format("formatHealth", ceil(player.health), ceil(player.maxHealth))) / 2.0)
+                        </x>
                         <y cache="STATIC">9</y>
                         <children>
                             <glString name="hp text">
-                                <text>absorption > 0? format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
-                                    "formatHealthAbsorb", ceil(hp), ceil(maxHp), ceil(absorption)):
-                                    format("formatHealth", ceil(hp), ceil(maxHp))
+                                <text>player.absorption > 0? format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
+                                    "formatHealthAbsorb", ceil(player.health), ceil(player.maxHealth),
+                                    ceil(player.absorption)):
+                                    format("formatHealth", ceil(player.health), ceil(player.maxHealth))
                                 </text>
                             </glString>
                         </children>
@@ -149,9 +154,9 @@
                 <children>
 				
                     <glString name="exp string">
-                        <x>-strWidth(format("%d", level)) / 2.0 +0.7</x>
+                        <x>-strWidth(format("%d", player.level)) / 2.0 +0.7</x>
                         <y cache="STATIC">9.5</y>
-                        <text>format("%d", level)</text>
+                        <text>format("%d", player.level)</text>
                     </glString>
 					
                     <elementGroup name="exp bg">
@@ -164,25 +169,25 @@
                                 <srcY cache="STATIC">0.0</srcY>
 								<srcW cache="STATIC">24.0</srcW>
 								<srcH cache="STATIC">64.0</srcH>
-								<x>-6 - strWidth(format("%d", level))/2.0</x>
+                                <x>-6 - strWidth(format("%d", player.level))/2.0</x>
                                 <w cache="STATIC">6</w>
                                 <h cache="STATIC">16</h>
                             </glRectangle>
 							
                             <glRectangle> <!-- middle part of label -->
 								<rgba cache="STATIC">0x424242FF</rgba>
-                                <x> - strWidth(format("%d", level))/2.0</x>
+                                <x>- strWidth(format("%d", player.level))/2.0</x>
                                 <srcX cache="STATIC">24.0</srcX>
                                 <srcY cache="STATIC">0.0</srcY>
 								<srcW cache="STATIC">26.0</srcW>
 								<srcH cache="STATIC">64.0</srcH>
-                                <w>strWidth(format("%d", level))</w>
+                                <w>strWidth(format("%d", player.level))</w>
                                 <h cache="STATIC">16</h>
                             </glRectangle>
 							
                             <glRectangle> <!-- right part of label -->
 								<rgba cache="STATIC">0x424242FF</rgba>
-                                <x>strWidth(format("%d", level)) / 2.0</x>
+                                <x>strWidth(format("%d", player.level)) / 2.0</x>
                                 <srcX cache="STATIC">50.0</srcX>
                                 <srcY cache="STATIC">0.0</srcY>
 								<srcW cache="STATIC">24.0</srcW>
@@ -209,7 +214,7 @@
 									<amount cache="STATIC">9</amount>
 									<children>
 										<glHotbarItem>
-											<rgba cache="NONE">i == selectedslot ? 0xFFBA66FF : 0x424242FF</rgba>
+                                            <rgba cache="NONE">i == player.selectedSlot ? 0xFFBA66FF : 0x424242FF</rgba>
 											<srcH cache="STATIC">256.0</srcH>
 											<srcW cache="STATIC">256.0</srcW>
 											<srcX cache="STATIC">0.0</srcX>
@@ -224,7 +229,7 @@
 									</children>
 								</repetitionGroup>
 								<elementGroup name="offhand">
-									<enabled>!offhandEmpty(0)</enabled>
+                                    <enabled>!player.isOffhandEmpty(0)</enabled>
 									<children>
 										<glHotbarItem>
 											<rgba cache="STATIC">0xFFBA66FF</rgba>
@@ -267,7 +272,7 @@
 									<amount cache="STATIC">9</amount>
 									<children>
 										<glHotbarItem>
-											<rgba cache="NONE">i == selectedslot ? 0xFFBA66FF : 0x424242FF</rgba>
+                                            <rgba cache="NONE">i == player.selectedSlot ? 0xFFBA66FF : 0x424242FF</rgba>
 											<srcH cache="STATIC">256.0</srcH>
 											<srcW cache="STATIC">256.0</srcW>
 											<srcX cache="STATIC">0.0</srcX>
@@ -282,7 +287,7 @@
 									</children>
 								</repetitionGroup>
 								<elementGroup name="offhand">
-									<enabled>!offhandEmpty(0)</enabled>
+                                    <enabled>!player.isOffhandEmpty(0)</enabled>
 									<children>
 										<glHotbarItem>
 											<rgba cache="STATIC">0xFFBA66FF</rgba>
@@ -325,7 +330,7 @@
                 <x cache="SIZE_CHANGE">scaledwidth / 2 - 91</x>
                 <y cache="SIZE_CHANGE">scaledheight - 29</y>
                 <texture>minecraft:textures/gui/icons.png</texture>
-                <enabled>hasMount</enabled>
+                <enabled>player.hasMount</enabled>
                 <children>
                     <glRectangle name="bg">
                         <srcY cache="STATIC">84</srcY>
@@ -333,9 +338,9 @@
                         <h cache="STATIC">5</h>
                     </glRectangle>
                     <glRectangle name="fill">
-                        <enabled>horsejump > 0</enabled>
+                        <enabled>player.horseJump > 0</enabled>
                         <srcY cache="STATIC">89</srcY>
-                        <w>182 * horsejump</w>
+                        <w>182 * player.horseJump</w>
                         <h cache="STATIC">5</h>
                     </glRectangle>
                 </children>
@@ -394,7 +399,7 @@
                         <x cache="STATIC">2</x>
                         <y cache="STATIC">35</y>
                         <texture>saoui:textures/hex/hex_labels.png</texture>
-                        <amount>ptSize</amount>
+                        <amount>party.size</amount>
                         <children>
                             <elementGroup name="bg">
                                 <children>
@@ -454,19 +459,21 @@
                             </elementGroup>
                             <glRectangle name="health bar">
                                 <texture>saoui:textures/hex/hexbars.png</texture>
-                                <rgba>healthStep.rgba</rgba>
+                                <rgba>player.healthStep.rgba</rgba>
                                 <x cache="STATIC">42</x>
                                 <y cache="NONE">15 * i</y>
-                                <w cache="NONE">1.796875 + 96.154*ptHpPct(i)</w>
+                                <w cache="NONE">1.796875 + 96.154*party.get(i).healthPercent</w>
                                 <h cache="STATIC">13</h>
 								
                                 <srcX cache="STATIC">0.0</srcX>
                                 <srcY cache="STATIC">25.6</srcY>
-								<srcW cache="NONE">4.6 + 240.0*ptHpPct(i)</srcW>
+                                <srcW cache="NONE">4.6 + 240.0*party.get(i).healthPercent</srcW>
 								<srcH cache="STATIC">25.6</srcH>
                             </glRectangle>
                             <glString name="pName">
-                                <text>ptName(i).length > 5? ptName(i).substring(0, 5): ptName(i)</text>
+                                <text>party.get(i).displayName.size > 5? party.get(i).displayName.substring(0, 5):
+                                    party.get(i).displayName
+                                </text>
                                 <x cache="STATIC">8</x>
                                 <y cache="NONE">15 * i + 7</y>
                                 <rgba>0xFFFFFFFF</rgba>
@@ -481,13 +488,13 @@
             <value name="effects">
                 <children>
                     <repetitionGroup name="effectGroup">
-                        <x>usernamewidth + 179</x>
+                        <x>strWidth(player.displayName) + 179</x>
                         <y cache="STATIC">2</y>
-                        <amount cache="NONE">statusEffects.size</amount>
+                        <amount cache="NONE">player.statusEffects.size</amount>
                         <children>
                             <rawElement name="effect">
                                 <expression cache="NONE">
-                                    statusEffect(i).glDraw(i * 14, i%2==0 ? 8:0, getZ)
+                                    player.statusEffect.get(i).glDraw(i * 14, i%2==0 ? 8:0, getZ)
                                 </expression>
                             </rawElement>
                         </children>

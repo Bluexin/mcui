@@ -30,7 +30,7 @@
                         </children>
                     </elementGroup>
                     <glString name="username">
-                        <text>username</text>
+                        <text>player.displayName</text>
                         <h cache="STATIC">15.0</h>
                         <x cache="STATIC">18.0</x>
                         <y cache="STATIC">-2.0</y>
@@ -40,19 +40,19 @@
                         <h cache="STATIC">9.0</h>
 						<w cache="STATIC">100.0</w>
                         <rgba>
-                            healthStep == VERY_LOW? 0xFFFFFFFF:
-                            healthStep == LOW? 0xFFFFFFFF:
-                            healthStep == VERY_DAMAGED? 0xFFFFFFFF:
-                            healthStep == DAMAGED? 0xFFFFFFFF:
-                            healthStep == OKAY? 0xFFFFFFFF:
-                            healthStep == GOOD? 0xFFFFFFFF:
-                            healthStep == CREATIVE? 0xFFFFFFFF:
+                            player.healthStep == VERY_LOW? 0xFFFFFFFF:
+                            player.healthStep == LOW? 0xFFFFFFFF:
+                            player.healthStep == VERY_DAMAGED? 0xFFFFFFFF:
+                            player.healthStep == DAMAGED? 0xFFFFFFFF:
+                            player.healthStep == OKAY? 0xFFFFFFFF:
+                            player.healthStep == GOOD? 0xFFFFFFFF:
+                            player.healthStep == CREATIVE? 0xFFFFFFFF:
                             0xFFFFFFFF
                         </rgba>
                         <srcH cache="STATIC">9.0</srcH>
-                        <srcW>215.0 * hpPct</srcW>
+                        <srcW>215.0 * player.healthPercent</srcW>
                         <srcY cache="STATIC">188.0</srcY>
-                        <w>100.0 * hpPct</w>
+                        <w>100.0 * player.healthPercent</w>
                         <x>18.0</x>
                         <y cache="STATIC">9.0</y>
                     </glRectangle>
@@ -73,9 +73,10 @@
                         <y cache="STATIC">12</y>
                         <children>
                             <glString name="hp text">
-                                <text>absorption > 0? format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
-                                    "formatHealthAbsorb", ceil(hp), ceil(maxHp), ceil(absorption)):
-                                    format("formatHealth", ceil(hp), ceil(maxHp))
+                                <text>player.absorption > 0? format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
+                                    "formatHealthAbsorb", ceil(player.health), ceil(player.maxHealth),
+                                    ceil(player.absorption)):
+                                    format("formatHealth", ceil(player.health), ceil(player.maxHealth))
                                 </text>
                                 <x cache="STATIC">-114</x>
                                 <y cache="STATIC">12</y>
@@ -96,18 +97,22 @@
 										<y cache="STATIC">4</y>
                                         <srcX cache="STATIC">66</srcX>
                                         <srcY cache="STATIC">15</srcY>
-                                        <w>strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
-                                            "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(hp), ceil(maxHp),
-                                            ceil(absorption)): format("formatHealth", ceil(hp), ceil(maxHp)))
+                                        <w>strWidth(player.absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
+                                            "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(player.health),
+                                            ceil(player.maxHealth),
+                                            ceil(player.absorption)): format("formatHealth", ceil(player.health),
+                                            ceil(player.maxHealth)))
                                         </w>
                                         <h cache="STATIC">13</h>
                                         <srcW cache="STATIC">5</srcW>
                                         <srcH cache="STATIC">13</srcH>
                                     </glRectangle>
                                     <glRectangle>
-                                        <x>-114 + strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
-                                            "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(hp), ceil(maxHp),
-                                            ceil(absorption)): format("formatHealth", ceil(hp), ceil(maxHp)))
+                                        <x>-114 + strWidth(player.absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
+                                            "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(player.health),
+                                            ceil(player.maxHealth),
+                                            ceil(player.absorption)): format("formatHealth", ceil(player.health),
+                                            ceil(player.maxHealth)))
                                         </x>
 										<y cache="STATIC">4</y>
                                         <srcX cache="STATIC">70</srcX>
@@ -127,7 +132,7 @@
                             <glString name="exp string">
                                 <x cache="STATIC">40</x>
                                 <y cache="STATIC">8</y>
-                                <text>format("displayLvShort", level)</text>
+                                <text>format("displayLvShort", player.level)</text>
                             </glString>
                             <elementGroup name="exp bg">
                                 <texture>saoui:textures/ggo/guiedt.png</texture>
@@ -143,13 +148,13 @@
                                         <x cache="STATIC">5</x>
                                         <srcX cache="STATIC">66</srcX>
                                         <srcY cache="STATIC">15</srcY>
-                                        <w>strWidth(format("displayLvShort", level))</w>
+                                        <w>strWidth(format("displayLvShort", player.level))</w>
                                         <h cache="STATIC">13</h>
                                         <srcW cache="STATIC">5</srcW>
                                         <srcH cache="STATIC">13</srcH>
                                     </glRectangle>
                                     <glRectangle>
-                                        <x>5 + strWidth(format("displayLvShort", level))</x>
+                                        <x>5 + strWidth(format("displayLvShort", player.level))</x>
                                         <srcX cache="STATIC">78</srcX>
                                         <srcY cache="STATIC">15</srcY>
                                         <srcW cache="STATIC">3</srcW>
@@ -177,7 +182,7 @@
                                 <children>
                                     <glHotbarItem>
                                         <h cache="STATIC">20.0</h>
-                                        <rgba cache="NONE">i == selectedslot ? 0x4274A4FF : 0x303030FF</rgba>
+                                        <rgba cache="NONE">i == player.selectedSlot ? 0x4274A4FF : 0x303030FF</rgba>
                                         <srcH cache="STATIC">20.0</srcH>
                                         <srcW cache="STATIC">20.0</srcW>
                                         <srcY cache="STATIC">25.0</srcY>
@@ -191,7 +196,7 @@
                                 </children>
                             </repetitionGroup>
                             <elementGroup name="offhand">
-                                <enabled>!offhandEmpty(0)</enabled>
+                                <enabled>!player.isOffhandEmpty(0)</enabled>
                                 <children>
                                     <glHotbarItem>
                                         <h cache="STATIC">20.0</h>
@@ -234,12 +239,12 @@
                 <x cache="SIZE_CHANGE">scaledwidth / 2 - 91</x>
                 <y cache="SIZE_CHANGE">scaledheight - 29</y>
                 <texture>saoui:textures/ggo/horse.png</texture>
-                <enabled>hasMount</enabled>
+                <enabled>player.hasMount</enabled>
                 <children>
                     <glRectangle name="fill">
-                        <enabled>horsejump > 0</enabled>
+                        <enabled>player.horseJump > 0</enabled>
                         <srcY cache="STATIC">89</srcY>
-                        <w>182 * horsejump</w>
+                        <w>182 * player.horseJump</w>
                         <h cache="STATIC">5</h>
                     </glRectangle>
                 </children>
@@ -286,7 +291,7 @@
                         <x cache="STATIC">2</x>
                         <y cache="STATIC">6</y>
                         <texture>saoui:textures/ggo/guiedt.png</texture>
-                        <amount>ptSize</amount>
+                        <amount>party.size</amount>
                         <children>
                             <elementGroup name="bg">
                                 <children>
@@ -335,24 +340,26 @@
                             <glRectangle name="health bar">
                                 <texture>saoui:textures/ggo/guiedt.png</texture>
                                 <rgba>
-                                    ptHealthStep(i) == VERY_LOW? 0xFFFFFFFF:
-                                    ptHealthStep(i) == LOW? 0xFFFFFFFF:
-                                    ptHealthStep(i) == VERY_DAMAGED? 0xFFFFFFFF:
-                                    ptHealthStep(i) == DAMAGED? 0xFFFFFFFF:
-                                    ptHealthStep(i) == OKAY? 0xFFFFFFFF:
-                                    ptHealthStep(i) == GOOD? 0xFFFFFFFF:
-                                    ptHealthStep(i) == CREATIVE? 0xFFFFFFFF:
+                                    party.get(i).healthStep == VERY_LOW? 0xFFFFFFFF:
+                                    party.get(i).healthStep == LOW? 0xFFFFFFFF:
+                                    party.get(i).healthStep == VERY_DAMAGED? 0xFFFFFFFF:
+                                    party.get(i).healthStep == DAMAGED? 0xFFFFFFFF:
+                                    party.get(i).healthStep == OKAY? 0xFFFFFFFF:
+                                    party.get(i).healthStep == GOOD? 0xFFFFFFFF:
+                                    party.get(i).healthStep == CREATIVE? 0xFFFFFFFF:
                                     0xFFFFFFFF
                                 </rgba>
                                 <srcX cache="STATIC">117</srcX>
                                 <srcY cache="STATIC">197</srcY>
-                                <w cache="NONE">98.0 * ptHpPct(i) + 1</w>
+                                <w cache="NONE">98.0 * party.get(i).healthPercent + 1</w>
                                 <h cache="STATIC">3.0</h>
                                 <x cache="STATIC">45</x>
                                 <y cache="NONE">15 * i + 5</y>
                             </glRectangle>
                             <glString name="pName">
-                                <text>ptName(i).length > 9? ptName(i).substring(0, 9): ptName(i)</text>
+                                <text>party.get(i).displayName.size > 9? party.get(i).displayName.substring(0, 9):
+                                    party.get(i).displayName
+                                </text>
                                 <x cache="STATIC">13</x>
                                 <y cache="NONE">15 * i + 8</y>
                                 <rgba>0xFFFFFFFF</rgba>

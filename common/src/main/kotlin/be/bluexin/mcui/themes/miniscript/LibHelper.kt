@@ -23,6 +23,7 @@ import be.bluexin.mcui.deprecated.api.info.IOption
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.effects.StatusEffects
 import be.bluexin.mcui.themes.miniscript.api.DrawContext
+import be.bluexin.mcui.themes.miniscript.api.MiniscriptLivingEntity
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptPlayer
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptSettings
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
@@ -71,6 +72,7 @@ class LibHelper {
             ColorUtil::class.java,
 
             MiniscriptPlayer::class.java,
+            MiniscriptLivingEntity::class.java,
             MiniscriptSettings::class.java,
         )
         // FIXME : currently Array#length is not supported

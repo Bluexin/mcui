@@ -4,7 +4,7 @@
             <x cache="STATIC">2</x>
             <y cache="STATIC">35</y>
             <texture>saoui:textures/sao/gui.png</texture>
-            <amount>ptSize</amount>
+            <amount>party.size</amount>
             <children>
                 <elementGroup name="bg">
                     <children>
@@ -52,16 +52,18 @@
                 </elementGroup>
                 <glRectangle name="health bar">
                     <texture>saoui:textures/sao/gui.png</texture>
-                    <rgba cache="NONE">ptHealthStep(i).rgba</rgba>
+                    <rgba cache="NONE">party.get(i).healthStep.rgba</rgba>
                     <srcX cache="STATIC">117</srcX>
                     <srcY cache="STATIC">197</srcY>
-                    <w cache="NONE">98.0 * ptHpPct(i) + 1</w>
+                    <w cache="NONE">98.0 * party.get(i).healthPercent + 1</w>
                     <h cache="STATIC">3.0</h>
                     <x cache="STATIC">58</x>
                     <y cache="NONE">15 * i + 5</y>
                 </glRectangle>
                 <glString name="pName">
-                    <text cache="NONE">ptName(i).length > 8? ptName(i).substring(0, 8): ptName(i)</text>
+                    <text cache="NONE">party.get(i).displayName.size > 8? party.get(i).displayName.substring(0, 8):
+                        party.get(i).displayName
+                    </text>
                     <x cache="STATIC">13</x>
                     <y cache="NONE">15 * i + 8</y>
                     <rgba>0xFFFFFFFF</rgba>

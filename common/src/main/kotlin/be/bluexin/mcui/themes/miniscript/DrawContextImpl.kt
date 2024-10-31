@@ -7,12 +7,17 @@ import org.koin.core.annotation.Single
 // TODO : migrate more hooks
 @Single
 internal class DrawContextImpl : DrawContext {
-    val player: MiniscriptPlayer by lazy {
-        // TODO : this needs to be set on world join !
-        MiniscriptPlayerImplementation(requireNotNull(Client.mc.player) { "Player not yet initialized" })
-    }
 
-    override fun player(): MiniscriptPlayer = player
+    private var playerCache: MiniscriptPlayerImpl? = null
+    override fun player(): MiniscriptPlayer {
+        val thePlayer = Client.mc.player
+        if (thePlayer == null && playerCache != null) {
+            playerCache = null
+        } else if (playerCache?.player !== thePlayer) {
+            playerCache = thePlayer?.let(::MiniscriptPlayerImpl)
+        }
+        return requireNotNull(playerCache) { "Player not yet initialized" }
+    }
 
     override fun settings(): MiniscriptSettings = MiniscriptSettingsImpl
 }

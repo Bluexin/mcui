@@ -22,39 +22,39 @@
                     <glRectangle name="health bar">
                         <texture>saoui:textures/os/guiedt.png</texture>
                         <rgba>
-                            statusEffects.contains(CURSED)? 0x444444FF:
-                            statusEffects.contains(POISONED)? 0x96C18DFF:
-                            absorption > 0? 0xFFEEADFF:
-                            statusEffects.contains(REGEN)? 0xFFDDE0FF:
-                            healthStep == VERY_LOW? 0xF72100FF:
-                            healthStep == LOW? 0xF72100FF:
-                            healthStep == VERY_DAMAGED? 0xF72100FF:
-                            healthStep == DAMAGED? 0xFFFFFFFF:
-                            healthStep == OKAY? 0xFFFFFFFF:
-                            healthStep == GOOD? 0xFFFFFFFF:
-                            healthStep == CREATIVE? 0xFFFFFFFF:
+                            player.statusEffects.contains(CURSED)? 0x444444FF:
+                            player.statusEffects.contains(POISONED)? 0x96C18DFF:
+                            player.absorption > 0? 0xFFEEADFF:
+                            player.statusEffects.contains(REGEN)? 0xFFDDE0FF:
+                            player.healthStep == VERY_LOW? 0xF72100FF:
+                            player.healthStep == LOW? 0xF72100FF:
+                            player.healthStep == VERY_DAMAGED? 0xF72100FF:
+                            player.healthStep == DAMAGED? 0xFFFFFFFF:
+                            player.healthStep == OKAY? 0xFFFFFFFF:
+                            player.healthStep == GOOD? 0xFFFFFFFF:
+                            player.healthStep == CREATIVE? 0xFFFFFFFF:
                             0xFFFFFFFF
                         </rgba>
                         <h cache="STATIC">7.0</h>
                         <srcH cache="STATIC">9.0</srcH>
-                        <srcW>215.0 * hpPct</srcW>
+                        <srcW>215.0 * player.healthPercent</srcW>
                         <srcY cache="STATIC">188.0</srcY>
-                        <w>215.0 * hpPct</w>
+                        <w>215.0 * player.healthPercent</w>
                         <x>33.1</x>
                         <y cache="STATIC">16.4</y>
                     </glRectangle>
                     <glRectangle name="FOOD">
                         <texture>saoui:textures/os/guiedt1.png</texture>
                         <rgba>
-                            statusEffects.contains(ROTTEN)? 0x96C18DFF:
-                            statusEffects.contains(STARVING)? 0xF72100FF:
+                            player.statusEffects.contains(ROTTEN)? 0x96C18DFF:
+                            player.statusEffects.contains(STARVING)? 0xF72100FF:
                             0xFFFFFFFF
                         </rgba>
                         <h cache="STATIC">6.0</h>
                         <srcH cache="STATIC">9.0</srcH>
-                        <srcW>215.0 * foodPct</srcW>
+                        <srcW>215.0 * player.foodPercent</srcW>
                         <srcY cache="STATIC">188.0</srcY>
-                        <w>215.0 * foodPct</w>
+                        <w>215.0 * player.foodPercent</w>
                         <x>33.1</x>
                         <y cache="STATIC">20.4</y>
                     </glRectangle>
@@ -62,9 +62,9 @@
                         <texture>saoui:textures/os/guiedt1.png</texture>
                         <h cache="STATIC">6.0</h>
                         <srcH cache="STATIC">9.0</srcH>
-                        <srcW>215.0 * experience</srcW>
+                        <srcW>215.0 * player.experience</srcW>
                         <srcY cache="STATIC">188.0</srcY>
-                        <w>215.0 * experience</w>
+                        <w>215.0 * player.experience</w>
                         <x>33.1</x>
                         <y cache="STATIC">22.4</y>
                     </glRectangle>
@@ -84,7 +84,8 @@
                                 <children>
                                     <glHotbarItem>
                                         <h cache="STATIC">20.0</h>
-                                        <rgba cache="NONE">i == selectedslot ? HOVER_COLOR.getRgba : 0xCDCDCDAA</rgba>
+                                        <rgba cache="NONE">i == player.selectedSlot ? HOVER_COLOR.getRgba : 0xCDCDCDAA
+                                        </rgba>
                                         <srcH cache="STATIC">20.0</srcH>
                                         <srcW cache="STATIC">20.0</srcW>
                                         <srcY cache="STATIC">25.0</srcY>
@@ -98,7 +99,7 @@
                                 </children>
                             </repetitionGroup>
                             <elementGroup name="offhand">
-                                <enabled>!offhandEmpty(0)</enabled>
+                                <enabled>!player.isOffhandEmpty(0)</enabled>
                                 <children>
                                     <glHotbarItem>
                                         <h cache="STATIC">20.0</h>
@@ -154,7 +155,7 @@
                         <y cache="SIZE_CHANGE">scaledheight - 35</y>
                     </glRectangle>
                     <glRectangle name="ALlineairbar">
-                        <enabled>! (mountHp > 0 || inWater)</enabled>
+                        <enabled>! (player.mount.health > 0 || player.isInWater)</enabled>
                         <texture>saoui:textures/os/al2.png</texture>
                         <h cache="STATIC">25.0</h>
                         <srcH cache="STATIC">9.0</srcH>
@@ -165,26 +166,26 @@
                         <y cache="SIZE_CHANGE">scaledheight - 35</y>
                     </glRectangle>
                     <glRectangle name="ALlineairbar">
-                        <enabled>hasMount</enabled>
+                        <enabled>player.hasMount</enabled>
                         <rgba cache="STATIC">HOVER_COLOR.getRgba</rgba>
                         <texture>saoui:textures/os/al2.png</texture>
                         <h cache="STATIC">25.0</h>
                         <srcH cache="STATIC">9.0</srcH>
-                        <srcW>215.0 * mountHpPct</srcW>
+                        <srcW>215.0 * player.mount.healthPercent</srcW>
                         <srcY cache="STATIC">188.0</srcY>
-                        <w>350.0 * mountHpPct</w>
+                        <w>350.0 * player.mount.healthPercent</w>
                         <x cache="SIZE_CHANGE">scaledwidth / 2 - 176</x>
                         <y cache="SIZE_CHANGE">scaledheight - 35</y>
                     </glRectangle>
                     <glRectangle name="ALlineairbar">
-                        <enabled>inWater</enabled>
+                        <enabled>player.isInWater</enabled>
                         <rgba>0x6caae0ff</rgba>
                         <texture>saoui:textures/os/al2.png</texture>
                         <h cache="STATIC">25.0</h>
                         <srcH cache="STATIC">9.0</srcH>
-                        <srcW>215.0 * airPct</srcW>
+                        <srcW>215.0 * player.airPercent</srcW>
                         <srcY cache="STATIC">188.0</srcY>
-                        <w>350.0 * airPct</w>
+                        <w>350.0 * player.airPercent</w>
                         <x cache="SIZE_CHANGE">scaledwidth / 2 - 176</x>
                         <y cache="SIZE_CHANGE">scaledheight - 35</y>
                     </glRectangle>
@@ -246,11 +247,11 @@
                     <glString name="exp string">
                         <x cache="STATIC">5</x>
                         <y cache="STATIC">-4</y>
-                        <text>format("displayLvShort", level)</text>
+                        <text>format("displayLvShort", player.level)</text>
                     </glString>
                     <glString name="hp text">
                         <text>
-                            format("formatHealth", ceil(hp), ceil(maxHp))
+                            format("formatHealth", ceil(player.health), ceil(player.maxHealth))
                         </text>
                         <x cache="STATIC">215</x>
                         <y cache="STATIC">-4</y>
@@ -264,12 +265,12 @@
                 <x cache="SIZE_CHANGE">scaledwidth / 2 - 91</x>
                 <y cache="SIZE_CHANGE">47</y>
                 <texture>saoui:textures/os/horse.png</texture>
-                <enabled>hasMount</enabled>
+                <enabled>player.hasMount</enabled>
                 <children>
                     <glRectangle name="fill">
-                        <enabled>horsejump > 0</enabled>
+                        <enabled>player.horseJump > 0</enabled>
                         <srcY cache="STATIC">89</srcY>
-                        <w>182 * horsejump</w>
+                        <w>182 * player.horseJump</w>
                         <h cache="STATIC">1</h>
                     </glRectangle>
                 </children>
@@ -283,7 +284,7 @@
                         <x cache="STATIC">-5</x>
                         <y cache="STATIC">50</y>
                         <texture>saoui:textures/os/guiedt.png</texture>
-                        <amount>ptSize</amount>
+                        <amount>party.size</amount>
                         <children>
                             <elementGroup name="bg">
                                 <children>
@@ -303,24 +304,26 @@
                             <glRectangle name="health bar">
                                 <texture>saoui:textures/os/guiedt.png</texture>
                                 <rgba>
-                                    ptHealthStep(i) == VERY_LOW? 0xF72100FF:
-                                    ptHealthStep(i) == LOW? 0xF72100FF:
-                                    ptHealthStep(i) == VERY_DAMAGED? 0xF72100FF:
-                                    ptHealthStep(i) == DAMAGED? 0xFFFFFFFF:
-                                    ptHealthStep(i) == OKAY? 0xFFFFFFFF:
-                                    ptHealthStep(i) == GOOD? 0xFFFFFFFF:
-                                    ptHealthStep(i) == CREATIVE? 0xFFFFFFFF:
+                                    party.get(i).healthStep == VERY_LOW? 0xF72100FF:
+                                    party.get(i).healthStep == LOW? 0xF72100FF:
+                                    party.get(i).healthStep == VERY_DAMAGED? 0xF72100FF:
+                                    party.get(i).healthStep == DAMAGED? 0xFFFFFFFF:
+                                    party.get(i).healthStep == OKAY? 0xFFFFFFFF:
+                                    party.get(i).healthStep == GOOD? 0xFFFFFFFF:
+                                    party.get(i).healthStep == CREATIVE? 0xFFFFFFFF:
                                     0xFFFFFFFF
                                 </rgba>
                                 <srcX cache="STATIC">117</srcX>
                                 <srcY cache="STATIC">197</srcY>
-                                <w cache="NONE">48.0 * ptHpPct(i)</w>
+                                <w cache="NONE">48.0 * party.get(i).healthPercent</w>
                                 <h cache="STATIC">3.0</h>
                                 <x cache="STATIC">40</x>
                                 <y cache="NONE">15 * i + 5</y>
                             </glRectangle>
                             <glString name="pName">
-                                <text>ptName(i).length > 8? ptName(i).substring(0, 8): ptName(i)</text>
+                                <text>party.get(i).displayName.size > 8? party.get(i).displayName.substring(0, 8):
+                                    party.get(i).displayName
+                                </text>
                                 <x cache="STATIC">7</x>
                                 <y cache="NONE">15 * i + 8</y>
                                 <rgba>0xFFFFFFFF</rgba>

@@ -18,6 +18,7 @@
 package be.bluexin.mcui.social
 
 import be.bluexin.mcui.config.OptionCore
+import be.bluexin.mcui.util.Client
 import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
@@ -51,7 +52,10 @@ object StaticPlayerHelper {
         return listOnlinePlayers(mc).find { it.name.string == username }
     }
 
-    private fun isOnline(mc: Minecraft, names: Array<String>): BooleanArray { // TODO: update a boolean[] upon player join server? (/!\ client-side)
+    private fun isOnline(
+        mc: Minecraft,
+        names: Array<String>
+    ): BooleanArray { // TODO: update a boolean[] upon player join server? (/!\ client-side)
         val players = listOnlinePlayers(mc)
         val online = BooleanArray(names.size)
 
@@ -133,11 +137,11 @@ object StaticPlayerHelper {
         return if (entity is LivingEntity) max(0.0000001f, entity.maxHealth) else 1f
     }
 
-    fun getHungerFract(mc: Minecraft, entity: Entity, time: Float) =
+    fun getHungerFract(entity: Entity, time: Float) =
         if (entity !is Player) 1.0f
-        else getHungerLevel(mc, entity, time) / 20.0f
+        else getHungerLevel(entity, time) / 20.0f
 
-    fun getHungerLevel(mc: Minecraft, entity: Entity, time: Float): Float {
+    fun getHungerLevel(entity: Entity, time: Float): Float {
         if (entity !is Player) return 1.0f
         val hungerReal: Float
         if (OptionCore.SMOOTH_HEALTH.isEnabled) {
@@ -159,8 +163,16 @@ object StaticPlayerHelper {
 
                         return hungerValue * value
                     }
-                    (hungerValue * 10).roundToLong() != (hungerReal * 10).roundToLong() -> hungerValue += (hungerReal - hungerValue) * (gameTimeDelay(mc, time) * HEALTH_ANIMATION_FACTOR)
-                    else -> hungerValue = hungerReal
+
+                    (hungerValue * 10).roundToLong() != (hungerReal * 10).roundToLong() -> {
+                        hungerValue += (hungerReal - hungerValue) * (gameTimeDelay(
+                            Client.mc, time
+                        ) * HEALTH_ANIMATION_FACTOR)
+                    }
+
+                    else -> {
+                        hungerValue = hungerReal
+                    }
                 }
 
                 hungerSmooth[uuid] = hungerValue

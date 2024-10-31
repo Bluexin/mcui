@@ -1,8 +1,12 @@
 package be.bluexin.mcui.themes.miniscript.api
 
 import be.bluexin.mcui.effects.StatusEffects
+import be.bluexin.mcui.social.StaticPlayerHelper.getHungerLevel
+import be.bluexin.mcui.themes.miniscript.PartialTicksTracker
 import be.bluexin.mcui.util.HealthStep
-import net.minecraft.world.entity.player.Player
+import net.minecraft.client.player.LocalPlayer
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.lang.ref.WeakReference
 import kotlin.math.min
 
@@ -11,27 +15,7 @@ import kotlin.math.min
  * as it doesn't support property access syntax
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate") // Exposed to JEL
-interface MiniscriptPlayer {
-
-    /**
-     * @return the player's username
-     */
-    fun username(): String
-
-    /**
-     * @return the current hp of the player on a scale from 0.0 to 1.0
-     */
-    fun healthPercent(): Double = min(health() / maxHealth().toDouble(), 1.0)
-
-    /**
-     * @return the current hp of the player (1 heart = 2 HP)
-     */
-    fun health(): Float
-
-    /**
-     * @return the current maximum hp of the player (1 heart = 2 HP)
-     */
-    fun maxHealth(): Float
+interface MiniscriptPlayer : MiniscriptLivingEntity {
 
     /**
      * @return the current absorption amount the player has
@@ -67,18 +51,55 @@ interface MiniscriptPlayer {
      */
     fun experience(): Float
 
-    fun statusEffects(): Array<StatusEffects>
+    /**
+     * @return the player's current status effects
+     */
+    fun statusEffects(): List<StatusEffects>
+
+    /**
+     * @return the player's food value
+     */
+    fun food(): Float
+
+    /**
+     * @return the player's max food value
+     */
+    fun maxFood(): Float = 20.0f
+
+    /**
+     * @return the player's food on a scale from 0.0 to 1.0
+     */
+    fun foodPercent(): Float = min((food() / maxFood()).toDouble(), 1.0).toFloat()
+
+    /**
+     * @return the player's saturation value
+     */
+    fun saturation(): Float
+
+    /**
+     * @return the player's max saturation value
+     */
+    fun maxSaturation(): Float = 20.0f
+
+    /**
+     * @return player saturation on a scale from 0.0 to 1.0
+     */
+    fun saturationPercent(): Float = min((saturation() / maxSaturation()).toDouble(), 1.0).toFloat()
+
+    /**
+     * @return horse jump value on a scale from 0.0 to 1.0
+     */
+    fun horseJump(): Float
 }
 
-internal class MiniscriptPlayerImplementation(
-    player: Player
-) : MiniscriptPlayer {
-    private val playerRef = WeakReference(player)
-    private val player = requireNotNull(playerRef.get()) { "Player reference was cleared" }
+internal class MiniscriptPlayerImpl(
+    player: LocalPlayer
+) : MiniscriptPlayer, MiniscriptLivingEntity by MiniscriptLivingEntityImpl(player), KoinComponent {
 
-    override fun username(): String = player.displayName.string
-    override fun health() = player.health
-    override fun maxHealth() = player.maxHealth
+    private val playerRef = WeakReference(player)
+    internal val player = requireNotNull(playerRef.get()) { "Player reference was cleared" }
+    private val partialTicksTracker by inject<PartialTicksTracker>()
+
     override fun absorption() = player.absorptionAmount
 
     override fun healthStep() = HealthStep.getStep(player, healthPercent())
@@ -86,5 +107,10 @@ internal class MiniscriptPlayerImplementation(
     override fun isOffhandEmpty(slot: Int) = player.inventory.offhand[slot].isEmpty
     override fun level() = player.experienceLevel
     override fun experience() = player.experienceProgress
-    override fun statusEffects(): Array<StatusEffects> = StatusEffects.getEffects(player).toTypedArray()
+    override fun statusEffects(): List<StatusEffects> = StatusEffects.getEffects(player)
+
+    override fun food() = getHungerLevel(player, partialTicksTracker.partialTicks)
+    override fun saturation() = player.foodData.saturationLevel
+
+    override fun horseJump(): Float = player.jumpRidingScale
 }

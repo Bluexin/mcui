@@ -1,12 +1,12 @@
 <bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="effects fragment">
     <children>
         <repetitionGroup name="effectGroup">
-            <x>usernamewidth + 248</x>
+            <x>strWidth(player.displayName) + 248</x>
             <y cache="STATIC">2</y>
-            <amount cache="NONE">statusEffects.size</amount>
+            <amount cache="NONE">player.statusEffects.size</amount>
             <children>
                 <rawElement name="effect">
-                    <expression cache="NONE">statusEffect(i).glDraw(i * 11, 0, getZ)</expression>
+                    <expression cache="NONE">player.statusEffect.get(i).glDraw(i * 11, 0, getZ)</expression>
                 </rawElement>
             </children>
         </repetitionGroup>

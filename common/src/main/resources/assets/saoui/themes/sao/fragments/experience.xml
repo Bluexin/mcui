@@ -4,7 +4,7 @@
         <glString name="exp string">
             <x cache="STATIC">5</x>
             <y cache="STATIC">8</y>
-            <text>format("displayLvShort", level)</text>
+            <text>format("displayLvShort", player.level)</text>
         </glString>
         <elementGroup name="exp bg">
             <texture>saoui:textures/sao/gui.png</texture>
@@ -20,13 +20,13 @@
                     <x cache="STATIC">5</x>
                     <srcX cache="STATIC">66</srcX>
                     <srcY cache="STATIC">15</srcY>
-                    <w>strWidth(format("displayLvShort", level))</w>
+                    <w>strWidth(format("displayLvShort", player.level))</w>
                     <h cache="STATIC">13</h>
                     <srcW cache="STATIC">5</srcW>
                     <srcH cache="STATIC">13</srcH>
                 </glRectangle>
                 <glRectangle>
-                    <x>5 + strWidth(format("displayLvShort", level))</x>
+                    <x>5 + strWidth(format("displayLvShort", player.level))</x>
                     <srcX cache="STATIC">78</srcX>
                     <srcY cache="STATIC">15</srcY>
                     <srcW cache="STATIC">3</srcW>

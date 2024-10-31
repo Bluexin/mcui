@@ -1,5 +1,5 @@
 <bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="jump bar fragment">
-    <enabled>hasMount</enabled>
+    <enabled>player.hasMount</enabled>
     <texture>minecraft:textures/gui/icons.png</texture>
     <children>
         <glRectangle name="bg">
@@ -8,9 +8,9 @@
             <h cache="STATIC">5</h>
         </glRectangle>
         <glRectangle name="fill">
-            <enabled>horsejump > 0</enabled>
+            <enabled>player.horseJump > 0</enabled>
             <srcY cache="STATIC">89</srcY>
-            <w>182 * horsejump</w>
+            <w>182 * player.horseJump</w>
             <h cache="STATIC">5</h>
         </glRectangle>
     </children>

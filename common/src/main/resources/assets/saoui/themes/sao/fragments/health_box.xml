@@ -13,19 +13,19 @@
                     <h cache="STATIC">15.0</h>
                     <srcW cache="STATIC">5.0</srcW>
                     <srcX cache="STATIC">16.0</srcX>
-                    <w>usernamewidth</w>
+                    <w>strWidth(player.displayName)</w>
                     <x cache="STATIC">16.0</x>
                 </glRectangle>
                 <glRectangle>
                     <h cache="STATIC">15.0</h>
                     <srcX cache="STATIC">21.0</srcX>
                     <w cache="STATIC">234.0</w>
-                    <x>16.0 + usernamewidth</x>
+                    <x>16.0 + strWidth(player.displayName)</x>
                 </glRectangle>
             </children>
         </elementGroup>
         <glString name="username">
-            <text>username</text>
+            <text>player.displayName</text>
             <h cache="STATIC">15.0</h>
             <x cache="STATIC">14.0</x>
             <y cache="STATIC">1.0</y>
@@ -33,51 +33,51 @@
         <glRectangle name="health bar">
             <texture>saoui:textures/sao/gui.png</texture>
             <h cache="STATIC">9.0</h>
-            <rgba>healthStep.rgba</rgba>
+            <rgba>player.healthStep.rgba</rgba>
             <srcH cache="STATIC">9.0</srcH>
-            <srcW>215.0 * hpPct</srcW>
+            <srcW>215.0 * player.healthPercent</srcW>
             <srcY cache="STATIC">188.0</srcY>
-            <w>215.0 * hpPct</w>
-            <x>18.0 + usernamewidth</x>
+            <w>215.0 * player.healthPercent</w>
+            <x>18.0 + strWidth(player.displayName)</x>
             <y cache="STATIC">3.0</y>
         </glRectangle>
         <glRectangle name="air bar">
             <texture>saoui:textures/sao/gui.png</texture>
             <h cache="STATIC">9.0</h>
-            <rgba>healthStep == CREATIVE? 0x00000000:
-                statusEffects.contains(WET)? 0x2ADDF580:
+            <rgba>player.healthStep == CREATIVE? 0x00000000:
+                player.statusEffects.contains(WET)? 0x2ADDF580:
                 0x00000000
             </rgba>
             <srcH cache="STATIC">9.0</srcH>
-            <srcW>215.0 * airPct</srcW>
+            <srcW>215.0 * player.airPercent</srcW>
             <srcY cache="STATIC">188.0</srcY>
-            <w>215.0 * airPct</w>
-            <x>18.0 + usernamewidth</x>
+            <w>215.0 * player.airPercent</w>
+            <x>18.0 + strWidth(player.displayName)</x>
             <y cache="STATIC">3.0</y>
         </glRectangle>
         <glRectangle name="hunger bar">
             <texture>saoui:textures/sao/gui.png</texture>
             <h cache="STATIC">2.0</h>
-            <rgba>healthStep == CREATIVE? 0xCD840400:
-                statusEffects.contains(ROTTEN)? 0xD045FFFF:
+            <rgba>player.healthStep == CREATIVE? 0xCD840400:
+                player.statusEffects.contains(ROTTEN)? 0xD045FFFF:
                 0xF5AB2AFF
             </rgba>
             <srcH cache="STATIC">2.0</srcH>
-            <srcW>115.0 * foodPct</srcW>
+            <srcW>115.0 * player.foodPercent</srcW>
             <srcY cache="STATIC">193.0</srcY>
-            <w>113.0 * foodPct</w>
-            <x>18.0 + usernamewidth</x>
+            <w>113.0 * player.foodPercent</w>
+            <x>18.0 + strWidth(player.displayName)</x>
             <y cache="STATIC">10.0</y>
         </glRectangle>
         <elementGroup name="hp bg and text">
             <enabled>!settings.boolean("hud:remove_hpxp")</enabled>
-            <x>usernamewidth + 132.0</x>
+            <x>strWidth(player.displayName) + 132.0</x>
             <y cache="STATIC">12.0</y>
             <children>
                 <glString name="hp text">
-                    <text>absorption > 0? format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
-                        "formatHealthAbsorb", ceil(hp), ceil(maxHp), ceil(absorption)):
-                        format("formatHealth", ceil(hp), ceil(maxHp))
+                    <text>player.absorption > 0? format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
+                        "formatHealthAbsorb", ceil(player.health), ceil(player.maxHealth), ceil(player.absorption)):
+                        format("formatHealth", ceil(player.health), ceil(player.maxHealth))
                     </text>
                     <x cache="STATIC">5.0</x>
                     <y cache="STATIC">8.0</y>
@@ -95,18 +95,22 @@
                             <x cache="STATIC">5.0</x>
                             <srcX cache="STATIC">66.0</srcX>
                             <srcY cache="STATIC">15.0</srcY>
-                            <w>strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
-                                "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(hp), ceil(maxHp),
-                                ceil(absorption)): format("formatHealth", ceil(hp), ceil(maxHp)))
+                            <w>strWidth(player.absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
+                                "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(player.health),
+                                ceil(player.maxHealth),
+                                ceil(player.absorption)): format("formatHealth", ceil(player.health),
+                                ceil(player.maxHealth)))
                             </w>
                             <h cache="STATIC">13.0</h>
                             <srcW cache="STATIC">5.0</srcW>
                             <srcH cache="STATIC">13.0</srcH>
                         </glRectangle>
                         <glRectangle>
-                            <x>5 + strWidth(absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
-                                "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(hp), ceil(maxHp),
-                                ceil(absorption)): format("formatHealth", ceil(hp), ceil(maxHp)))
+                            <x>5 + strWidth(player.absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
+                                "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(player.health),
+                                ceil(player.maxHealth),
+                                ceil(player.absorption)): format("formatHealth", ceil(player.health),
+                                ceil(player.maxHealth)))
                             </x>
                             <srcX cache="STATIC">70.0</srcX>
                             <srcY cache="STATIC">15.0</srcY>

@@ -228,7 +228,7 @@ class HudDrawContext(
     }
 
     override fun foodLevel(): Float {
-        return getHungerLevel(mc, player, partialTicks)
+        return getHungerLevel(player, partialTicks)
     }
 
     override fun saturationLevel(): Float {

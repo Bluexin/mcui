@@ -10,7 +10,7 @@
                     <children>
                         <glHotbarItem>
                             <h cache="STATIC">20.0</h>
-                            <rgba cache="NONE">i == selectedslot ? 0xFFBA66FF : 0xCDCDCDAA</rgba>
+                            <rgba cache="NONE">i == player.selectedSlot ? 0xFFBA66FF : 0xCDCDCDAA</rgba>
                             <srcH cache="STATIC">20.0</srcH>
                             <srcW cache="STATIC">20.0</srcW>
                             <srcY cache="STATIC">25.0</srcY>
@@ -24,7 +24,7 @@
                     </children>
                 </repetitionGroup>
                 <elementGroup name="offhand">
-                    <enabled>!offhandEmpty(0)</enabled>
+                    <enabled>!player.isOffhandEmpty(0)</enabled>
                     <children>
                         <glHotbarItem>
                             <h cache="STATIC">20.0</h>
@@ -68,7 +68,7 @@
                     <children>
                         <glHotbarItem>
                             <h cache="STATIC">20.0</h>
-                            <rgba cache="NONE">i == selectedslot ? 0xFFBA66FF : 0xCDCDCDAA</rgba>
+                            <rgba cache="NONE">i == player.selectedSlot ? 0xFFBA66FF : 0xCDCDCDAA</rgba>
                             <srcH cache="STATIC">20.0</srcH>
                             <srcW cache="STATIC">20.0</srcW>
                             <srcY cache="STATIC">25.0</srcY>
@@ -82,7 +82,7 @@
                     </children>
                 </repetitionGroup>
                 <elementGroup name="offhand">
-                    <enabled>!offhandEmpty(0)</enabled>
+                    <enabled>!player.isOffhandEmpty(0)</enabled>
                     <children>
                         <glHotbarItem>
                             <h cache="STATIC">20.0</h>

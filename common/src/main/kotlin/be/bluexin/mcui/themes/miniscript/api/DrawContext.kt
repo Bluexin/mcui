@@ -7,12 +7,18 @@ package be.bluexin.mcui.themes.miniscript.api
 @Suppress("unused", "MemberVisibilityCanBePrivate") // Exposed to JEL
 interface DrawContext {
 
+    /**
+     * @return the current player
+     */
     fun player(): MiniscriptPlayer
 
     /**
      * Not yet implemented
      */
-    fun party(): Array<MiniscriptPlayer> = emptyArray()
+    fun party(): List<MiniscriptPlayer> = emptyList()
 
+    /**
+     * @return access to the theme settings
+     */
     fun settings(): MiniscriptSettings
 }
