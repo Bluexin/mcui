@@ -17,4 +17,5 @@ Releases can be found on CurseForge (link on the badges below)
 [![](http://cf.way2muchnoise.eu/versions/Available%20for%20MC_sao-ui_all.svg)](http://minecraft.curseforge.com/projects/sao-ui)
 
 ## Third-party licenses
-Information on third-party libraries included in this mod can be found [here](src/main/resources/third_party).
+
+Information on third-party libraries included in this mod can be found [here](common/src/main/resources/third_party).
