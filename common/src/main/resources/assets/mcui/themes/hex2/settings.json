@@ -1,11 +1,5 @@
 [
   {
-    "key": "hud:remove_hpxp",
-    "type": "boolean",
-    "defaultValue": false,
-    "comment": "Whether to remove HP & XP from showing on the HUD"
-  },
-  {
     "key": "hud:vertical_hotbar",
     "type": "boolean",
     "defaultValue": true,
@@ -36,5 +30,22 @@
     "type": "boolean",
     "defaultValue": false,
     "comment": "Hide health numbers section of the HUD"
+  },
+  {
+    "key": "hud:debug_mode",
+    "type": "boolean",
+    "defaultValue": false,
+    "comment": "Enable HUD debug mode"
+  },
+  {
+    "key": "hud:test_choice",
+    "type": "choice",
+    "defaultValue": "one",
+    "comment": "Testing choice setting",
+    "values": [
+      "one",
+      "two",
+      "three"
+    ]
   }
 ]

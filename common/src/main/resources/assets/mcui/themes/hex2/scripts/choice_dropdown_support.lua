@@ -33,7 +33,7 @@ local function loadDropdown(root, args)
     wl.bind(baseArgs, 'currentValue', args.currentValue, wl.tstatic, 'STRING')
     wl.bind(baseArgs, 'xPos', args.xPos, wl.tstatic, 'DOUBLE')
     wl.bind(baseArgs, 'yPos', args.yPos, wl.tstatic, 'DOUBLE')
-    wl.bind(baseArgs, 'initialWidth', args.width or 160, wl.tstatic, 'DOUBLE')
+    wl.bind(baseArgs, 'initialWidth', args.width or 160, wl.tstatic, 'INT')
 
     local allArgs = util.merge(
             baseArgs,

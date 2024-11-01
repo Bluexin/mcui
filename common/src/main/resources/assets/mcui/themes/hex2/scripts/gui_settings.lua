@@ -79,6 +79,89 @@ end
 
 local xPos = 'scaledwidth / 2 - 60'
 
+--- @param parent Widget
+--- @param setting BooleanSetting
+--- @param catN number
+local function booleanSettingButton(parent, setting, catN)
+    local screenLocalKey = ('mcui.theme.' .. setting.namespace.string .. '.setting.' .. setting.key.string .. '.name'):gsub(':', '/')
+    local valueMapping = 'format("mcui.screen.settings.boolean." + state)'
+    local fullLabel = 'format("mcui.screen.settinglabel", formatOr("' .. screenLocalKey .. '", "' .. setting.key.path .. '"), ' .. valueMapping .. ')'
+
+    return wl.loadButton(
+            parent, {
+                xPos = 0, yPos = catN * 20,
+                -- miniscript settings currently resolve to "currentTheme" so not great
+                label = wl.tframe(fullLabel, 'STRING', true),
+                --label = settingName .. ': ' .. tostring(setting.getValue()),
+                tooltip = settingTooltip(setting),
+                onClick = function(widget)
+                    local newVal = not setting.getValue()
+                    setting.setValue(newVal)
+                    widget.setVariable('state', wl.tstatic(newVal))
+                    return true
+                end,
+                variables = {
+                    state = wl.tstatic(setting.getValue())
+                }
+            }
+    )
+end
+
+--- @param parent Widget
+--- @param setting ChoiceSetting
+--- @param catN number
+local function choiceSettingButton(parent, setting, catN)
+    local screenLocalKey = ('mcui.theme.' .. setting.namespace.string .. '.setting.' .. setting.key.string):gsub(':', '/')
+
+    return dropdownSupport.createDropdown(parent, {
+        currentValue = screenLocalKey .. '/' .. setting.getValue(),
+        key = screenLocalKey,
+        label = wl.tstatic('format("' .. screenLocalKey .. '.name")', 'STRING', true),
+        xPos = 0,
+        yPos = catN * 20,
+        options = util.map(setting.values, function(it)
+            local i18nKey = screenLocalKey .. '/' .. it
+            return {
+                key = i18nKey,
+                variables = {
+                    initialWidth = wl.tstatic(80, 'INT')
+                }
+            }
+        end),
+        setValue = function(newValue)
+            local newValuetrimmed, _ = newValue.expression:gsub(screenLocalKey .. '/', ''):gsub('"', '')
+            print('Setting setting ' .. setting.key.string .. ' to ' .. newValuetrimmed)
+            setting.setValue(newValuetrimmed)
+        end,
+    })
+end
+
+--- @param parent Widget
+--- @param settingName string
+--- @param setting Setting
+--- @param catN number
+local function settingButton(parent, settingName, setting, catN)
+    if (type(setting) == 'BooleanSetting') then
+        return booleanSettingButton(parent, setting, catN)
+    elseif (type(setting) == 'ChoiceSetting') then
+        return choiceSettingButton(parent, setting, catN)
+    else
+        local screenLocalKey = ('mcui.theme.' .. setting.namespace.string .. '.setting.' .. setting.key.string .. '.name'):gsub(':', '/')
+        local fullLabel = 'format("mcui.screen.settinglabel", formatOr("' .. screenLocalKey .. '", "' .. setting.key.path .. '"), "' .. tostring(setting.getValue()) .. '")'
+
+        return wl.loadButton(
+                parent, {
+                    xPos = 0, yPos = catN * 20,
+                    label = wl.tframe(fullLabel, 'STRING', true),
+                    tooltip = settingTooltip(setting),
+                    variables = {
+                        active = wl.tstatic(false)
+                    }
+                }
+        )
+    end
+end
+
 local function gui(root)
     print('Starting to analyse settings')
     local themes = wl.loadCategory(root, 'scaledheight / 2 - 10', xPos, 'themeselection', function()
@@ -121,36 +204,7 @@ local function gui(root)
                 if category then
                     local catContent = wl.getChildWidget(category, 'content')
                     for settingName, setting in pairs(catValue) do
-                        if (type(setting) == 'BooleanSetting') then
-                            local bs = --[[---@type BooleanSetting]] setting
-                            wl.loadButton(
-                                    catContent, {
-                                        xPos = 0, yPos = catN * 20,
-                                        -- miniscript settings currently resolve to "currentTheme" so not great
-                                        label = wl.tframe('"' .. settingName .. ': " + (state? "yes": "no")', 'STRING', true),
-                                        --label = settingName .. ': ' .. tostring(bs.getValue()),
-                                        tooltip = settingTooltip(setting),
-                                        onClick = function(widget)
-                                            local newVal = not bs.getValue()
-                                            bs.setValue(newVal)
-                                            widget.setVariable('state', wl.tstatic(newVal))
-                                            return true
-                                        end,
-                                        variables = {
-                                            state = wl.tstatic(bs.getValue())
-                                        }
-                                    }
-                            )
-                        else
-                            wl.loadButton(
-                                    catContent, {
-                                        xPos = 0, yPos = catN * 20,
-                                        label = settingName .. ': ' .. type(setting),
-                                        tooltip = settingTooltip(setting)
-                                    }
-                            )
-                        end
-
+                        settingButton(catContent, settingName, setting, catN)
                         catN = catN + 1
                     end
                     wl.centerCategoryContent(catContent, catN)

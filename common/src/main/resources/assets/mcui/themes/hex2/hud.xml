@@ -7,6 +7,16 @@
             <value name="health box">
                 <children>
                     <fragmentReference id="mcui.hex2:health_box"/>
+                    <fragmentReference id="mcui.hex2:label">
+                        <enabled>settings.boolean("hud:debug_mode")</enabled>
+                        <x cache="STATIC">10</x>
+                        <y cache="STATIC">40</y>
+                        <variables>
+                            <variable type="STRING" key="text">"Choice setting value: " +
+                                settings.string("hud:test_choice")
+                            </variable>
+                        </variables>
+                    </fragmentReference>
                 </children>
             </value>
         </entry>

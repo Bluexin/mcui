@@ -41,7 +41,7 @@
                     <h cache="STATIC">16</h>
                 </glRectangle>
                 <glString name="label">
-                    <x>-strWidth(text) / 2.0 + 2.7</x>
+                    <x>-strWidth(text) / 2.0</x>
                     <y cache="STATIC">9.5</y>
                     <text>text</text>
                 </glString>
