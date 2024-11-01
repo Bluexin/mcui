@@ -2,7 +2,7 @@
     <texture>mcui:themes/hex2/textures/gui_hex.png</texture>
     <children>
         <glRectangle name="hex">
-            <enabled>false</enabled>
+            <enabled>true</enabled>
             <w cache="STATIC">10</w>
             <h cache="STATIC">10</h>
             <x cache="SIZE_CHANGE">-5</x>
@@ -13,7 +13,7 @@
             <srcH cache="STATIC">16.0</srcH>
         </glRectangle>
         <glRectangle name="dot">
-            <enabled>true</enabled>
+            <enabled>false</enabled>
             <!--<enabled>!isEnabled(CROSS_HAIR)</enabled>-->
             <h cache="STATIC">1.0</h>
             <w cache="STATIC">1.0</w>

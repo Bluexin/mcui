@@ -3,7 +3,7 @@
         <variable key="text" type="STRING"/>
         <variable key="initialWidth" type="INT" cache="STATIC">120</variable>
         <variable key="initialHeight" type="INT" cache="STATIC">16</variable>
-        <variable key="xPos" type="DOUBLE" cache="STATIC">0.0</variable>
+        <variable key="xPos" type="DOUBLE">-initialWidth / 2.0</variable>
         <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
         <variable key="active" type="BOOLEAN" cache="STATIC">true</variable>
         <variable key="colour" type="INT" cache="STATIC">0x424242FF</variable>
@@ -66,11 +66,18 @@
                     <y cache="STATIC">9.5</y>
                     <text>text</text>
                 </glString>
+
+                <glString name="debug">
+                    <enabled>settings.boolean("hud:debug_mode")</enabled>
+                    <text>"category_label_button " + xPos</text>
+                    <rgba>0x0B8B00</rgba>
+                    <x>initialWidth</x>
+                </glString>
             </children>
         </elementGroup>
 
         <widget name="content">
-            <x cache="STATIC">0</x>
+            <x>initialWidth / 2</x>
             <y cache="STATIC">0</y>
             <enabled>isOpen</enabled>
             <contentWidth cache="STATIC">0</contentWidth>

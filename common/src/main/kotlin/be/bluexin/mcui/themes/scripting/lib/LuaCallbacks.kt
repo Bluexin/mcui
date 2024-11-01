@@ -12,7 +12,6 @@ import be.bluexin.mcui.themes.scripting.serialization.AbstractLuaEncoder
 import be.bluexin.mcui.util.debug
 import be.bluexin.mcui.util.trace
 import kotlinx.serialization.ExperimentalSerializationApi
-import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -93,9 +92,7 @@ class LoadFragment(private val theme: ThemeDefinition) : LuaFunction(), KoinComp
             val fragmentRef = FragmentReference(id = id).also {
                 it.setup(target, mapOf(ResourceLocation(id) to { fragment }), theme)
             }
-            Minecraft.getInstance().tell {
-                target.add(fragmentRef)
-            }
+            target.add(fragmentRef)
 
             return fragment.toLua()
         } catch (e: Throwable) {
@@ -113,18 +110,17 @@ class LoadFragment(private val theme: ThemeDefinition) : LuaFunction(), KoinComp
             val (target, fragment) = internalLoad(arg1, arg2)
             val id = generateId()
             val serializer = Variables.serializer()
+
             @OptIn(ExperimentalSerializationApi::class) // TODO : move this special handling to the decoder
-            val fragmentReference =
-                AbstractLuaDecoder.LuaMapDecoder(arg3.checktable(), null, serializer.descriptor.getElementDescriptor(0))
+            val fragmentReference = AbstractLuaDecoder
+                .LuaMapDecoder(arg3.checktable(), null, serializer.descriptor.getElementDescriptor(0))
                 .decodeSerializableValue(serializer).let { variables ->
                     FragmentReference(id = id, serializedVariables = variables).also {
                         it.setup(target, mapOf(ResourceLocation(id) to { fragment }), theme)
                     }
                 }
 
-            Minecraft.getInstance().tell {
-                target.add(fragmentReference)
-            }
+            target.add(fragmentReference)
 
             return fragment.toLua()
         } catch (e: Throwable) {
@@ -170,9 +166,7 @@ object LoadWidget : LuaFunction(), KoinComponent {
     override fun call(arg1: LuaValue, arg2: LuaValue): LuaValue {
         try {
             val (target, widget) = internalLoad(arg1, arg2)
-            Minecraft.getInstance().tell {
-                target += widget
-            }
+            target += widget
 
             return widget.toLua()
         } catch (e: Throwable) {
@@ -201,12 +195,9 @@ object LoadWidget : LuaFunction(), KoinComponent {
                     }
                 }
             libHelper.popContext() // from Variables deser
-//            widget.setup(target, emptyMap())
 
-            Minecraft.getInstance().tell {
-                target += widget
-                Constants.LOG.debug { "Adding ${widget.name} to ${(target as? Widget)?.hierarchyName ?: target.name}" }
-            }
+            target += widget
+            Constants.LOG.debug { "Adding ${widget.name} to ${(target as? Widget)?.hierarchyName ?: target.name}" }
 
             return widget.toLua()
         } catch (e: Throwable) {

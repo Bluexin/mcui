@@ -45,7 +45,6 @@ local function addThemeSettings(parent)
             currentValue = 'mcui.theme.' .. (currentValue and currentValue.string or 'none'),
             key = screenLocalKey,
             label = wl.tstatic('format("' .. screenLocalKey .. '.name")', 'STRING', true),
-            xPos = 0,
             yPos = (index - 1) * 20,
             options = util.map(
                     settings.getThemesImplementingScreenId(screenId),
@@ -89,7 +88,7 @@ local function booleanSettingButton(parent, setting, catN)
 
     return wl.loadButton(
             parent, {
-                xPos = 0, yPos = catN * 20,
+                yPos = catN * 20,
                 -- miniscript settings currently resolve to "currentTheme" so not great
                 label = wl.tframe(fullLabel, 'STRING', true),
                 --label = settingName .. ': ' .. tostring(setting.getValue()),
@@ -114,25 +113,26 @@ local function choiceSettingButton(parent, setting, catN)
     local screenLocalKey = ('mcui.theme.' .. setting.namespace.string .. '.setting.' .. setting.key.string):gsub(':', '/')
 
     return dropdownSupport.createDropdown(parent, {
-        currentValue = screenLocalKey .. '/' .. setting.getValue(),
+        currentValue = setting.getValue(),
         key = screenLocalKey,
         label = wl.tstatic('format("' .. screenLocalKey .. '.name")', 'STRING', true),
-        xPos = 0,
         yPos = catN * 20,
         options = util.map(setting.values, function(it)
             local i18nKey = screenLocalKey .. '/' .. it
             return {
-                key = i18nKey,
+                key = it,
                 variables = {
-                    initialWidth = wl.tstatic(80, 'INT')
+                    initialWidth = wl.tstatic(80, 'INT'),
+                    translateValue = wl.tframe('format("' .. screenLocalKey .. '" + "/" + thisValue + ".name")', 'STRING', true)
                 }
             }
         end),
         setValue = function(newValue)
-            local newValuetrimmed, _ = newValue.expression:gsub(screenLocalKey .. '/', ''):gsub('"', '')
-            print('Setting setting ' .. setting.key.string .. ' to ' .. newValuetrimmed)
-            setting.setValue(newValuetrimmed)
+            setting.setValue(newValue.expression:gsub('"', ''))
         end,
+        variables = {
+            translateValue = wl.tframe('format("' .. screenLocalKey .. '" + "/" + currentValue + ".name")', 'STRING', true)
+        }
     })
 end
 
@@ -151,7 +151,7 @@ local function settingButton(parent, settingName, setting, catN)
 
         return wl.loadButton(
                 parent, {
-                    xPos = 0, yPos = catN * 20,
+                    yPos = catN * 20,
                     label = wl.tframe(fullLabel, 'STRING', true),
                     tooltip = settingTooltip(setting),
                     variables = {
@@ -199,7 +199,7 @@ local function gui(root)
             local tlN = 0
             local tlContent = wl.getChildWidget(topLevel, 'content')
             for catName, catValue in pairs(topLevelValue) do
-                local category = wl.loadCategory(tlContent, tlN * 20, 0, catName, settingsCategoryName)
+                local category = wl.loadCategory(tlContent, wl.tstatic(tlN * 20), nil, catName, settingsCategoryName)
                 local catN = 0
                 if category then
                     local catContent = wl.getChildWidget(category, 'content')

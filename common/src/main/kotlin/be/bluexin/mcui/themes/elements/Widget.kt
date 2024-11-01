@@ -15,7 +15,7 @@ import be.bluexin.mcui.themes.miniscript.serialization.JelType
 import be.bluexin.mcui.themes.scripting.LuaJManager
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
 import be.bluexin.mcui.util.Client
-import be.bluexin.mcui.util.info
+import be.bluexin.mcui.util.debug
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -354,19 +354,19 @@ class Widget(
 
     @LuajExpose
     fun setFocus() {
-        logger.info { "Setting focus to self ($hierarchyName)" }
+        logger.debug { "Setting focus to self ($hierarchyName)" }
         (rootElement as? WidgetParent)?.setFocus(this)
     }
 
     private val logger = logger()
 
     fun loseFocus() {
-        logger.info { "$hierarchyName loses focus" }
+        logger.debug { "$hierarchyName loses focus" }
         onLoseFocus()
     }
 
     override fun setFocus(target: Widget) {
-        logger.info { "Setting focus on self ($hierarchyName) to ${target.hierarchyName}" }
+        logger.debug { "Setting focus on self ($hierarchyName) to ${target.hierarchyName}" }
         val root = rootElement
         if (root != this && root is WidgetParent) root.setFocus(target)
     }

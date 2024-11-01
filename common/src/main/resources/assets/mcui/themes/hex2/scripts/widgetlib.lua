@@ -6,6 +6,7 @@ local util = require 'util'
 
 --- @param parent Widget|nil
 --- @param name string
+--- @return Widget|nil
 function wl.getChildWidget(parent, name)
     if parent then
         local child = (--[[---@type Widget]] parent).getChildByName(name)
@@ -14,6 +15,7 @@ function wl.getChildWidget(parent, name)
         end
     end
     error('No child widget with name ' .. name .. " on " .. ((parent and (--[[---@type Widget]] parent).name) or 'missing parent'))
+    return nil
 end
 
 --- @param categoryContent Widget
@@ -21,6 +23,27 @@ end
 function wl.centerCategoryContent(categoryContent, n)
     if n > 1 then
         categoryContent.y = -20 * math.floor((n - 2) / 2)
+    end
+
+    local maxWidth = -1
+    local children = categoryContent.allChildren
+    for i, v in ipairs(children) do
+        if i > 1 and type(v) == 'Widget' then
+            -- skipping "back" button
+            local width = tonumber(v.getVariable('initialWidth').expression)
+            --print('Checking width of ' .. util.tprint(v.getVariable('initialWidth')) .. ' in ' .. v.name)
+            if width > maxWidth then
+                maxWidth = width
+            end
+        end
+    end
+    --print('Resizing ' .. tostring(n) .. ' children of ' .. categoryContent.hierarchyName .. ' to a width of ' .. maxWidth)
+    if (maxWidth > 0) then
+        for _, v in ipairs(children) do
+            if type(v) == 'Widget' then
+                v.setVariable('initialWidth', wl.tstatic(maxWidth, 'INT'))
+            end
+        end
     end
 end
 
@@ -124,8 +147,8 @@ local label_button_frag = theme.readWidget("mcui.hex2:label_button")
 
 --- @shape buttonArgs
 --- @field key string|nil mapped to the widget's name
---- @field xPos string|number|CDouble
---- @field yPos string|number|CDouble
+--- @field xPos? string|number|CDouble
+--- @field yPos? string|number|CDouble
 --- @field width number|nil
 --- @field label string|CString|nil
 --- @field tooltip string|CString|nil
@@ -192,18 +215,25 @@ end
 local category_frag = theme.readWidget("mcui.hex2:category_label_button")
 
 --- @param parent string|Widget
---- @param yPos string|number
---- @param xPos string|number
+--- @param yPos string|number|nil|CValue
+--- @param xPos string|number|nil|CValue
 --- @param label string
 --- @param display? fun(id: string): string
 --- @param noBackButton? boolean
 --- @return Widget|nil
 function wl.loadCategory(parent, yPos, xPos, label, display, noBackButton)
-    local r = theme.loadWidget(parent, category_frag, {
-        text = wl.tstatic((display and display(label)) or '"' .. label .. '"', "STRING", true),
-        xPos = wl.tframe(xPos, 'DOUBLE'),
-        yPos = wl.tframe(yPos, "DOUBLE"),
-    })
+    local baseArgs = {}
+
+    wl.bind(baseArgs, 'xPos', xPos, wl.tframe, 'DOUBLE')
+    wl.bind(baseArgs, 'yPos', yPos, wl.tframe, 'DOUBLE')
+
+    local allArgs = util.merge(
+            baseArgs, {
+                text = wl.tstatic((display and display(label)) or '"' .. label .. '"', "STRING", true)
+            }
+    )
+
+    local r = theme.loadWidget(parent, category_frag, allArgs)
     if not r then
         print('Could not load category ' .. label)
         return nil
@@ -216,7 +246,7 @@ function wl.loadCategory(parent, yPos, xPos, label, display, noBackButton)
             local bk = w.name .. '_back'
             local backButton = wl.loadButton(content, {
                 key = bk,
-                xPos = 0,
+                --xPos = 0,
                 yPos = -20,
                 label = wl.tstatic('format("mcui.screen.back")', 'STRING', true),
                 onClick = onClickBackButton,

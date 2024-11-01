@@ -8,7 +8,7 @@ import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.HudDrawContext
 import be.bluexin.mcui.themes.scripting.lib.LoadFragment
 import be.bluexin.mcui.themes.scripting.lib.LoadWidget
-import be.bluexin.mcui.util.info
+import be.bluexin.mcui.util.debug
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
@@ -117,11 +117,11 @@ class LuaScriptedScreen(
     private val logger = logger()
 
     override fun setFocus(target: Widget) {
-        logger.info { "Setting focus of $this to ${target.hierarchyName}" }
+        logger.debug { "Setting focus of $this to ${target.hierarchyName}" }
         if (target != focus) {
             focus?.loseFocus()
             focus = target
-        } else logger.info { "Skipping because focus already set" }
+        } else logger.debug { "Skipping because focus already set" }
     }
 
     private fun clearFocus() {
