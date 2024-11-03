@@ -22,6 +22,25 @@ function wl.centerCategoryContent(categoryContent, n)
     if n > 2 then
         categoryContent.y = -20 * math.floor((n - 1) / 2)
     end
+    local maxWidth = -1
+    local children = categoryContent.allChildren
+    for _, v in ipairs(children) do
+        if type(v) == 'Widget' then
+            local width = tonumber(v.getVariable('initialWidth').expression)
+            --print('Checking width of ' .. util.tprint(v.getVariable('initialWidth')) .. ' in ' .. v.name)
+            if width > maxWidth then
+                maxWidth = width
+            end
+        end
+    end
+    --print('Resizing ' .. tostring(n) .. ' children of ' .. categoryContent.hierarchyName .. ' to a width of ' .. maxWidth)
+    if (maxWidth > 0) then
+        for _, v in ipairs(children) do
+            if type(v) == 'Widget' then
+                v.setVariable('initialWidth', wl.tstatic(maxWidth, 'INT'))
+            end
+        end
+    end
 end
 
 function wl.static(value)
@@ -78,7 +97,7 @@ end
 --- @param default fun(value: string|number|boolean, jtype: JelType|nil, nowrap: boolean): CValue
 --- @param valueType JelType
 --- @return CValue
-local function fromArg(arg, default, valueType)
+function wl.fromArg(arg, default, valueType)
     if (type(arg) == 'table') then
         return --[[---@type CValue]] arg
     else
@@ -91,9 +110,9 @@ end
 --- @param source string|number|boolean|CValue|nil
 --- @param default fun(value: string|number|boolean, jtype: JelType|nil, nowrap: boolean): CValue
 --- @param valueType JelType
-local function bind(self, key, source, default, valueType)
+function wl.bind(self, key, source, default, valueType)
     if (source) then
-        self[key] = fromArg(source, default, valueType)
+        self[key] = wl.fromArg(source, default, valueType)
     end
 end
 
@@ -115,10 +134,10 @@ function wl.loadButton(parent, args)
     --- @type table<string, CValue>
     local baseArgs = {}
 
-    bind(baseArgs, 'text', args.label, wl.tstatic, 'STRING')
-    bind(baseArgs, 'xPos', args.xPos, wl.tstatic, 'DOUBLE')
-    bind(baseArgs, 'yPos', args.yPos, wl.tstatic, 'DOUBLE')
-    bind(baseArgs, 'initialWidth', args.width or 160, wl.tstatic, 'DOUBLE')
+    wl.bind(baseArgs, 'text', args.label, wl.tstatic, 'STRING')
+    wl.bind(baseArgs, 'xPos', args.xPos, wl.tstatic, 'DOUBLE')
+    wl.bind(baseArgs, 'yPos', args.yPos, wl.tstatic, 'DOUBLE')
+    wl.bind(baseArgs, 'initialWidth', args.width or 160, wl.tstatic, 'DOUBLE')
 
     local allArgs = util.merge(
             baseArgs,
@@ -132,7 +151,7 @@ function wl.loadButton(parent, args)
     else
         local w = --[[---@type Widget]] r
         if (args.tooltip) then
-            w.tooltip = fromArg(args.tooltip, wl.tstatic, 'STRING')
+            w.tooltip = wl.fromArg(args.tooltip, wl.tstatic, 'STRING')
         end
 
         if args.onClick then

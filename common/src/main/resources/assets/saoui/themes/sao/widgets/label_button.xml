@@ -34,7 +34,7 @@
             <y cache="STATIC">10</y>
             <text>text</text>
             <rgba>isHovered? 0xFFFFFFFF: 0x888888FF</rgba>
-            <shadow>false</shadow>
+            <shadow>isHovered</shadow>
         </glString>
     </children>
 

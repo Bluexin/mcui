@@ -135,10 +135,9 @@ local function choiceSettingButton(parent, setting, catN)
 end
 
 --- @param parent Widget
---- @param settingName string
 --- @param setting Setting
 --- @param catN number
-local function settingButton(parent, settingName, setting, catN)
+local function settingButton(parent, setting, catN)
     if (type(setting) == 'BooleanSetting') then
         return booleanSettingButton(parent, setting, catN)
     elseif (type(setting) == 'ChoiceSetting') then
@@ -201,8 +200,8 @@ local function gui(root)
                 local catN = 0
                 if category then
                     local catContent = wl.getChildWidget(category, 'content')
-                    for settingName, setting in pairs(catValue) do
-                        settingButton(catContent, settingName, setting, catN)
+                    for _, setting in pairs(catValue) do
+                        settingButton(catContent, setting, catN)
                         catN = catN + 1
                     end
                     wl.centerCategoryContent(catContent, catN)

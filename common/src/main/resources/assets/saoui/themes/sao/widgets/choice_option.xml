@@ -1,0 +1,63 @@
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="choice_option">
+    <expect>
+        <variable key="thisValue" type="STRING"/>
+        <variable key="translateValue" type="STRING">format(thisValue.replace(":", ".") + ".name")</variable>
+        <variable key="valueTooltip" type="STRING">format(thisValue.replace(":", ".") + ".description")</variable>
+        <variable key="initialWidth" type="INT" cache="STATIC">120</variable>
+        <variable key="initialHeight" type="INT" cache="STATIC">18</variable>
+        <variable key="xPos" type="DOUBLE" cache="STATIC">0.0</variable>
+        <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
+        <variable key="colour" type="INT" cache="STATIC">0xFFFFFFFF</variable>
+        <variable key="hoverColour" type="INT" cache="STATIC">0xC99B13FF</variable>
+        <variable key="isHovered" type="BOOLEAN" cache="STATIC">false</variable>
+    </expect>
+    <contentWidth>initialWidth</contentWidth>
+    <contentHeight>initialHeight</contentHeight>
+    <x>xPos</x>
+    <y>yPos</y>
+    <tooltip>valueTooltip</tooltip>
+    <children>
+        <elementGroup name="button">
+            <children>
+                <glRectangle name="bg">
+                    <x>isHovered? -initialWidth * 0.05: 0</x>
+                    <y>isHovered? -initialHeight * 0.05: 0</y>
+                    <scale>isHovered? 1.1: 1.0</scale>
+                    <texture>saoui:themes/sao/textures/slot.png</texture>
+                    <rgba>isHovered? hoverColour: colour</rgba>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">40.0</srcY>
+                    <srcW cache="STATIC">84.0</srcW>
+                    <srcH cache="STATIC">18.0</srcH>
+                    <w>initialWidth</w>
+                    <h>initialHeight</h>
+                </glRectangle>
+                <glString name="label">
+                    <rgba>isHovered? 0xFFFFFFFF: 0x888888FF</rgba>
+                    <x>initialWidth / 2 - strWidth(translateValue) / 2</x>
+                    <y cache="STATIC">9.5</y>
+                    <text>translateValue</text>
+                    <shadow>isHovered</shadow>
+                </glString>
+            </children>
+        </elementGroup>
+    </children>
+
+    <onClick>
+        local self = --[[---@type Widget]]...
+        local wl = require 'widgetlib'
+        -- direct parent is the content widget of the choice button
+        local parent = --[[---@type Widget]] self.parentElement.parentElement
+        -- safety check to make sure this wasn't included in some odd place
+        if type(parent) == 'Widget' and parent.extra.setValue then
+            parent.extra.setValue(self.getVariable('thisValue'))
+        end
+
+        return true
+    </onClick>
+
+    <onMouseOverEvent>
+        local button, _, _, entered = ...
+        button.setVariable('isHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
+    </onMouseOverEvent>
+</bl:widget>

@@ -66,4 +66,23 @@ function util.shallow_copy(t)
     return t2
 end
 
+--- @generic T, R
+--- @param from T[]
+--- @param mapper fun(input: T): R
+--- @return R[]
+function util.map(from, mapper)
+    local r = {}
+    for _, value in ipairs(from) do
+        table.insert(r, mapper(value))
+    end
+
+    return r
+end
+
+--- @param input string
+--- @return boolean
+function util.string_to_boolean(input)
+    return input and (input:lower() == 'true')
+end
+
 return util

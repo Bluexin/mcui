@@ -358,7 +358,7 @@
   "mcui.theme.saoui.sao_json.name": "[WIP] SAO",
   "mcui.theme.saoui.sao_json.description": "[WIP] Built-in experimental variant of the SAO theme using JSON hud",
   "# Screens": "",
-  "saoui.menu.errors": "[SAOUI] %1$s errors loading theme %2$s",
+  "saoui.menu.errors": "[MCUI] %1$s errors loading theme %2$s",
   "saoui.menu.clicktoexpand": "(click this or run /mcui print_errors to print errors to chat)",
   "mcui.screen.settings.themeselection": "Themes",
   "mcui.screen.settings.theme": "%s Settings",

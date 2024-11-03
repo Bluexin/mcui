@@ -1,0 +1,85 @@
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="choice_dropdown">
+    <expect>
+        <variable key="label" type="STRING"/>
+        <variable key="currentValue" type="STRING"/>
+        <variable key="translateValue" type="STRING">format(currentValue.replace(":", ".") + ".name")</variable>
+        <variable key="valueTooltip" type="STRING">format(currentValue.replace(":", ".") + ".description")</variable>
+        <variable key="text" type="STRING">format("mcui.screen.settinglabel", label, translateValue)</variable>
+        <variable key="initialWidth" type="INT" cache="STATIC">120</variable>
+        <variable key="initialHeight" type="INT" cache="STATIC">18</variable>
+        <variable key="xPos" type="DOUBLE">-initialWidth / 2.0</variable>
+        <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
+        <variable key="active" type="BOOLEAN" cache="STATIC">true</variable>
+        <variable key="colour" type="INT" cache="STATIC">0xFFFFFFFF</variable>
+        <variable key="hoverColour" type="INT" cache="STATIC">0xC99B13FF</variable>
+        <variable key="isHovered" type="BOOLEAN" cache="STATIC">false</variable>
+        <variable key="isOpen" type="BOOLEAN" cache="STATIC">false</variable>
+    </expect>
+    <contentWidth>initialWidth</contentWidth>
+    <contentHeight>initialHeight</contentHeight>
+    <x>xPos</x>
+    <y>yPos</y>
+    <children>
+        <elementGroup name="button">
+            <children>
+                <glRectangle name="bg">
+                    <x>isHovered? -initialWidth * 0.05: 0</x>
+                    <y>isHovered? -initialHeight * 0.05: 0</y>
+                    <scale>isHovered? 1.1: 1.0</scale>
+                    <texture>saoui:themes/sao/textures/slot.png</texture>
+                    <rgba>(isHovered || isOpen)? hoverColour: colour</rgba>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">40.0</srcY>
+                    <srcW cache="STATIC">84.0</srcW>
+                    <srcH cache="STATIC">18.0</srcH>
+                    <w>initialWidth</w>
+                    <h>initialHeight</h>
+                </glRectangle>
+                <glString name="label">
+                    <x>initialWidth / 2 - strWidth(text) / 2</x>
+                    <y cache="STATIC">9.5</y>
+                    <text>text</text>
+                    <shadow>isHovered || isOpen</shadow>
+                    <rgba>(isHovered || isOpen)? 0xFFFFFFFF: 0x888888FF</rgba>
+                </glString>
+            </children>
+        </elementGroup>
+
+        <widget name="content">
+            <x>initialWidth + 2</x>
+            <y cache="STATIC">0</y>
+            <enabled>isOpen</enabled>
+            <contentWidth cache="STATIC">0</contentWidth>
+            <contentHeight cache="STATIC">0</contentHeight>
+        </widget>
+    </children>
+
+    <onClick>
+        local self = --[[---@type Widget]]...
+        local wl = require 'widgetlib'
+        local util = require 'util'
+
+        local isOpen = self.getVariable('isOpen')
+
+        if util.string_to_boolean(isOpen.expression) then
+            self.setVariable('isOpen', wl.tstatic(false))
+        else
+            self.setVariable('isOpen', wl.tstatic(true))
+            self.setFocus()
+        end
+
+        return true
+    </onClick>
+
+    <onMouseOverEvent>
+        local button, _, _, entered = ...
+        button.setVariable('isHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
+    </onMouseOverEvent>
+
+    <onLoseFocus>
+        local self = --[[---@type Widget]]...
+        local wl = require 'widgetlib'
+
+        self.setVariable('isOpen', wl.tstatic(false))
+    </onLoseFocus>
+</bl:widget>

@@ -3,12 +3,12 @@
         <variable key="label" type="STRING"/>
         <variable key="currentValue" type="BOOLEAN"/>
         <variable key="initialWidth" type="INT" cache="STATIC">80</variable>
-        <variable key="initialHeight" type="INT" cache="STATIC">16</variable>
+        <variable key="initialHeight" type="INT" cache="STATIC">18</variable>
         <variable key="xPos" type="DOUBLE">-initialWidth / 2.0</variable>
         <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
         <variable key="active" type="BOOLEAN" cache="STATIC">true</variable>
-        <variable key="colour" type="INT" cache="STATIC">0x424242FF</variable>
-        <variable key="hoverColour" type="INT" cache="STATIC">(int) (0x424242FF &amp; 0xAFAFAFFF)</variable>
+        <variable key="colour" type="INT" cache="STATIC">0xFFFFFFFF</variable>
+        <variable key="hoverColour" type="INT" cache="STATIC">0xC99B13FF</variable>
         <variable key="isHovered" type="BOOLEAN" cache="STATIC">false</variable>
     </expect>
     <contentWidth>initialWidth</contentWidth>
@@ -17,53 +17,31 @@
     <x>xPos</x>
     <y>yPos</y>
     <children>
-        <elementGroup name="bg">
+        <elementGroup>
             <x>isHovered? -initialWidth * 0.05: 0</x>
             <y>isHovered? -initialHeight * 0.05: 0</y>
             <scale>isHovered? 1.1: 1.0</scale>
-            <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
+            <texture>saoui:themes/sao/textures/slot.png</texture>
             <children>
-                <glRectangle> <!-- left part of label -->
+                <glRectangle name="bg">
                     <rgba>isHovered? hoverColour: colour</rgba>
                     <srcX cache="STATIC">0.0</srcX>
-                    <srcY cache="STATIC">0.0</srcY>
-                    <srcW cache="STATIC">24.0</srcW>
-                    <srcH cache="STATIC">64.0</srcH>
-                    <w cache="STATIC">6</w>
-                    <h>initialHeight</h>
-                </glRectangle>
-
-                <glRectangle> <!-- middle part of label -->
-                    <rgba>isHovered? hoverColour: colour</rgba>
-                    <x cache="STATIC">6</x>
-                    <srcX cache="STATIC">24.0</srcX>
-                    <srcY cache="STATIC">0.0</srcY>
-                    <srcW cache="STATIC">26.0</srcW>
-                    <srcH cache="STATIC">64.0</srcH>
-                    <w>initialWidth - 12</w>
-                    <h>initialHeight</h>
-                </glRectangle>
-
-                <glRectangle> <!-- right part of label -->
-                    <rgba>isHovered? hoverColour: colour</rgba>
-                    <x>initialWidth - 6</x>
-                    <srcX cache="STATIC">50.0</srcX>
-                    <srcY cache="STATIC">0.0</srcY>
-                    <srcW cache="STATIC">24.0</srcW>
-                    <srcH cache="STATIC">64.0</srcH>
-                    <w cache="STATIC">6</w>
+                    <srcY cache="STATIC">40.0</srcY>
+                    <srcW cache="STATIC">84.0</srcW>
+                    <srcH cache="STATIC">18.0</srcH>
+                    <w>initialWidth</w>
                     <h>initialHeight</h>
                 </glRectangle>
 
                 <glRectangle name="checkbox">
                     <rgba>0xD5D5D5FF</rgba>
-                    <x>initialWidth - initialHeight * 1.075</x>
+                    <x>initialWidth - initialHeight * 0.9</x>
                     <y>initialHeight * 0.1</y>
                     <srcX cache="STATIC">0.0</srcX>
-                    <srcY cache="STATIC">0.0</srcY>
-                    <srcW cache="STATIC">74.0</srcW>
-                    <srcH cache="STATIC">64.0</srcH>
-                    <w>initialHeight * 0.95</w>
+                    <srcY cache="STATIC">40.0</srcY>
+                    <srcW cache="STATIC">10.0</srcW>
+                    <srcH cache="STATIC">10.0</srcH>
+                    <w>initialHeight * 0.8</w>
                     <h>initialHeight * 0.8</h>
                 </glRectangle>
 
@@ -80,20 +58,15 @@
                     <w cache="STATIC">16</w>
                     <h>initialHeight</h>
                 </glRectangle>
-
-                <glString name="debug">
-                    <enabled>settings.boolean("hud:debug_mode")</enabled>
-                    <text>"checkbox_button " + xPos + " " + currentValue</text>
-                    <rgba>0x0B8B00</rgba>
-                    <x>initialWidth</x>
-                </glString>
             </children>
         </elementGroup>
 
         <glString name="label">
             <x>initialWidth / 2 - strWidth(label) / 2 - initialHeight / 2</x>
-            <y cache="STATIC">9.5</y>
+            <y cache="STATIC">10</y>
+            <rgba>isHovered? 0xFFFFFFFF: 0x888888FF</rgba>
             <text>label</text>
+            <shadow>isHovered</shadow>
         </glString>
     </children>
 
