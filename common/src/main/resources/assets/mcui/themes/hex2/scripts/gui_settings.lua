@@ -34,6 +34,7 @@ local function onThemeClick(receiver)
 end
 
 local dropdownSupport = require 'choice_dropdown_support'
+local checkboxSupport = require 'checkbox_support'
 
 --- @param parent Widget the parent's **content** widget
 local function addThemeSettings(parent)
@@ -83,24 +84,21 @@ local xPos = 'scaledwidth / 2 - 60'
 --- @param catN number
 local function booleanSettingButton(parent, setting, catN)
     local screenLocalKey = ('mcui.theme.' .. setting.namespace.string .. '.setting.' .. setting.key.string .. '.name'):gsub(':', '/')
-    local valueMapping = 'format("mcui.screen.settings.boolean." + state)'
-    local fullLabel = 'format("mcui.screen.settinglabel", formatOr("' .. screenLocalKey .. '", "' .. setting.key.path .. '"), ' .. valueMapping .. ')'
+    local fullLabel = 'formatOr("' .. screenLocalKey .. '", "' .. setting.key.path .. '")'
 
-    return wl.loadButton(
+    return checkboxSupport.createCheckbox(
             parent, {
                 yPos = catN * 20,
-                -- miniscript settings currently resolve to "currentTheme" so not great
                 label = wl.tframe(fullLabel, 'STRING', true),
-                --label = settingName .. ': ' .. tostring(setting.getValue()),
                 tooltip = settingTooltip(setting),
                 onClick = function(widget)
                     local newVal = not setting.getValue()
                     setting.setValue(newVal)
-                    widget.setVariable('state', wl.tstatic(newVal))
+                    widget.setVariable('currentValue', wl.tstatic(newVal))
                     return true
                 end,
                 variables = {
-                    state = wl.tstatic(setting.getValue())
+                    currentValue = wl.tstatic(setting.getValue())
                 }
             }
     )

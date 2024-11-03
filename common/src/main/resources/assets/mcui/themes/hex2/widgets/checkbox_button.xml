@@ -1,0 +1,109 @@
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="checkbox_button">
+    <expect>
+        <variable key="label" type="STRING"/>
+        <variable key="currentValue" type="BOOLEAN"/>
+        <variable key="initialWidth" type="INT" cache="STATIC">80</variable>
+        <variable key="initialHeight" type="INT" cache="STATIC">16</variable>
+        <variable key="xPos" type="DOUBLE">-initialWidth / 2.0</variable>
+        <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
+        <variable key="active" type="BOOLEAN" cache="STATIC">true</variable>
+        <variable key="colour" type="INT" cache="STATIC">0x424242FF</variable>
+        <variable key="hoverColour" type="INT" cache="STATIC">(int) (0x424242FF &amp; 0xAFAFAFFF)</variable>
+        <variable key="isHovered" type="BOOLEAN" cache="STATIC">false</variable>
+    </expect>
+    <contentWidth>initialWidth</contentWidth>
+    <contentHeight>initialHeight</contentHeight>
+    <active>active</active>
+    <x>xPos</x>
+    <y>yPos</y>
+    <children>
+        <elementGroup name="bg">
+            <x>isHovered? -initialWidth * 0.05: 0</x>
+            <y>isHovered? -initialHeight * 0.05: 0</y>
+            <scale>isHovered? 1.1: 1.0</scale>
+            <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
+            <children>
+                <glRectangle> <!-- left part of label -->
+                    <rgba>isHovered? hoverColour: colour</rgba>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">24.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w cache="STATIC">6</w>
+                    <h>initialHeight</h>
+                </glRectangle>
+
+                <glRectangle> <!-- middle part of label -->
+                    <rgba>isHovered? hoverColour: colour</rgba>
+                    <x cache="STATIC">6</x>
+                    <srcX cache="STATIC">24.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">26.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w>initialWidth - 12</w>
+                    <h>initialHeight</h>
+                </glRectangle>
+
+                <glRectangle> <!-- right part of label -->
+                    <rgba>isHovered? hoverColour: colour</rgba>
+                    <x>initialWidth - 6</x>
+                    <srcX cache="STATIC">50.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">24.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w cache="STATIC">6</w>
+                    <h>initialHeight</h>
+                </glRectangle>
+
+                <glRectangle name="checkbox">
+                    <rgba>0xD5D5D5FF</rgba> <!-- TODO : less white colour -->
+                    <x>initialWidth - 17</x>
+                    <y>initialHeight * 0.1</y>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">74.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w cache="STATIC">15</w>
+                    <h>initialHeight * 0.8</h>
+                </glRectangle>
+
+                <glRectangle name="checkmark">
+                    <enabled>currentValue</enabled>
+                    <texture>mcui:themes/hex2/textures/check_mark.png</texture>
+                    <rgba>hoverColour</rgba>
+                    <x>initialWidth - 17</x>
+                    <y cache="STATIC">0</y>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">256.0</srcW>
+                    <srcH cache="STATIC">256.0</srcH>
+                    <w cache="STATIC">16</w>
+                    <h>initialHeight</h>
+                </glRectangle>
+
+                <glString name="debug">
+                    <enabled>settings.boolean("hud:debug_mode")</enabled>
+                    <text>"checkbox_button " + xPos + " " + currentValue</text>
+                    <rgba>0x0B8B00</rgba>
+                    <x>initialWidth</x>
+                </glString>
+            </children>
+        </elementGroup>
+
+        <glString name="label">
+            <x>initialWidth / 2 - strWidth(label) / 2 - 8</x>
+            <y cache="STATIC">9.5</y>
+            <text>label</text>
+        </glString>
+    </children>
+
+    <!--<onClick>
+        local mouseX, mouseY, button = ...
+        print("onClick with " .. button .. " from Lua script !")
+    </onClick>-->
+
+    <onMouseOverEvent>
+        local button, _, _, entered = ...
+        button.setVariable('isHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
+    </onMouseOverEvent>
+</bl:widget>
