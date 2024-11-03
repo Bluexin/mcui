@@ -137,14 +137,14 @@
                             <xs:documentation>Text to render on-screen (should resolve to a string).</xs:documentation>
                         </xs:annotation>
                     </xs:element>
-                    <xs:element name="shadow" default="true" minOccurs="0" type="xs:boolean">
+                    <xs:element name="shadow" default="true" minOccurs="0" type="CachedExpression">
                         <xs:annotation>
                             <xs:documentation>
                                 Whether the text should be rendered with a shadow (should resolve to a boolean).
                             </xs:documentation>
                         </xs:annotation>
                     </xs:element>
-                    <xs:element name="centered" default="true" minOccurs="0" type="xs:boolean">
+                    <xs:element name="centered" default="true" minOccurs="0" type="CachedExpression">
                         <xs:annotation>
                             <xs:documentation>
                                 Whether the text should be centered along the y axis

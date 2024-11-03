@@ -101,7 +101,6 @@ sealed class Element : LKExposed {
     @JvmTransient
     protected lateinit var parent: WeakReference<ElementParent>
 
-    @LuajExpose
     @Transient
     protected lateinit var root: WeakReference<ElementParent>
 

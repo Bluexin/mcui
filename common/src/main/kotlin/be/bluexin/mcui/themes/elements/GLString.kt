@@ -21,12 +21,12 @@ import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.elements.access.GLStringAccess
+import be.bluexin.mcui.themes.miniscript.CBoolean
 import be.bluexin.mcui.themes.miniscript.CInt
 import be.bluexin.mcui.themes.miniscript.CString
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
 import org.luaj.vm2.LuaValue
 
@@ -43,11 +43,11 @@ class GLString(
     @LuajExpose
     var text: CString,
     @LuajExpose
-    @XmlElement
-    var shadow: Boolean = true,
+    @XmlSerialName("shadow")
+    var shadow: CBoolean = CBoolean.TRUE,
     @LuajExpose
-    @XmlElement
-    var centered: Boolean = true
+    @XmlSerialName("centered")
+    var centered: CBoolean = CBoolean.TRUE
 ) : GLRectangleParent() {
 
     override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
@@ -68,8 +68,8 @@ class GLString(
             x = x.toInt(),
             y = y.toInt(),
             rgba = rgba,
-            shadow = shadow,
-            centered = centered,
+            shadow = shadow(ctx),
+            centered = centered(ctx),
             poseStack = poseStack
         )
         if (pushed) poseStack.popPose()
