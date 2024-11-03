@@ -16,7 +16,16 @@
     <active>active</active>
     <x>xPos</x>
     <y>yPos</y>
+    <z>isHovered? 10: isOpen? 1: 0</z>
     <children>
+        <widget name="content">
+            <x>initialWidth + 6</x>
+            <y cache="STATIC">0</y>
+            <enabled>isOpen</enabled>
+            <contentWidth cache="STATIC">0</contentWidth>
+            <contentHeight cache="STATIC">0</contentHeight>
+        </widget>
+
         <glRectangle>
             <x>isHovered? -initialWidth * 0.05: 0</x>
             <y>isHovered? -initialHeight * 0.05: 0</y>
@@ -37,14 +46,6 @@
             <rgba>(isHovered || isOpen)? 0xFFFFFFFF: 0x888888FF</rgba>
             <shadow>isHovered || isOpen</shadow>
         </glString>
-
-        <widget name="content">
-            <x>initialWidth + 6</x>
-            <y cache="STATIC">0</y>
-            <enabled>isOpen</enabled>
-            <contentWidth cache="STATIC">0</contentWidth>
-            <contentHeight cache="STATIC">0</contentHeight>
-        </widget>
     </children>
 
     <onClick>

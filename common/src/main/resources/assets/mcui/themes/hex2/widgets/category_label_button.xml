@@ -17,6 +17,7 @@
     <active>!isPeerOpen</active>
     <x>xPos</x>
     <y>yPos</y>
+    <z>isHovered? 10: isOpen? 1: 0</z>
     <enabled>!isPeerOpen</enabled>
     <children>
         <elementGroup name="button">

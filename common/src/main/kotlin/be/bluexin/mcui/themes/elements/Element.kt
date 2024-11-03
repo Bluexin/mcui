@@ -173,5 +173,7 @@ sealed class Element : LKExposed {
         return name
     }
 
+    open fun getZ(ctx: IHudDrawContext): Double = z(ctx)
+
     override fun toString() = "$name (${javaClass.simpleName})"
 }

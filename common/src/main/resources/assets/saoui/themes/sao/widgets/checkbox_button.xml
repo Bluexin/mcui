@@ -16,6 +16,7 @@
     <active>active</active>
     <x>xPos</x>
     <y>yPos</y>
+    <z>isHovered? 10: 0</z>
     <children>
         <elementGroup>
             <x>isHovered? -initialWidth * 0.05: 0</x>

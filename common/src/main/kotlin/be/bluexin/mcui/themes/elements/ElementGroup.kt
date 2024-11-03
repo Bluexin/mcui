@@ -114,7 +114,9 @@ sealed class ElementGroupParent : Element(), ElementParent {
         val relMouseY = mouseY - y(ctx)
 
         if (Services.PLATFORM.isDevelopmentEnvironment /* TODO : debug setting ? */) {
-            children = children.filter {
+            children = children.sortedBy {
+                it.getZ(ctx)
+            }.filter {
                 ctx.profile(it.name) {
                     try {
                         it.draw(ctx, poseStack, relMouseX, relMouseY)
@@ -126,7 +128,9 @@ sealed class ElementGroupParent : Element(), ElementParent {
                 }
             }.let(::Children)
         } else {
-            children.forEach {
+            children.sortedBy {
+                it.getZ(ctx)
+            }.forEach {
                 ctx.profile(it.name) {
                     it.draw(ctx, poseStack, relMouseX, relMouseY)
                 }

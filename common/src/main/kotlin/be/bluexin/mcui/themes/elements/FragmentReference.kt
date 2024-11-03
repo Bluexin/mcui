@@ -106,6 +106,13 @@ class FragmentReference(
 
     override fun toLua(): LuaValue = FragmentReferenceAccess(this)
 
+    override fun getZ(ctx: IHudDrawContext): Double {
+        ctx.pushContext(variables)
+        val r = z(ctx)
+        ctx.popContext()
+        return r
+    }
+
     private companion object {
         private const val MISSING_ID = "@@MISSING_ID@@"
     }

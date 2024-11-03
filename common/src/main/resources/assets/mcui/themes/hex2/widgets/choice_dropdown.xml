@@ -19,7 +19,16 @@
     <contentHeight>initialHeight</contentHeight>
     <x>xPos</x>
     <y>yPos</y>
+    <z>isHovered? 10: isOpen? 1: 0</z>
     <children>
+        <widget name="content">
+            <x>initialWidth + 2</x>
+            <y cache="STATIC">0</y>
+            <enabled>isOpen</enabled>
+            <contentWidth cache="STATIC">0</contentWidth>
+            <contentHeight cache="STATIC">0</contentHeight>
+        </widget>
+
         <elementGroup name="button">
             <children>
                 <elementGroup name="bg">
@@ -75,14 +84,6 @@
                 </glString>
             </children>
         </elementGroup>
-
-        <widget name="content">
-            <x>initialWidth + 2</x>
-            <y cache="STATIC">0</y>
-            <enabled>isOpen</enabled>
-            <contentWidth cache="STATIC">0</contentWidth>
-            <contentHeight cache="STATIC">0</contentHeight>
-        </widget>
     </children>
 
     <onClick>

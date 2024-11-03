@@ -380,4 +380,6 @@ class Widget(
     override fun afterSet() {
         libHelper.popContext()
     }
+
+    override fun getZ(ctx: IHudDrawContext): Double = ctx.withContext(z::invoke)
 }
