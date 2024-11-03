@@ -13,53 +13,43 @@ local function settingsCategoryName(id)
     return 'format("mcui.screen.settings.' .. string.gsub(id, ':', '.') .. '")'
 end
 
---- @param receiver Widget
-local function onThemeClick(receiver)
-    if receiver.getVariable('isCurrentTheme').expression == 'false' then
-        local themeId, _ = receiver.getVariable('themeId').expression:gsub('"', '')
-        settings.setTheme(themeId)
-        receiver.setVariable('isCurrentTheme', wl.tstatic(true))
-        --receiver.setVariable('active', tstatic(false))
-        for _, v in ipairs(receiver.peers) do
-            if (type(v) == 'Widget') then
-                -- TODO: disabled themes that failed to load to show helpful tooltip ?
-                --(--[[---@type Widget]] v).setVariable('active', tstatic(true))
-                (--[[---@type Widget]] v).setVariable('isCurrentTheme', wl.tstatic(false))
-            end
-        end
-        return true
-    else
-        return false
-    end
-end
-
 local dropdownSupport = require 'choice_dropdown_support'
 local checkboxSupport = require 'checkbox_support'
 
 --- @param parent Widget the parent's **content** widget
 local function addThemeSettings(parent)
-    local currentTheme = settings.currentTheme().string
-    local themeCount = 0
-    for index, themeId in ipairs(settings.themes()) do
-        local themeLocalKey = themeId.namespace .. '.' .. themeId.path
-        if wl.loadButton(
-                parent, {
-                    label = wl.tframe('(isCurrentTheme? "> ": "" ) + formatOr("mcui.theme.' .. themeLocalKey .. '.name", "' .. themeId.path .. '")', 'STRING', true),
-                    tooltip = wl.tstatic('format("mcui.theme.' .. themeLocalKey .. '.description")', 'STRING', true),
-                    xPos = 0,
-                    yPos = (index - 1) * 20,
-                    width = 80,
-                    onClick = onThemeClick,
-                    variables = {
-                        isCurrentTheme = wl.tstatic(themeId.string == currentTheme),
-                        themeId = wl.tstatic(themeId.string)
-                    }
-                }
-        ) then
-            themeCount = themeCount + 1
+    local settingsCount = 0
+    for index, screenId in ipairs(settings.allScreenIds()) do
+        local screenLocalKey = screenId.namespace .. '.screen.' .. screenId.path
+        local currentValue = settings.getScreenConfiguration(screenId)
+        if dropdownSupport.createDropdown(parent, {
+            currentValue = 'mcui.theme.' .. (currentValue and currentValue.string or 'none'),
+            key = screenLocalKey,
+            label = wl.tstatic('format("' .. screenLocalKey .. '.name")', 'STRING', true),
+            xPos = 0,
+            yPos = (index - 1) * 20,
+            options = util.map(
+                    settings.getThemesImplementingScreenId(screenId),
+                    function(it)
+                        local i18nKey = 'mcui.theme.' .. it.string
+                        return {
+                            key = i18nKey,
+                            variables = {
+                                initialWidth = wl.tstatic(80, 'INT')
+                            }
+                        }
+                    end
+            ),
+            setValue = function(newValue)
+                local themeId, _ = newValue.expression:gsub('mcui.theme.', ''):gsub('"', '')
+                --print('Setting screen ' .. screenId.string .. ' to ' .. themeId)
+                settings.setScreenConfiguration(screenId, themeId)
+            end,
+        }) then
+            settingsCount = settingsCount + 1
         end
     end
-    wl.centerCategoryContent(parent, themeCount)
+    wl.centerCategoryContent(parent, settingsCount)
 end
 
 --- @param setting Setting

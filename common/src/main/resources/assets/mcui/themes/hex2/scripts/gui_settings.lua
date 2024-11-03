@@ -13,26 +13,6 @@ local function settingsCategoryName(id)
     return 'format("mcui.screen.settings.' .. string.gsub(id, ':', '.') .. '")'
 end
 
---- @param receiver Widget
-local function onThemeClick(receiver)
-    if receiver.getVariable('isCurrentTheme').expression == 'false' then
-        local themeId, _ = receiver.getVariable('themeId').expression:gsub('"', '')
-        settings.setTheme(themeId)
-        receiver.setVariable('isCurrentTheme', wl.tstatic(true))
-        --receiver.setVariable('active', tstatic(false))
-        for _, v in ipairs(receiver.peers) do
-            if (type(v) == 'Widget') then
-                -- TODO: disabled themes that failed to load to show helpful tooltip ?
-                --(--[[---@type Widget]] v).setVariable('active', tstatic(true))
-                (--[[---@type Widget]] v).setVariable('isCurrentTheme', wl.tstatic(false))
-            end
-        end
-        return true
-    else
-        return false
-    end
-end
-
 local dropdownSupport = require 'choice_dropdown_support'
 local checkboxSupport = require 'checkbox_support'
 
