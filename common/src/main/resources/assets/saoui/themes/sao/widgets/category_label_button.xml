@@ -70,4 +70,13 @@
         local button, _, _, entered = ...
         button.setVariable('isHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
     </onMouseOverEvent>
+
+    <extra>
+        <value key="test1">return 3</value>
+        <value key="test2">
+            return function()
+            print 'hello from extra'
+            end
+        </value>
+    </extra>
 </bl:widget>

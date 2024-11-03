@@ -9,7 +9,6 @@ import be.bluexin.mcui.logger
 import be.bluexin.mcui.themes.elements.access.WidgetAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.meta.ThemeDefinition
-import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.*
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
 import be.bluexin.mcui.themes.scripting.LuaJManager
@@ -80,10 +79,11 @@ class Widget(
     @XmlElement
     @XmlSerialName("onLoseFocus")
     val onLoseFocusScript: String? = null,
+    @XmlSerialName("extra")
+    val extraScripts: ExtraWrapper = ExtraWrapper()
 ) : ElementGroupParent(), GuiEventListener, Renderable, NarratableEntry, WidgetParent, KoinComponent, BeforeSet,
     AfterSet {
 
-    private val themeManager: ThemeManager by inject()
     private val luaJManager: LuaJManager by inject()
     private val libHelper: LibHelper by inject()
 
@@ -152,7 +152,7 @@ class Widget(
      * Table to store arbitrary Lua data.
      */
     @LuajExpose
-    @Transient // TODO : be able to include these in deserialization ?
+    @Transient
     var extra: LuaTable = LuaTable()
 
     @Transient
@@ -242,6 +242,16 @@ class Widget(
         loadCallbackFromScript(access, onClickScript, ::onClick.name, theme)
         loadCallbackFromScript(access, onMouseOverEventScript, ::onMouseOverEvent.name, theme)
         loadCallbackFromScript(access, onLoseFocusScript, ::onLoseFocus.name, theme)
+        extraScripts.values.forEach { (key, script) ->
+            extra[key] = try {
+                luaJManager.compileSnippet("${this.name}/$name".lowercase(), script, theme)
+                    .call()
+            } catch (e: Throwable) {
+                LuaValue.varargsOf(
+                    arrayOf(LuaValue.NIL, LuaValue.valueOf(e.message))
+                ) as LuaValue
+            }
+        }
 
         return anonymous
     }
@@ -382,4 +392,10 @@ class Widget(
     }
 
     override fun getZ(ctx: IHudDrawContext): Double = ctx.withContext(z::invoke)
+
+    @Serializable
+    data class ExtraWrapper(
+        @XmlSerialName("extra")
+        val values: Map<String, String> = emptyMap()
+    )
 }

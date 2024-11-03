@@ -90,7 +90,7 @@ class LuaJManager(
             .map(Resource::open)
             .map { scriptStream ->
                 val (userGlobals, setHook) = getEnvFor(theme)
-                val chunk = serverGlobals.load(scriptStream, "=$rl", "t", userGlobals)
+                val chunk = serverGlobals.load(scriptStream, "@$rl", "t", userGlobals)
                 val userThread = LuaThread(userGlobals, chunk)
                 setHook(
                     LuaValue.varargsOf(
@@ -129,14 +129,14 @@ class LuaJManager(
         .map(Resource::open)
         .map { scriptStream ->
             val (userGlobals) = getEnvFor(theme)
-            serverGlobals.load(scriptStream, "=$rl", "t", userGlobals)
+            serverGlobals.load(scriptStream, "@$rl", "t", userGlobals)
         }
         .filter(LuaValue::isfunction)
         .getOrNull()
 
     fun compileSnippet(key: String, snippet: String, theme: ThemeDefinition): LuaValue {
         val (userGlobals, _) = getEnvFor(theme)
-        val chunk = serverGlobals.load(snippet, "=${theme.id.withPath { "$it/$key" }}", userGlobals)
+        val chunk = serverGlobals.load(snippet, "@${theme.id.withPath { "$it/$key" }}", userGlobals)
 
         return chunk
     }

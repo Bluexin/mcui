@@ -19,10 +19,7 @@ class SafetyLib(
         globals = env.checkglobals()
 
         val packageLib = env["package"].checktable()
-
-        val searchers = packageLib["searchers"].checktable()
-        while (searchers.length() > 0) searchers.remove(0) // pos 0 pops last value
-        searchers.set(1, ScriptSearcher())
+        packageLib["searchers"] = LuaValue.listOf(arrayOf(ScriptSearcher()))
 
         return NIL
     }
