@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 
 object Constants {
     const val MOD_ID = "mcui"
+    const val LEGACY_MOD_ID = "saoui"
     const val MOD_VERSION = "indev" // TODO
     @JvmField
     val LOG: Logger = LoggerFactory.getLogger(MOD_ID)

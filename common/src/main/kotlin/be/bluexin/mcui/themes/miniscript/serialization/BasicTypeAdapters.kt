@@ -32,7 +32,7 @@ sealed class BasicExpressionAdapter<CValueType : CValue<T>, T : Any> : KoinCompo
         logger.error(message)
         AbstractThemeLoader.Reporter += message.substringAfterLast("–––COMPILATION ERROR :\n")
         default
-    } catch (e: Exception) {
+    } catch (e: Throwable) {
         val message = "An unknown error occurred while compiling '${v.expression}'"
         logger.error(message, e)
         AbstractThemeLoader.Reporter += (e.message ?: "unknown error") + " in ${v.expression}"

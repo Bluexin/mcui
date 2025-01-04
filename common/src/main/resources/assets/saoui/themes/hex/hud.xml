@@ -494,7 +494,7 @@
                         <children>
                             <rawElement name="effect">
                                 <expression cache="NONE">
-                                    player.statusEffect.get(i).glDraw(i * 14, i%2==0 ? 8:0, getZ)
+                                    player.statusEffect(i).glDraw(i * 14, i%2==0 ? 8:0, getZ)
                                 </expression>
                             </rawElement>
                         </children>

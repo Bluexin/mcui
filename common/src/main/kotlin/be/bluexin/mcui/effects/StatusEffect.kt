@@ -17,16 +17,22 @@
 
 package be.bluexin.mcui.effects
 
+import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.deprecated.api.screens.IIcon
+import be.bluexin.mcui.themes.loader.TexturesFallbackHandler
+import be.bluexin.mcui.themes.miniscript.PoseStackTracker
+import be.bluexin.mcui.util.append
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.*
 
 // TODO : probably better off using the vanilla keys for these ?
-enum class StatusEffect : IIcon {
+enum class StatusEffect : IIcon, KoinComponent {
 
     PARALYZED,
     POISONED,
@@ -56,17 +62,33 @@ enum class StatusEffect : IIcon {
     RESIST,
     SLOWNESS;
 
+    private val texturesFallbackHandler by inject<TexturesFallbackHandler>()
+    private val poseStackTracker by inject<PoseStackTracker>()
+
     private val icons: ResourceLocation
-        get() = TODO("Not yet implemented") //StringNames.statusIcons.append("${name.lowercase(Locale.getDefault())}.png")
+        get() = texturesFallbackHandler.statusIcons.append("${name.lowercase(Locale.getDefault())}.png")
 
     @Suppress("unused")
     override fun glDraw(x: Int, y: Int, z: Float, poseStack: PoseStack) {
-//        GLCore.glBindTexture(icons)
-//        GLCore.glTexturedRectV2(x.toDouble(), y.toDouble(), z.toDouble(), 16.0, 16.0, srcWidth = 16.0, srcHeight = 16.0, textureW = 16, textureH = 16)
+        GLCore.glBindTexture(icons)
+        GLCore.glTexturedRectV2(
+            x = x.toDouble(),
+            y = y.toDouble(),
+            z = z.toDouble(),
+            width = 16.0,
+            height = 16.0,
+            srcWidth = 16.0,
+            srcHeight = 16.0,
+            textureW = 16,
+            textureH = 16,
+            poseStack = poseStack
+        )
     }
 
     @Deprecated("For old themes compile compatibility for now", level = DeprecationLevel.ERROR)
-    fun glDraw(x: Int, y: Int, z: Float) = Unit
+    fun glDraw(x: Int, y: Int, z: Float) = glDraw(x, y, z, requireNotNull(poseStackTracker.poseStack) {
+        "PoseStackTracker is not set up"
+    })
 
     companion object {
         fun getEffects(entity: LivingEntity): List<StatusEffect> {

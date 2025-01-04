@@ -4,7 +4,6 @@ import be.bluexin.luajksp.annotations.LKExposed
 import be.bluexin.mcui.config.Settings
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.ResourceLocationMapper
-import be.bluexin.mcui.util.Client
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.luaj.vm2.LuaTable
@@ -18,8 +17,6 @@ object SettingsLib : TwoArgFunction() {
         val settingsTable = LuaTable()
         settingsTable["listAll"] = ListAll
         settingsTable["themes"] = Themes
-        settingsTable["currentTheme"] = CurrentTheme
-        settingsTable["setTheme"] = SetTheme
         settingsTable["allScreenIds"] = AllScreenIds
         settingsTable["getThemesImplementingScreenId"] = GetThemesImplementingScreenId
         settingsTable["getScreenConfiguration"] = GetScreenConfiguration
@@ -47,26 +44,6 @@ object SettingsLib : TwoArgFunction() {
             emptyArray(),
             themeManager.themeList.keys.map(ResourceLocationMapper::toLua).toTypedArray()
         )
-    }
-
-    private object CurrentTheme : ZeroArgFunction(), KoinComponent {
-        private val themeManager by inject<ThemeManager>()
-
-        override fun call(): LuaValue = ResourceLocationMapper.toLua(themeManager.currentTheme.id)
-    }
-
-    private object SetTheme : OneArgFunction(), KoinComponent {
-        private val themeManager by inject<ThemeManager>()
-
-        override fun call(p0: LuaValue): LuaValue {
-            val themeId = ResourceLocationMapper.fromLua(p0)
-
-            Client.mc.tell {
-                themeManager.load(Client.mc.resourceManager, themeId)
-            }
-
-            return LuaValue.NONE
-        }
     }
 
     private object AllScreenIds : ZeroArgFunction(), KoinComponent {

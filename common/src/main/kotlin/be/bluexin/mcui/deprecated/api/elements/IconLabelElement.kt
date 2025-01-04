@@ -21,7 +21,6 @@ import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.config.OptionCore
 import be.bluexin.mcui.deprecated.api.elements.registry.DrawType
 import be.bluexin.mcui.deprecated.api.screens.IIcon
-import be.bluexin.mcui.deprecated.resources.StringNames
 import be.bluexin.mcui.deprecated.screens.unaryPlus
 import be.bluexin.mcui.util.ColorUtil
 import be.bluexin.mcui.util.math.BoundingBox2D
@@ -71,7 +70,7 @@ open class IconLabelElement(icon: IIcon, open var label: String = "", pos: Vec2d
         GLCore.glBlend(true)
         GLCore.depth(true)
         GLCore.color(ColorUtil.multiplyAlpha(getColor(mouse), transparency))
-        GLCore.glBindTexture(StringNames.slot)
+//        GLCore.glBindTexture(StringNames.slot)
         GLCore.glTexturedRectV2(
             pos.x,
             pos.y,

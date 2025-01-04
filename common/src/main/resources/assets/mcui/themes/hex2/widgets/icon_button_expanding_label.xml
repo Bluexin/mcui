@@ -15,7 +15,7 @@
     <active>active</active>
     <x>(isHovered? -initialWidth * 0.05: 0) + xPos</x>
     <y>(isHovered? -initialHeight * 0.05: 0) + yPos</y>
-    <z>isHovered? 10: isOpen? 1: 0</z>
+    <z>isHovered? 10: 0</z>
     <scale>isHovered? 1.1: 1.0</scale>
     <children>
         <glRectangle name="icon">

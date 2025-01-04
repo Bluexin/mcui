@@ -1,4 +1,6 @@
 <bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="effects fragment">
+    <x>settings.double("hud:health_offset_x")</x>
+    <y>settings.double("hud:health_offset_y")</y>
     <children>
         <repetitionGroup name="effectGroup">
             <x>strWidth(player.displayName) + 179</x>

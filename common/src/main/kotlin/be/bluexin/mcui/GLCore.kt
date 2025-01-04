@@ -177,8 +177,7 @@ object GLCore {
      */
     fun checkTexture(location: ResourceLocation): Boolean {
         return try {
-            Client.mc.resourceManager.getResource(location)
-            true
+            Client.mc.resourceManager.getResource(location).isPresent
         } catch (e: Exception) {
             false
         }

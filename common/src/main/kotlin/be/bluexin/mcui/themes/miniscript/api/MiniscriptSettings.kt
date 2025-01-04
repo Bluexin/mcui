@@ -1,5 +1,6 @@
 package be.bluexin.mcui.themes.miniscript.api
 
+import be.bluexin.mcui.Constants
 import be.bluexin.mcui.config.Settings
 import be.bluexin.mcui.themes.meta.ThemeAnalyzer
 import be.bluexin.mcui.themes.meta.ThemeManager
@@ -42,9 +43,10 @@ internal class MiniscriptSettingsImpl(
     private fun setting(key: String): Any? =
         Settings[themeManager.getScreenConfiguration(ThemeAnalyzer.HUD)!!, ResourceLocation(key)]
 
-    override fun string(key: String) = setting(key) as String
-    override fun boolean(key: String) = setting(key) as Boolean
-    override fun int(key: String) = setting(key) as Int
-    override fun double(key: String) = setting(key) as Double
-    override fun resourceLocation(key: String) = setting(key) as ResourceLocation
+    override fun string(key: String) = (setting(key) as? String).orEmpty()
+    override fun boolean(key: String) = setting(key) as? Boolean ?: false
+    override fun int(key: String) = setting(key) as? Int ?: 0
+    override fun double(key: String) = setting(key) as? Double ?: .0
+    override fun resourceLocation(key: String) =
+        setting(key) as? ResourceLocation ?: ResourceLocation(Constants.MOD_ID, "missing")
 }

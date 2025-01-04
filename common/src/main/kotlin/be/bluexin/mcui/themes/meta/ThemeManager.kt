@@ -25,6 +25,7 @@ import be.bluexin.mcui.logger
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.loader.SettingsLoader
+import be.bluexin.mcui.themes.loader.TexturesFallbackHandler
 import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.Client.resourceManager
@@ -44,6 +45,7 @@ class ThemeManager(
     private val themeDetector: ThemeDetector,
     private val themeAnalyzer: ThemeAnalyzer,
     private val settingsLoader: SettingsLoader,
+    private val texturesFallbackHandler: TexturesFallbackHandler,
 ) {
 
     // TODO: tests
@@ -55,14 +57,20 @@ class ThemeManager(
         private set
 
     /**
+     * Map of all screen IDs to the themes which registered an implementation for it (and their callback)
      * TODO: This is not filtered for "valid" screen IDs !
      * map<screenId, map<themeId, screenCallback>>
      */
-    private val themeScreens = mutableMapOf<ResourceLocation, Map<ResourceLocation, (ResourceLocation) -> Unit>>()
+    private val availableThemeScreens =
+        mutableMapOf<ResourceLocation, Map<ResourceLocation, (ResourceLocation) -> Unit>>()
 
     /*
      * TODO : cache of screen id to screen callback / reference, currently callback to getting the callback
-     * TODO : this needs to be stored
+     * TODO : this needs to be made persistent
+     */
+    /**
+     * Map of all configured screens
+     * map<screenId, themeId>
      */
     private val screenConfiguration = mutableMapOf(
         ThemeAnalyzer.MCUI_SETTINGS to ResourceLocation(Constants.MOD_ID, "hex2")
@@ -90,16 +98,10 @@ class ThemeManager(
         }
     private var isReloading = false
 
-    fun load(resourceManager: ResourceManager, theme: ResourceLocation = ConfigHandler.currentTheme) {
-        val oldTheme = ConfigHandler.currentTheme
-        currentTheme = themeList[theme] ?: themeList[oldTheme] ?: themeList[ConfigHandler.DEFAULT_THEME]!!
+    private fun load() {
+        currentTheme = themeList[ConfigHandler.currentTheme] ?: themeList[ConfigHandler.DEFAULT_THEME]!!
+        setScreenConfiguration(ThemeAnalyzer.HUD, currentTheme.id)
 
-        ConfigHandler.currentTheme = currentTheme.id
-
-        currentTheme.hud
-            ?.let(HudFormat::fromFile)?.loader
-            // FIXME : this should probably not be loading the whole theme this way
-            ?.load(resourceManager, currentTheme) { HUD = it }
         reportLoading()
 
 //        if (!isReloading) GLCore.setFont(Client.mc, OptionCore.CUSTOM_FONT.isEnabled)
@@ -109,14 +111,14 @@ class ThemeManager(
         RegisterScreen.clear()
         themeList = data
         isReloading = true
-        load(resourceManager)
+        load()
         isReloading = false
     }
 
     private val logger = logger()
 
     fun loadData(resourceManager: ResourceManager): Map<ResourceLocation, ThemeDefinition> {
-        themeScreens.clear()
+        availableThemeScreens.clear()
         return themeDetector.listThemes(resourceManager).onEach { (_, themeDefinition) ->
             analyzeTheme(
                 resourceManager = resourceManager,
@@ -133,7 +135,7 @@ class ThemeManager(
         successReport: (() -> String) -> Unit,
         failureReport: (() -> String) -> Unit,
     ) {
-        themeScreens.clear()
+        availableThemeScreens.clear()
         themeList.forEach { (_, themeDefinition) ->
             analyzeTheme(
                 resourceManager = resourceManager,
@@ -156,6 +158,8 @@ class ThemeManager(
             setHud = {
                 logger.info("Setting HUD to ${themeDefinition.id}")
                 ConfigHandler.currentTheme = themeDefinition.id
+                // This only handles status effects icons atm, which are primarily for use in HUD
+                texturesFallbackHandler.init(themeDefinition)
                 HUD = it
             },
             successReport = successReport,
@@ -163,7 +167,7 @@ class ThemeManager(
         )
 
         themeScreens.forEach { (screenId, callback) ->
-            this.themeScreens.compute(screenId) { _, existing ->
+            this.availableThemeScreens.compute(screenId) { _, existing ->
                 if (existing != null) existing + (themeDefinition.id to callback)
                 else mapOf(themeDefinition.id to callback)
             }
@@ -214,19 +218,19 @@ class ThemeManager(
         }
     }
 
-    val allScreenIds get() = themeScreens.keys
+    val allScreenIds get() = availableThemeScreens.keys
 
     fun getAllScreens(screenId: ResourceLocation): Map<ResourceLocation, (ResourceLocation) -> Unit> =
-        themeScreens[screenId].orEmpty()
+        availableThemeScreens[screenId].orEmpty()
 
     fun getConfiguredScreen(screenId: ResourceLocation): ((ResourceLocation) -> Unit)? =
-        themeScreens[screenId]?.get(getScreenConfiguration(screenId))
+        availableThemeScreens[screenId]?.get(getScreenConfiguration(screenId))
 
     fun getScreenConfiguration(screenId: ResourceLocation): ResourceLocation? =
         screenConfiguration[screenId]
 
     fun setScreenConfiguration(screenId: ResourceLocation, themeId: ResourceLocation) {
-        val registeredScreen = themeScreens[screenId]?.get(themeId)
+        val registeredScreen = availableThemeScreens[screenId]?.get(themeId)
         if (registeredScreen != null) {
             screenConfiguration[screenId] = themeId
             // tmp callback to setting the HUD ref...

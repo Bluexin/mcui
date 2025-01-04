@@ -24,6 +24,7 @@ import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.meta.ThemeMetaModule
 import be.bluexin.mcui.themes.meta.ThemeMetadata
 import be.bluexin.mcui.themes.miniscript.MiniscriptModule
+import be.bluexin.mcui.themes.miniscript.api.DrawContext
 import be.bluexin.mcui.themes.miniscript.profile
 import be.bluexin.mcui.themes.scripting.ScriptingModule
 import com.mojang.blaze3d.vertex.PoseStack
@@ -38,6 +39,8 @@ import nl.adaptivity.xmlutil.XmlStreaming
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlNamespaceDeclSpec
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.ksp.generated.module
 import org.koin.logger.slf4jLogger
@@ -91,7 +94,7 @@ class Hud(
     val version: String = ThemeMetadata.UNKNOWN_VERSION,
     @XmlSerialName("parts")
     private val parts: Parts,
-) : ElementParent {
+) : ElementParent, KoinComponent {
 
     override val rootElement: ElementParent
         get() = this
@@ -99,6 +102,8 @@ class Hud(
     @Transient
     @JvmTransient
     private val indexedParts = parts.parts.associate { (k, v) -> k to v }
+
+    private val drawContext by inject<DrawContext>()
 
     operator fun get(key: HudPartType) = indexedParts[key]
 
@@ -114,7 +119,8 @@ class Hud(
     fun drawAll(ctx: IHudDrawContext, poseStack: PoseStack) {
         ctx.profile(javaClass.simpleName) {
             parts.parts.forEach { (key, part) ->
-                ctx.profile(key.name) {
+                // Compatibility for old themes
+                if (key != HudPartType.JUMP_BAR || drawContext.player().hasMount()) ctx.profile(key.name) {
                     part.draw(ctx, poseStack, 0.0, 0.0)
                 }
             }

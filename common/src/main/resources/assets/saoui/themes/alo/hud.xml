@@ -429,7 +429,7 @@
                         <amount cache="NONE">player.statusEffects.size</amount>
                         <children>
                             <rawElement name="effect">
-                                <expression cache="NONE">player.statusEffect.get(i).glDraw(i * 11, 0, getZ)</expression>
+                                <expression cache="NONE">player.statusEffect(i).glDraw(i * 11, 0, getZ)</expression>
                             </rawElement>
                         </children>
                     </repetitionGroup>

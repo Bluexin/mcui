@@ -3,7 +3,6 @@ package be.bluexin.mcui.deprecated.api.elements
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.config.OptionCore
-import be.bluexin.mcui.deprecated.resources.StringNames
 import be.bluexin.mcui.deprecated.screens.CoreGUI
 import be.bluexin.mcui.deprecated.screens.util.toIcon
 import be.bluexin.mcui.util.Client
@@ -62,7 +61,7 @@ class ProfileElement(var player: Player, override var listed: Boolean) : IconEle
             val shadowY = size / 2 + max(min((mouse.y - pos.y), 0.0), -size / 2 + 2.0)
             GLCore.glTexturedRectV2(pos.x, pos.y, width = w.toDouble(), height = h.toDouble(), poseStack = poseStack)
 
-            GLCore.glBindTexture(StringNames.gui)
+//            GLCore.glBindTexture(StringNames.gui)
             GLCore.glTexturedRectV2(
                 left - size / 2,
                 top - shadowY / 2,

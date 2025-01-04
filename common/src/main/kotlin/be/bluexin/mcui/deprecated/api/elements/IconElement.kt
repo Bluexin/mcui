@@ -22,7 +22,6 @@ import be.bluexin.mcui.config.OptionCore
 import be.bluexin.mcui.deprecated.api.elements.animator.Easing
 import be.bluexin.mcui.deprecated.api.elements.registry.DrawType
 import be.bluexin.mcui.deprecated.api.screens.IIcon
-import be.bluexin.mcui.deprecated.resources.StringNames
 import be.bluexin.mcui.deprecated.screens.MouseButton
 import be.bluexin.mcui.deprecated.screens.unaryPlus
 import be.bluexin.mcui.util.Client
@@ -141,7 +140,7 @@ open class IconElement(
         val mouseCheck = mouse in this || selected
         GLCore.glBlend(true)
         GLCore.color(ColorUtil.multiplyAlpha(getColor(mouse), transparency))
-        GLCore.glBindTexture(StringNames.gui)
+//        GLCore.glBindTexture(StringNames.gui)
         blit(
             poseStack, pos.xi, pos.yi,
             1, 26, width, height,

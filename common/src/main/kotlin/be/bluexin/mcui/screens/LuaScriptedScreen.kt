@@ -6,6 +6,8 @@ import be.bluexin.mcui.logger
 import be.bluexin.mcui.themes.elements.*
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.HudDrawContext
+import be.bluexin.mcui.themes.miniscript.PartialTicksTracker
+import be.bluexin.mcui.themes.miniscript.PoseStackTracker
 import be.bluexin.mcui.themes.scripting.lib.LoadFragment
 import be.bluexin.mcui.themes.scripting.lib.LoadWidget
 import be.bluexin.mcui.util.debug
@@ -24,6 +26,8 @@ class LuaScriptedScreen(
 ) : Screen(Component.literal("Lua Scripted Screen")), WidgetParent, KoinComponent {
 
     private val themeManager: ThemeManager by inject()
+    private val partialTicksTracker by inject<PartialTicksTracker>()
+    private val poseStackTracker by inject<PoseStackTracker>()
 
     override val name = screenId.toString()
 
@@ -71,7 +75,10 @@ class LuaScriptedScreen(
         if (widgets.isEmpty()) return onClose()
 
         context.setTime(partialTick)
-        widgets.forEach { it.draw(context, poseStack, mouseX.toDouble(), mouseY.toDouble()) }
+        partialTicksTracker.partialTicks = partialTick
+        poseStackTracker.withStack(poseStack) {
+            widgets.forEach { it.draw(context, poseStack, mouseX.toDouble(), mouseY.toDouble()) }
+        }
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
