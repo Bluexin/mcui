@@ -6,7 +6,7 @@
             <amount cache="NONE">player.statusEffects.size</amount>
             <children>
                 <rawElement name="effect">
-                    <expression cache="NONE">player.statusEffects.get(i).glDraw(i * 14, i%2==0 ? 8:0, getZ)</expression>
+                    <expression cache="NONE">player.statusEffect(i).glDraw(i * 14, i%2==0 ? 8:0, getZ)</expression>
                 </rawElement>
             </children>
         </repetitionGroup>

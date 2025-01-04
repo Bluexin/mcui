@@ -304,25 +304,25 @@
                             <glRectangle name="health bar">
                                 <texture>saoui:textures/os/guiedt.png</texture>
                                 <rgba>
-                                    party.get(i).healthStep == VERY_LOW? 0xF72100FF:
-                                    party.get(i).healthStep == LOW? 0xF72100FF:
-                                    party.get(i).healthStep == VERY_DAMAGED? 0xF72100FF:
-                                    party.get(i).healthStep == DAMAGED? 0xFFFFFFFF:
-                                    party.get(i).healthStep == OKAY? 0xFFFFFFFF:
-                                    party.get(i).healthStep == GOOD? 0xFFFFFFFF:
-                                    party.get(i).healthStep == CREATIVE? 0xFFFFFFFF:
+                                    party(i).healthStep == VERY_LOW? 0xF72100FF:
+                                    party(i).healthStep == LOW? 0xF72100FF:
+                                    party(i).healthStep == VERY_DAMAGED? 0xF72100FF:
+                                    party(i).healthStep == DAMAGED? 0xFFFFFFFF:
+                                    party(i).healthStep == OKAY? 0xFFFFFFFF:
+                                    party(i).healthStep == GOOD? 0xFFFFFFFF:
+                                    party(i).healthStep == CREATIVE? 0xFFFFFFFF:
                                     0xFFFFFFFF
                                 </rgba>
                                 <srcX cache="STATIC">117</srcX>
                                 <srcY cache="STATIC">197</srcY>
-                                <w cache="NONE">48.0 * party.get(i).healthPercent</w>
+                                <w cache="NONE">48.0 * party(i).healthPercent</w>
                                 <h cache="STATIC">3.0</h>
                                 <x cache="STATIC">40</x>
                                 <y cache="NONE">15 * i + 5</y>
                             </glRectangle>
                             <glString name="pName">
-                                <text>party.get(i).displayName.size > 8? party.get(i).displayName.substring(0, 8):
-                                    party.get(i).displayName
+                                <text>party(i).displayName.length > 8? party(i).displayName.substring(0, 8):
+                                    party(i).displayName
                                 </text>
                                 <x cache="STATIC">7</x>
                                 <y cache="NONE">15 * i + 8</y>

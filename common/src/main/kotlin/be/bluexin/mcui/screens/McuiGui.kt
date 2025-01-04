@@ -2,6 +2,7 @@ package be.bluexin.mcui.screens
 
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.HudDrawContext
+import be.bluexin.mcui.themes.miniscript.PartialTicksTracker
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
@@ -16,9 +17,11 @@ import org.koin.core.component.inject
 class McuiGui(private val mc: Minecraft) : Gui(mc, mc.itemRenderer), KoinComponent {
     private val context = HudDrawContext(mc)
     private val themeManager by inject<ThemeManager>()
+    private val partialTicksTracker by inject<PartialTicksTracker>()
 
     override fun render(poseStack: PoseStack, partialTick: Float) {
         context.setTime(partialTick)
+        partialTicksTracker.partialTicks = partialTick
         // TODO : rn we draw all, in the past we only drew horse jump bar when the player is mounted -> breaks themes
         themeManager.HUD.drawAll(context, poseStack)
 

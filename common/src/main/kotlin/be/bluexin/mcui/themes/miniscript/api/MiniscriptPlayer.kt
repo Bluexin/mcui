@@ -1,8 +1,11 @@
 package be.bluexin.mcui.themes.miniscript.api
 
-import be.bluexin.mcui.effects.StatusEffects
+import be.bluexin.mcui.effects.StatusEffect
 import be.bluexin.mcui.social.StaticPlayerHelper.getHungerLevel
+import be.bluexin.mcui.themes.miniscript.AnonymousExpressionIntermediate
+import be.bluexin.mcui.themes.miniscript.FrameCachedExpression
 import be.bluexin.mcui.themes.miniscript.PartialTicksTracker
+import be.bluexin.mcui.themes.miniscript.StaticCachedExpression
 import be.bluexin.mcui.util.HealthStep
 import net.minecraft.client.player.LocalPlayer
 import org.koin.core.component.KoinComponent
@@ -54,7 +57,12 @@ interface MiniscriptPlayer : MiniscriptLivingEntity {
     /**
      * @return the player's current status effects
      */
-    fun statusEffects(): List<StatusEffects>
+    fun statusEffects(): List<StatusEffect>
+
+    /**
+     * @return the player's current status effect at given [index], or null if [index] is out of bounds
+     */
+    fun statusEffect(index: Int): StatusEffect? = statusEffects().getOrNull(index)
 
     /**
      * @return the player's food value
@@ -93,7 +101,7 @@ interface MiniscriptPlayer : MiniscriptLivingEntity {
 }
 
 internal class MiniscriptPlayerImpl(
-    player: LocalPlayer
+    player: LocalPlayer,
 ) : MiniscriptPlayer, MiniscriptLivingEntity by MiniscriptLivingEntityImpl(player), KoinComponent {
 
     private val playerRef = WeakReference(player)
@@ -107,7 +115,11 @@ internal class MiniscriptPlayerImpl(
     override fun isOffhandEmpty(slot: Int) = player.inventory.offhand[slot].isEmpty
     override fun level() = player.experienceLevel
     override fun experience() = player.experienceProgress
-    override fun statusEffects(): List<StatusEffects> = StatusEffects.getEffects(player)
+
+    private val statusEffects =
+        FrameCachedExpression({ StatusEffect.getEffects(player) }, AnonymousExpressionIntermediate.EMPTY)
+
+    override fun statusEffects(): List<StatusEffect> = statusEffects.invoke(StaticCachedExpression.StubContext)
 
     override fun food() = getHungerLevel(player, partialTicksTracker.partialTicks)
     override fun saturation() = player.foodData.saturationLevel

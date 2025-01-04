@@ -75,7 +75,7 @@
         <value key="test1">return 3</value>
         <value key="test2">
             return function()
-            print 'hello from extra'
+                print 'hello from extra'
             end
         </value>
     </extra>

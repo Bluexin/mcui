@@ -227,4 +227,10 @@ subprojects {
             }
         }
     }*/
+
+    idea {
+        module {
+            excludeDirs = excludeDirs + file("run/")
+        }
+    }
 }

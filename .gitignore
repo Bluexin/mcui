@@ -20,7 +20,7 @@ build
 
 # other
 eclipse
-run
+run/
 /convert/
 /tmp/
 

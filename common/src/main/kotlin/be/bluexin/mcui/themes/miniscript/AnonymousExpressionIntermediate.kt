@@ -44,4 +44,8 @@ data class AnonymousExpressionIntermediate(
     @SerialName("cache")
     @XmlOtherAttributes
     override val cacheType: CacheType = CacheType.PER_FRAME
-) : ExpressionIntermediate()
+) : ExpressionIntermediate() {
+    companion object {
+        val EMPTY = AnonymousExpressionIntermediate("")
+    }
+}

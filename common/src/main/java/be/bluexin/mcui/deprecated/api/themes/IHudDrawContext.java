@@ -18,7 +18,7 @@
 package be.bluexin.mcui.deprecated.api.themes;
 
 
-import be.bluexin.mcui.effects.StatusEffects;
+import be.bluexin.mcui.effects.StatusEffect;
 import be.bluexin.mcui.themes.miniscript.CValue;
 import be.bluexin.mcui.themes.miniscript.api.DrawContext;
 import be.bluexin.mcui.util.HealthStep;
@@ -50,61 +50,65 @@ public interface IHudDrawContext {
 
     /**
      * @return the player's username
-     * @deprecated use player.displayName instead
+     * @deprecated use `player.displayName` instead
      */
     @Deprecated
     String username();
 
     /**
      * @return the width of the player's username (in pixel, with the current font)
-     * @deprecated use strWidth(player.displayName) instead
+     * @deprecated use `strWidth(player.displayName)` instead
      */
     @Deprecated
     double usernamewidth();
 
     /**
      * @return the current hp of the player, in percentage of 1
-     * @deprecated use player.healthPercent instead
+     * @deprecated use `player.healthPercent` instead
      */
     @Deprecated
     double hpPct();
 
     /**
      * @return the current hp of the player (1 heart = 2 HP)
-     * @deprecated use player.health instead
+     * @deprecated use `player.health` instead
      */
     @Deprecated
     float hp();
 
     /**
      * @return the current maximum hp of the player (1 heart = 2 HP)
-     * @deprecated use player.maxHealth instead
+     * @deprecated use `player.maxHealth` instead
      */
     @Deprecated
     float maxHp();
 
     /**
      * @return the health step the player is currently at
-     * @deprecated use player.healthStep instead
+     * @deprecated use `player.healthStep` instead
      */
     @Deprecated
     HealthStep healthStep();
 
     /**
      * @return the id of the hotbar slot the player is using (from 0 to 8)
-     * @deprecated use player.selectedSlot instead
+     * @deprecated use `player.selectedSlot` instead
      */
     @Deprecated
     int selectedslot();
 
     /**
      * @return screen width, scaled
+     * @deprecated use `gameWindowInfo.scaledWidth` instead
      */
+    @Deprecated
     int scaledwidth();
 
     /**
      * @return screen heigth, scaled
+     * @deprecated use `gameWindowInfo.scaledHeight` instead
      */
+    @Deprecated
     int scaledheight();
 
     /**
@@ -113,7 +117,7 @@ public interface IHudDrawContext {
      *
      * @param slot offhand slot to query
      * @return whether the specified offhand slot is empty
-     * @deprecated use player.isOffhandEmpty instead
+     * @deprecated use `player.isOffhandEmpty` instead
      */
     @Deprecated
     boolean offhandEmpty(int slot);
@@ -135,21 +139,21 @@ public interface IHudDrawContext {
 
     /**
      * @return the current absorption amount the player has
-     * @deprecated use player.absorption instead
+     * @deprecated use `player.absorption` instead
      */
     @Deprecated
     float absorption();
 
     /**
      * @return the current experience level of the player
-     * @deprecated use player.level instead
+     * @deprecated use `player.level` instead
      */
     @Deprecated
     int level();
 
     /**
      * @return the current experience percent of the player (scale of 1)
-     * @deprecated use player.experience instead
+     * @deprecated use `player.experience` instead
      */
     @Deprecated
     float experience();
@@ -183,7 +187,7 @@ public interface IHudDrawContext {
 
     /**
      * @return horse jump value (on a scale of 1)
-     * @deprecated use player.horseJump instead
+     * @deprecated use `player.horseJump` instead
      */
     @Deprecated
     float horsejump();
@@ -201,7 +205,7 @@ public interface IHudDrawContext {
     /**
      * @param index the index of the party member to check
      * @return username of the party member at given index
-     * @deprecated use party.get(index).displayName instead
+     * @deprecated use `party(index).displayName` instead
      */
     @Deprecated
     String ptName(int index);
@@ -209,7 +213,7 @@ public interface IHudDrawContext {
     /**
      * @param index the index of the party member to check
      * @return hp of the party member at given index
-     * @deprecated use party.get(index).health instead
+     * @deprecated use `party(index).health` instead
      */
     @Deprecated
     float ptHp(int index);
@@ -217,7 +221,7 @@ public interface IHudDrawContext {
     /**
      * @param index the index of the party member to check
      * @return max hp of the party member at given index
-     * @deprecated use party.get(index).maxHealth instead
+     * @deprecated use `party(index).maxHealth` instead
      */
     @Deprecated
     float ptMaxHp(int index);
@@ -225,7 +229,7 @@ public interface IHudDrawContext {
     /**
      * @param index the index of the party member to check
      * @return hp percent of the party member at given index
-     * @deprecated use party.get(index).healthPercent instead
+     * @deprecated use `party(index).healthPercent` instead
      */
     @Deprecated
     float ptHpPct(int index);
@@ -233,28 +237,28 @@ public interface IHudDrawContext {
     /**
      * @param index the index of the party member to check
      * @return health step of the party member at given index
-     * @deprecated use party.get(index).healthStep instead
+     * @deprecated use `party(index).healthStep` instead
      */
     @Deprecated
     HealthStep ptHealthStep(int index);
 
     /**
      * @return current party size
-     * @deprecated use party.size instead
+     * @deprecated use `party.size` instead
      */
     @Deprecated
     int ptSize();
 
     /**
      * @return player food level
-     * @deprecated use player.food instead
+     * @deprecated use `player.food` instead
      */
     @Deprecated
     float foodLevel();
 
     /**
      * @return player food max value
-     * @deprecated use player.maxFood instead
+     * @deprecated use `player.maxFood` instead
      */
     @Deprecated
     default float foodMax() {
@@ -263,7 +267,7 @@ public interface IHudDrawContext {
 
     /**
      * @return player food percentage
-     * @deprecated use player.foodPercent instead
+     * @deprecated use `player.foodPercent` instead
      */
     @Deprecated
     default float foodPct() {
@@ -272,14 +276,14 @@ public interface IHudDrawContext {
 
     /**
      * @return player saturation level
-     * @deprecated use player.saturation instead
+     * @deprecated use `player.saturation` instead
      */
     @Deprecated
     float saturationLevel();
 
     /**
      * @return player saturation max value
-     * @deprecated use player.maxSaturation instead
+     * @deprecated use `player.maxSaturation` instead
      */
     @Deprecated
     default float saturationMax() {
@@ -288,7 +292,7 @@ public interface IHudDrawContext {
 
     /**
      * @return player saturation percentage
-     * @deprecated use player.saturationPercent instead
+     * @deprecated use `player.saturationPercent` instead
      */
     @Deprecated
     default float saturationPct() {
@@ -297,45 +301,45 @@ public interface IHudDrawContext {
 
     /**
      * @return player's current status effects
-     * @deprecated use player.statusEffects instead
+     * @deprecated use `player.statusEffects` instead
      */
     @Deprecated
-    List<StatusEffects> statusEffects();
+    List<StatusEffect> statusEffects();
 
     /**
      * @param i index to check
      * @return status effect at given index
-     * @deprecated use player.statusEffects.get(i) instead
+     * @deprecated use `player.statusEffect(i)` instead
      */
     @Deprecated
-    default StatusEffects statusEffect(int i) {
+    default StatusEffect statusEffect(int i) {
         return statusEffects().get(i);
     }
 
     /**
      * @return whether the current player is riding an entity
-     * @deprecated use player.hasMount instead
+     * @deprecated use `player.hasMount` instead
      */
     @Deprecated
     boolean hasMount();
 
     /**
      * @return current mount hp (or 0 if none)
-     * @deprecated use player.mount.health instead
+     * @deprecated use `player.mount.health` instead
      */
     @Deprecated
     float mountHp();
 
     /**
      * @return mount max hp (or 1 if none)
-     * @deprecated use player.mount.maxHealth instead
+     * @deprecated use `player.mount.maxHealth` instead
      */
     @Deprecated
     float mountMaxHp();
 
     /**
      * @return mount hp percentage (or 1 if none)
-     * @deprecated use player.mount.healthPercent instead
+     * @deprecated use `player.mount.healthPercent` instead
      */
     @Deprecated
     default float mountHpPct() {
@@ -344,21 +348,21 @@ public interface IHudDrawContext {
 
     /**
      * @return whether the player is under water
-     * @deprecated use player.isInWater instead
+     * @deprecated use `player.isInWater` instead
      */
     @Deprecated
     boolean inWater();
 
     /**
      * @return current air level
-     * @deprecated use player.currentAir instead
+     * @deprecated use `player.currentAir` instead
      */
     @Deprecated
     int air();
 
     /**
      * @return max air level
-     * @deprecated use player.maxAir instead
+     * @deprecated use `player.maxAir` instead
      */
     @Deprecated
     default int airMax() {
@@ -367,7 +371,7 @@ public interface IHudDrawContext {
 
     /**
      * @return air level percentage
-     * @deprecated use player.airPercent instead
+     * @deprecated use `player.airPercent` instead
      */
     @Deprecated
     default float airPct() {
@@ -376,7 +380,7 @@ public interface IHudDrawContext {
 
     /**
      * @return armor value
-     * @deprecated use player.armor instead
+     * @deprecated use `player.armor` instead
      */
     @Deprecated
     int armor();

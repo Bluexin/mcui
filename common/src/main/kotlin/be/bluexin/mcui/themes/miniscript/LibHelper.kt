@@ -21,7 +21,7 @@ import be.bluexin.mcui.Constants
 import be.bluexin.mcui.config.OptionCore
 import be.bluexin.mcui.deprecated.api.info.IOption
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
-import be.bluexin.mcui.effects.StatusEffects
+import be.bluexin.mcui.effects.StatusEffect
 import be.bluexin.mcui.themes.miniscript.api.DrawContext
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptLivingEntity
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptPlayer
@@ -54,7 +54,7 @@ class LibHelper {
         val staticLib = arrayOf(
             Math::class.java,
             HealthStep::class.java,
-            StatusEffects::class.java,
+            StatusEffect::class.java,
             OptionCore::class.java,
             ColorUtil::class.java,
             McuiStaticLib::class.java
@@ -67,7 +67,7 @@ class LibHelper {
             String::class.java,
             IOption::class.java,
             List::class.java,
-            StatusEffects::class.java,
+            StatusEffect::class.java,
             HealthStep::class.java,
             ColorUtil::class.java,
 

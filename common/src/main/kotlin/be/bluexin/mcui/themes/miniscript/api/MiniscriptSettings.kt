@@ -4,8 +4,7 @@ import be.bluexin.mcui.config.Settings
 import be.bluexin.mcui.themes.meta.ThemeAnalyzer
 import be.bluexin.mcui.themes.meta.ThemeManager
 import net.minecraft.resources.ResourceLocation
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import org.koin.core.annotation.Single
 
 @Suppress("unused", "MemberVisibilityCanBePrivate") // Exposed to JEL
 interface MiniscriptSettings {
@@ -35,8 +34,10 @@ interface MiniscriptSettings {
     fun resourceLocation(key: String): ResourceLocation
 }
 
-internal object MiniscriptSettingsImpl : MiniscriptSettings, KoinComponent {
-    private val themeManager by inject<ThemeManager>()
+@Single
+internal class MiniscriptSettingsImpl(
+    private val themeManager: ThemeManager
+) : MiniscriptSettings {
 
     private fun setting(key: String): Any? =
         Settings[themeManager.getScreenConfiguration(ThemeAnalyzer.HUD)!!, ResourceLocation(key)]

@@ -19,7 +19,7 @@ package be.bluexin.mcui.deprecated.resources
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.GLCore
-import be.bluexin.mcui.effects.StatusEffects
+import be.bluexin.mcui.effects.StatusEffect
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.util.IconCore
 import be.bluexin.mcui.util.append
@@ -48,13 +48,13 @@ object StringNames : KoinComponent /* TODO: this should either be removed or mad
         particleLarge = GLCore.takeTextureIfExists(textureRoot.append("particlelarge.png"))
             ?: logMissingAndUse("death particles", defaultParticleLarge)
 
-        val missingEffects = StatusEffects.entries.filter {
+        val missingEffects = StatusEffect.entries.filter {
             !GLCore.checkTexture(textureRoot.append("status_icons/${it.name.lowercase(Locale.getDefault())}.png"))
         }
         statusIcons = if (missingEffects.isEmpty()) {
             textureRoot.append("status_icons/")
         } else logMissingAndUse(
-            "status icons ${missingEffects.map(StatusEffects::name)}",
+            "status icons ${missingEffects.map(StatusEffect::name)}",
             defaultStatusIcons
         )
 

@@ -64,19 +64,19 @@
                 </elementGroup>
                 <glRectangle name="health bar">
                     <texture>mcui:themes/hex2/textures/hexbars.png</texture>
-                    <rgba>party.get(i).healthStep.rgba</rgba>
+                    <rgba>party(i).healthStep.rgba</rgba>
                     <x cache="STATIC">42</x>
                     <y cache="NONE">15 * i</y>
-                    <w cache="NONE">1.796875 + 96.154 * party.get(i).healthPercent</w>
+                    <w cache="NONE">1.796875 + 96.154 * party(i).healthPercent</w>
                     <h cache="STATIC">13</h>
 
                     <srcX cache="STATIC">0.0</srcX>
                     <srcY cache="STATIC">25.6</srcY>
-                    <srcW cache="NONE">4.6 + 240.0 * party.get(i).healthPercent</srcW>
+                    <srcW cache="NONE">4.6 + 240.0 * party(i).healthPercent</srcW>
                     <srcH cache="STATIC">25.6</srcH>
                 </glRectangle>
                 <glString name="pName">
-                    <text>party.get(i).username.size > 5? party.get(i).username.substring(0, 5): party.get(i).username
+                    <text>party(i).displayName.length > 5? party(i).displayName.substring(0, 5): party(i).displayName
                     </text>
                     <x cache="STATIC">8</x>
                     <y cache="NONE">15 * i + 7</y>

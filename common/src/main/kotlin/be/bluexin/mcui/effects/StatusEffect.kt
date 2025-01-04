@@ -26,7 +26,7 @@ import net.minecraft.world.entity.player.Player
 import java.util.*
 
 // TODO : probably better off using the vanilla keys for these ?
-enum class StatusEffects : IIcon {
+enum class StatusEffect : IIcon {
 
     PARALYZED,
     POISONED,
@@ -69,8 +69,8 @@ enum class StatusEffects : IIcon {
     fun glDraw(x: Int, y: Int, z: Float) = Unit
 
     companion object {
-        fun getEffects(entity: LivingEntity): List<StatusEffects> {
-            val effects = LinkedList<StatusEffects>()
+        fun getEffects(entity: LivingEntity): List<StatusEffect> {
+            val effects = LinkedList<StatusEffect>()
 
             entity.activeEffects.asSequence().filterNotNull().forEach {
                 when (it.effect) {

@@ -18,8 +18,8 @@ package be.bluexin.mcui.themes.miniscript
 
 import be.bluexin.mcui.deprecated.api.info.PlayerStatsProvider
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
-import be.bluexin.mcui.effects.StatusEffects
-import be.bluexin.mcui.effects.StatusEffects.Companion.getEffects
+import be.bluexin.mcui.effects.StatusEffect
+import be.bluexin.mcui.effects.StatusEffect.Companion.getEffects
 import be.bluexin.mcui.social.StaticPlayerHelper.getHungerLevel
 import be.bluexin.mcui.social.StaticPlayerHelper.getMaxHealth
 import be.bluexin.mcui.themes.miniscript.*
@@ -44,6 +44,7 @@ import kotlin.math.min
  *
  * @author Bluexin
  */
+@Suppress("OVERRIDE_DEPRECATION")
 class HudDrawContext(
     val mc: Minecraft = Client.mc,
     private val itemRenderer: ItemRenderer = mc.itemRenderer
@@ -64,7 +65,7 @@ class HudDrawContext(
     private var partialTicks = 0f
     private var i = 0
 //    private var pt: List<PlayerInfo> = listOf()
-    private var effects: List<StatusEffects>? = null
+private var effects: List<StatusEffect>? = null
     private var nearbyEntities: List<WeakReference<LivingEntity>> = listOf()
     private var targetEntity: WeakReference<LivingEntity>? = null
     private var lastTargetedTick = 0L
@@ -235,7 +236,7 @@ class HudDrawContext(
         return player.foodData.saturationLevel
     }
 
-    override fun statusEffects(): List<StatusEffects> {
+    override fun statusEffects(): List<StatusEffect> {
         return effects!!
     }
 

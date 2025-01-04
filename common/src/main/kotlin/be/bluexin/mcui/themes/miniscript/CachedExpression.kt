@@ -19,12 +19,15 @@ package be.bluexin.mcui.themes.miniscript
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
-import be.bluexin.mcui.effects.StatusEffects
+import be.bluexin.mcui.effects.StatusEffect
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
+import be.bluexin.mcui.themes.miniscript.api.GameWindowInfo
 import be.bluexin.mcui.util.HealthStep
 import net.minecraft.util.profiling.InactiveProfiler
 import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.entity.LivingEntity
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Part of saoui by Bluexin.
@@ -34,8 +37,9 @@ import net.minecraft.world.entity.LivingEntity
 sealed class CachedExpression<T : Any>(
     var expression: (IHudDrawContext) -> T,
     val expressionIntermediate: ExpressionIntermediate
-) : (IHudDrawContext) -> T {
+) : (IHudDrawContext) -> T, KoinComponent {
 
+    protected val gameWindowInfo: GameWindowInfo by inject()
     protected abstract val cache: T?
 
     protected fun warn(e: Throwable) {
@@ -51,21 +55,23 @@ sealed class CachedExpression<T : Any>(
     }
 }
 
-class FrameCachedExpression<T: Any>(
-    expression: CompiledExpressionWrapper<T>,
+class FrameCachedExpression<T : Any>(
+    expression: (IHudDrawContext) -> T,
     expressionIntermediate: ExpressionIntermediate
 ) : CachedExpression<T>(expression, expressionIntermediate) {
     override var cache: T? = null
 
     private var lastTime = -1.0F
 
-    private fun checkUpdateTime(ctx: IHudDrawContext) = if (lastTime == ctx.partialTicks) false else {
-        lastTime = ctx.partialTicks
-        true
-    }
+    private fun checkUpdateTime() =
+        if (lastTime == gameWindowInfo.partialTicks) false
+        else {
+            lastTime = gameWindowInfo.partialTicks
+            true
+        }
 
     override fun invoke(ctx: IHudDrawContext): T {
-        if (checkUpdateTime(ctx)) cache = try {
+        if (checkUpdateTime()) cache = try {
             expression(ctx)
         } catch (e: Exception) {
             warn(e)
@@ -81,7 +87,7 @@ class FrameCachedExpression<T: Any>(
 }
 
 class StaticCachedExpression<T : Any>(
-    expression: CompiledExpressionWrapper<T>,
+    expression: (IHudDrawContext) -> T,
     expressionIntermediate: ExpressionIntermediate
 ) : CachedExpression<T>(expression, expressionIntermediate) {
     override val cache: T by lazy { expression(StubContext) }
@@ -124,7 +130,7 @@ class StaticCachedExpression<T : Any>(
         override fun horsejump() = 0f
         override fun foodLevel() = 0f
         override fun saturationLevel() = 0f
-        override fun statusEffects() = mutableListOf<StatusEffects>()
+        override fun statusEffects() = mutableListOf<StatusEffect>()
         override fun nearbyEntities() = mutableListOf<LivingEntity>()
         override fun entityName(index: Int) = ""
         override fun entityHp(index: Int) = 0f
@@ -148,8 +154,8 @@ class StaticCachedExpression<T : Any>(
     override fun invoke(ctx: IHudDrawContext) = cache
 }
 
-class SizeCachedExpression<T: Any>(
-    expression: CompiledExpressionWrapper<T>,
+class SizeCachedExpression<T : Any>(
+    expression: (IHudDrawContext) -> T,
     expressionIntermediate: ExpressionIntermediate
 ) : CachedExpression<T>(expression, expressionIntermediate) {
     override var cache: T? = null
@@ -157,21 +163,21 @@ class SizeCachedExpression<T: Any>(
     private var lastW = 0
     private var lastH = 0
 
-    private fun checkUpdateSize(ctx: IHudDrawContext) =
-        if (lastW == ctx.scaledwidth() && lastH == ctx.scaledheight()) false else {
-            lastW = ctx.scaledwidth()
-            lastH = ctx.scaledheight()
+    private fun checkUpdateSize() =
+        if (lastW == gameWindowInfo.scaledWidth && lastH == gameWindowInfo.scaledHeight) false else {
+            lastW = gameWindowInfo.scaledWidth
+            lastH = gameWindowInfo.scaledHeight
             true
         }
 
     override fun invoke(ctx: IHudDrawContext): T {
-        if (checkUpdateSize(ctx)) cache = expression(ctx)
+        if (checkUpdateSize()) cache = expression(ctx)
         return cache!!
     }
 }
 
 class UnCachedExpression<T : Any>(
-    expression: CompiledExpressionWrapper<T>,
+    expression: (IHudDrawContext) -> T,
     expressionIntermediate: ExpressionIntermediate
 ) : CachedExpression<T>(expression, expressionIntermediate) {
     override val cache: T
