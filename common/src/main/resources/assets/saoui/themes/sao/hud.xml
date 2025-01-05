@@ -19,22 +19,6 @@
             </value>
         </entry>
         <entry>
-            <key>EXPERIENCE</key>
-            <value name="exp">
-                <!-- Could be moved to be part of the health fragment -->
-                <enabled>!settings.boolean("hud:remove_hpxp")</enabled>
-                <x>strWidth(player.displayName) + 144 + strWidth(player.absorption > 0?
-                    format(isEnabled(ALT_ABSORB_POS)?
-                    "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(player.health), ceil(player.maxHealth),
-                    ceil(player.absorption)): format("formatHealth", ceil(player.health), ceil(player.maxHealth)))
-                </x>
-                <y cache="STATIC">14</y>
-                <children>
-                    <fragmentReference id="saoui.sao:experience"/>
-                </children>
-            </value>
-        </entry>
-        <entry>
             <key>JUMP_BAR</key>
             <value name="vanilla horse jump bar">
                 <x cache="SIZE_CHANGE">scaledwidth / 2 - 91</x>

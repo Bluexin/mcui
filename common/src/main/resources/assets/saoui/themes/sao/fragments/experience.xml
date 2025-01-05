@@ -1,4 +1,4 @@
-<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="label fragment">
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="experience fragment">
     <!-- Should probably be replaced by a label -->
     <children>
         <glString name="exp string">

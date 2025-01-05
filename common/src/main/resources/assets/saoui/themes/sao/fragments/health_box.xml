@@ -1,6 +1,16 @@
 <bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="health box fragment">
     <x>settings.double("hud:health_offset_x")</x>
     <y>settings.double("hud:health_offset_y")</y>
+    <expect>
+        <variable key="hpWithoutAbsorptionText" type="STRING">format("formatHealth", ceil(player.health),
+            ceil(player.maxHealth))
+        </variable>
+        <variable key="hpWithAbsorptionText" type="STRING">format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
+            "formatHealthAbsorb", ceil(player.health), ceil(player.maxHealth), ceil(player.absorption))
+        </variable>
+        <variable key="hpText" type="STRING">player.absorption > 0? hpWithAbsorptionText: hpWithoutAbsorptionText
+        </variable>
+    </expect>
     <children>
         <elementGroup name="background">
             <texture>saoui:textures/sao/gui.png</texture>
@@ -75,10 +85,7 @@
             <y cache="STATIC">12.0</y>
             <children>
                 <glString name="hp text">
-                    <text>player.absorption > 0? format(isEnabled(ALT_ABSORB_POS)? "formatHealthAbsorbAlt":
-                        "formatHealthAbsorb", ceil(player.health), ceil(player.maxHealth), ceil(player.absorption)):
-                        format("formatHealth", ceil(player.health), ceil(player.maxHealth))
-                    </text>
+                    <text>hpText</text>
                     <x cache="STATIC">5.0</x>
                     <y cache="STATIC">8.0</y>
                 </glString>
@@ -95,23 +102,13 @@
                             <x cache="STATIC">5.0</x>
                             <srcX cache="STATIC">66.0</srcX>
                             <srcY cache="STATIC">15.0</srcY>
-                            <w>strWidth(player.absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
-                                "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(player.health),
-                                ceil(player.maxHealth),
-                                ceil(player.absorption)): format("formatHealth", ceil(player.health),
-                                ceil(player.maxHealth)))
-                            </w>
+                            <w>strWidth(hpText)</w>
                             <h cache="STATIC">13.0</h>
                             <srcW cache="STATIC">5.0</srcW>
                             <srcH cache="STATIC">13.0</srcH>
                         </glRectangle>
                         <glRectangle>
-                            <x>5 + strWidth(player.absorption > 0? format(isEnabled(ALT_ABSORB_POS)?
-                                "formatHealthAbsorbAlt": "formatHealthAbsorb", ceil(player.health),
-                                ceil(player.maxHealth),
-                                ceil(player.absorption)): format("formatHealth", ceil(player.health),
-                                ceil(player.maxHealth)))
-                            </x>
+                            <x>5 + strWidth(hpText)</x>
                             <srcX cache="STATIC">70.0</srcX>
                             <srcY cache="STATIC">15.0</srcY>
                             <w cache="STATIC">5.0</w>
@@ -121,5 +118,9 @@
                 </elementGroup>
             </children>
         </elementGroup>
+        <fragmentReference id="saoui.sao:experience">
+            <x>strWidth(player.displayName) + 132.0 + 10.0 + strWidth(hpText)</x>
+            <y cache="STATIC">12.0</y>
+        </fragmentReference>
     </children>
 </bl:fragment>
