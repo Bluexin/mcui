@@ -19,6 +19,11 @@ package be.bluexin.mcui.config
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.config.Settings.NS_BUILTIN
+import be.bluexin.mcui.themes.meta.ThemeAnalyzer
+import be.bluexin.mcui.util.RLSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.json.Json
 import net.minecraft.resources.ResourceLocation
 import java.util.*
 
@@ -30,6 +35,11 @@ import java.util.*
 object ConfigHandler {
     val DEFAULT_THEME = ResourceLocation(Constants.MOD_ID, "hex2")
 
+    val DEFAULT_SCREEN_CONFIG: Map<ResourceLocation, ResourceLocation> = mapOf(
+        ThemeAnalyzer.MCUI_SETTINGS to ResourceLocation(Constants.MOD_ID, "hex2"),
+        ThemeAnalyzer.HUD to ResourceLocation(Constants.LEGACY_MOD_ID, "sao"),
+    )
+
     private fun general(key: String) = ResourceLocation("general", key)
 
     private val allSettings = LinkedList<Setting<*>>()
@@ -38,7 +48,13 @@ object ConfigHandler {
         allSettings.add(it)
     }
 
-    var lastVersion by wrap(StringSetting(general("last_update"), "nothing"))
+    var lastVersion by wrap(
+        StringSetting(
+            key = general("last_update"),
+            defaultValue = "nothing",
+            showInUI = false
+        )
+    )
     var ignoreUpdate by wrap(BooleanSetting(general("ignore_update"), true))
     var enableDebug by wrap(BooleanSetting(general("debug"), false))
     var debugFakePT by wrap(
@@ -48,13 +64,33 @@ object ConfigHandler {
         )
     )
 
-    @Deprecated("Should migrate away from this, to screen-based config")
-    var currentTheme by wrap(
-        ResourceLocationSetting(
-            general("current_theme"), DEFAULT_THEME,
-            "The currently selected theme. If invalid or unavailable, this will default to the built-in $DEFAULT_THEME theme"
+    @OptIn(ExperimentalSerializationApi::class)
+    private val json = Json {
+        ignoreUnknownKeys = true
+        useAlternativeNames = false
+        allowTrailingComma = true
+        allowComments = true
+    }
+    private val screenSettingsSerializer = MapSerializer(
+        RLSerializer(), RLSerializer()
+    )
+    private var screenSettings by wrap(
+        StringSetting(
+            key = general("screen_settings"),
+            defaultValue = DEFAULT_SCREEN_CONFIG.let {
+                json.encodeToString(screenSettingsSerializer, it)
+            },
+            comment = "Screen theme selection. If invalid or unavailable, this will default to built-in themes",
+            showInUI = false,
         )
     )
+
+    fun setScreenSettings(settings: Map<ResourceLocation, ResourceLocation>) {
+        screenSettings = json.encodeToString(screenSettingsSerializer, settings)
+    }
+
+    fun getScreenSettings(): Map<ResourceLocation, ResourceLocation> =
+        json.decodeFromString(screenSettingsSerializer, screenSettings)
 
     fun registerSettings() {
         allSettings.forEach(Setting<*>::register)
