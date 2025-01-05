@@ -193,8 +193,10 @@ local function gui(root)
                 if category then
                     local catContent = wl.getChildWidget(category, 'content')
                     for _, setting in pairs(catValue) do
-                        settingButton(catContent, setting, catN)
-                        catN = catN + 1
+                        if (setting.showInUI) then
+                            settingButton(catContent, setting, catN)
+                            catN = catN + 1
+                        end
                     end
                     wl.centerCategoryContent(catContent, catN)
                 end

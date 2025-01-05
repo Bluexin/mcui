@@ -35,6 +35,9 @@ sealed class Setting<T : Any> : LKExposed {
     @LuajExpose
     abstract val commentKey: String? // TODO: actually this should probably be calculated
 
+    @LuajExpose
+    abstract val showInUI: Boolean
+
     @Transient
     lateinit var property: Property
         private set
@@ -75,6 +78,7 @@ open class StringSetting(
     override val defaultValue: String,
     override val comment: String? = null,
     override val commentKey: String? = null,
+    override val showInUI: Boolean = true,
     @Transient
     private val validate: ((String) -> Boolean)? = null
 ) : Setting<String>() {
@@ -119,7 +123,8 @@ class BooleanSetting(
     override val key: LKResourceLocation,
     override val defaultValue: Boolean,
     override val comment: String? = null,
-    override val commentKey: String? = null
+    override val commentKey: String? = null,
+    override val showInUI: Boolean = true,
 ) : Setting<Boolean>() {
     override val type get() = Property.Type.BOOLEAN
 
@@ -163,6 +168,7 @@ class IntSetting(
     override val defaultValue: Int,
     override val comment: String? = null,
     override val commentKey: String? = null,
+    override val showInUI: Boolean = true,
     @LuajExpose
     val min: Int? = null,
     @LuajExpose
@@ -227,6 +233,7 @@ class DoubleSetting(
     override val defaultValue: Double,
     override val comment: String? = null,
     override val commentKey: String? = null,
+    override val showInUI: Boolean = true,
     @LuajExpose
     val min: Double? = null,
     @LuajExpose
@@ -291,6 +298,7 @@ class ChoiceSetting(
     override val defaultValue: String,
     override val comment: String? = null,
     override val commentKey: String? = null,
+    override val showInUI: Boolean = true,
     @LuajExpose
     val values: Set<String>
 ) : Setting<String>() {
@@ -341,6 +349,7 @@ class ResourceLocationSetting(
     override val defaultValue: LKResourceLocation,
     override val comment: String? = null,
     override val commentKey: String? = null,
+    override val showInUI: Boolean = true,
     @Transient
     private val validate: ((LKResourceLocation) -> Boolean)? = null
 ) : Setting<LKResourceLocation>() {
