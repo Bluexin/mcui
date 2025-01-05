@@ -22,7 +22,7 @@ local function addThemeSettings(parent)
     for index, screenId in ipairs(settings.allScreenIds()) do
         local screenLocalKey = screenId.namespace .. '.screen.' .. screenId.path
         local currentValue = settings.getScreenConfiguration(screenId)
-        if dropdownSupport.createDropdown(parent, {
+        local dropdown = dropdownSupport.createDropdown(parent, {
             currentValue = 'mcui.theme.' .. (currentValue and currentValue.string or 'none'),
             key = screenLocalKey,
             label = wl.tstatic('format("' .. screenLocalKey .. '.name")', 'STRING', true),
@@ -42,10 +42,14 @@ local function addThemeSettings(parent)
             ),
             setValue = function(newValue)
                 local themeId, _ = newValue.expression:gsub('mcui.theme.', ''):gsub('"', '')
-                --print('Setting screen ' .. screenId.string .. ' to ' .. themeId)
                 settings.setScreenConfiguration(screenId, themeId)
             end,
-        }) then
+        })
+        if dropdown then
+            dropdown.extra.reloadValue = function()
+                local newValue = settings.getScreenConfiguration(screenId)
+                dropdown.setVariable('currentValue', wl.tstatic('mcui.theme.' .. (newValue and newValue.string or 'none')))
+            end
             settingsCount = settingsCount + 1
         end
     end
@@ -78,7 +82,7 @@ local function booleanSettingButton(parent, setting, catN)
                     return true
                 end,
                 variables = {
-                    currentValue = wl.tstatic(setting.getValue())
+                    currentValue = wl.tframe('settings.boolean("' .. setting.namespace.string .. '", "' .. setting.key.string .. '")', 'BOOLEAN')
                 }
             }
     )
@@ -91,11 +95,12 @@ local function choiceSettingButton(parent, setting, catN)
     local screenLocalKey = ('mcui.theme.' .. setting.namespace.string .. '.setting.' .. setting.key.string):gsub(':', '/')
 
     return dropdownSupport.createDropdown(parent, {
-        currentValue = setting.getValue(),
+        currentValue = wl.tframe('settings.string("' .. setting.namespace.string .. '", "' .. setting.key.string .. '")', 'STRING', true),
         key = screenLocalKey,
         label = wl.tstatic('format("' .. screenLocalKey .. '.name")', 'STRING', true),
         xPos = 0,
         yPos = catN * 20,
+        tooltip = settingTooltip(setting),
         options = util.map(setting.values, function(it)
             return {
                 key = it,
@@ -118,13 +123,25 @@ end
 --- @param setting Setting
 --- @param catN number
 local function settingButton(parent, setting, catN)
-    if (type(setting) == 'BooleanSetting') then
+    if type(setting) == 'BooleanSetting' then
         return booleanSettingButton(parent, setting, catN)
-    elseif (type(setting) == 'ChoiceSetting') then
+    elseif type(setting) == 'ChoiceSetting' then
         return choiceSettingButton(parent, setting, catN)
     else
         local screenLocalKey = ('mcui.theme.' .. setting.namespace.string .. '.setting.' .. setting.key.string .. '.name'):gsub(':', '/')
-        local fullLabel = 'format("mcui.screen.settinglabel", formatOr("' .. screenLocalKey .. '", "' .. setting.key.path .. '"), "' .. tostring(setting.getValue()) .. '")'
+        local valueString = tostring(setting.getValue()) -- static fallback
+        local settingArgs = '("' .. setting.namespace.string .. '", "' .. setting.key.string .. '")'
+        if type(setting) == 'StringSetting' then
+            valueString = 'settings.string' .. settingArgs
+        elseif type(setting) == 'IntSetting' then
+            valueString = 'settings.int' .. settingArgs
+        elseif type(setting) == 'DoubleSetting' then
+            valueString = 'settings.double' .. settingArgs
+        elseif type(setting) == 'ResourceLocationSetting' then
+            valueString = 'settings.resourceLocation' .. settingArgs
+        end
+
+        local fullLabel = 'format("mcui.screen.settinglabel", formatOr("' .. screenLocalKey .. '", "' .. setting.key.path .. '"), ' .. valueString .. ')'
 
         return wl.loadButton(
                 parent, {

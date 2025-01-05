@@ -38,7 +38,7 @@
     "comment": "Enable the theme\\'s debug mode"
   },
   {
-    "key": "hud:test_choice",
+    "key": "debug:test_choice",
     "type": "choice",
     "defaultValue": "one",
     "comment": "Testing choice setting",

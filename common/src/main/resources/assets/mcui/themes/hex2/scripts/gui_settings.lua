@@ -100,6 +100,7 @@ local function choiceSettingButton(parent, setting, catN)
         key = screenLocalKey,
         label = wl.tstatic('format("' .. screenLocalKey .. '.name")', 'STRING', true),
         yPos = catN * 20,
+        tooltip = settingTooltip(setting),
         options = util.map(setting.values, function(it)
             local i18nKey = screenLocalKey .. '/' .. it
             return {
