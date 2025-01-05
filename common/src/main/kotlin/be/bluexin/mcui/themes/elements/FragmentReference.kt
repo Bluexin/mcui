@@ -1,5 +1,7 @@
 package be.bluexin.mcui.themes.elements
 
+import be.bluexin.luajksp.annotations.AfterSet
+import be.bluexin.luajksp.annotations.BeforeSet
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
@@ -7,6 +9,7 @@ import be.bluexin.mcui.themes.elements.access.FragmentReferenceAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.*
+import be.bluexin.mcui.themes.miniscript.serialization.JelType
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
@@ -15,6 +18,7 @@ import kotlinx.serialization.Transient
 import net.minecraft.resources.ResourceLocation
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.luaj.vm2.LuaValue
 
 @Serializable
@@ -24,7 +28,8 @@ class FragmentReference(
     @DeserializationOrder(0)
     private val serializedVariables: Variables = Variables.EMPTY,
     private var id: String = MISSING_ID
-) : Element(), ElementParent, KoinComponent {
+) : Element(), ElementParent, KoinComponent, BeforeSet, AfterSet {
+    private val libHelper: LibHelper by inject()
 
     init {
         if (serializedVariables !== Variables.EMPTY) get<LibHelper>().popContext()
@@ -60,19 +65,24 @@ class FragmentReference(
                 Constants.LOG.warn(message + hierarchyName)
                 AbstractThemeLoader.Reporter += message + nameOrParent()
             } else {
-                val missing = fragment?.expect?.variables.orEmpty().filter { (key, it) ->
-                    val inContext = variables[key]
-                    inContext == null || inContext.type != it.type
-                }
-                val defaults = missing.onEach { (key, it) ->
-                    if (it.hasDefault()) variables[key] = it.type.expressionAdapter.compile(it)
-                }.keys
-                val realMissing = missing - defaults
-                if (realMissing.isNotEmpty()) {
-                    val present = variables.mapValues { (_, value) -> value?.value?.expressionIntermediate }
-                    val message = "Missing variables $realMissing for $id (present : $present) in "
-                    Constants.LOG.warn(message + hierarchyName)
-                    AbstractThemeLoader.Reporter += message + nameOrParent()
+                val expect = fragment?.expect
+                if (expect != null) {
+                    val missing = expect.variables.filter { (key, it) ->
+                        val inContext = variables[key]
+                        inContext == null || inContext.type != it.type
+                    }
+                    expect.pushContext()
+                    val defaults = missing.onEach { (key, it) ->
+                        if (it.hasDefault()) variables[key] = it.type.expressionAdapter.compile(it)
+                    }.keys
+                    libHelper.popContext()
+                    val realMissing = missing - defaults
+                    if (realMissing.isNotEmpty()) {
+                        val present = variables.mapValues { (_, value) -> value?.value?.expressionIntermediate }
+                        val message = "Missing variables $realMissing for $id (present : $present) in "
+                        Constants.LOG.warn(message + hierarchyName)
+                        AbstractThemeLoader.Reporter += message + nameOrParent()
+                    }
                 }
             }
         }
@@ -111,6 +121,16 @@ class FragmentReference(
         val r = z(ctx)
         ctx.popContext()
         return r
+    }
+
+    override fun beforeSet() {
+        libHelper.pushContext(
+            variables.mapValues { (_, value) -> value.type ?: JelType.ERROR }
+        )
+    }
+
+    override fun afterSet() {
+        libHelper.popContext()
     }
 
     private companion object {
