@@ -175,7 +175,7 @@ function wl.loadButton(parent, args)
 
     local r = theme.loadWidget(parent, label_button_frag, allArgs)
     if not r then
-        print('Could not load button ' .. args.label)
+        print('Could not load button ' .. args.label.expression)
     else
         local w = --[[---@type Widget]] r
         if (args.tooltip) then
@@ -193,10 +193,22 @@ function wl.loadButton(parent, args)
     return r
 end
 
---- @param self Widget
-local function onClickBackButton(self)
-    local cat = --[[--- @type Widget]] self.parentElement.parentElement
+local cancel_apply_button_frag = theme.readWidget("mcui.hex2:cancel_apply_buttons")
 
+--- @param parent Widget|string
+--- @return Widget|boolean
+function wl.loadCancelApplyButtons(parent)
+    local r = theme.loadWidget(parent, cancel_apply_button_frag, {
+        yPos = wl.tstatic(-20)
+    })
+    if not r then
+        print('Could not load cancel/apply buttons for ' .. parent.hierarchyName)
+    end
+    return r
+end
+
+--- @param cat Widget
+local function onCloseCategory(cat)
     cat.setVariable('isOpen', wl.tstatic(false))
     if (cat.extra.onClose) then
         cat.extra.onClose()
@@ -211,6 +223,15 @@ local function onClickBackButton(self)
     end
     return true
 end
+
+--- @param self Widget
+local function onClickBackButton(self)
+    local cat = --[[--- @type Widget]] self.parentElement.parentElement
+    return onCloseCategory(cat)
+end
+
+wl.onClickBackButton = onClickBackButton
+wl.onCloseCategory = onCloseCategory
 
 local category_frag = theme.readWidget("mcui.hex2:category_label_button")
 
@@ -250,7 +271,6 @@ function wl.loadCategory(parent, yPos, xPos, label, display, noBackButton)
                 yPos = -20,
                 label = wl.tstatic('format("mcui.screen.back")', 'STRING', true),
                 onClick = onClickBackButton,
-                tooltip = bk,
                 variables = {
                     isPeerOpen = wl.tstatic(false),
                 },

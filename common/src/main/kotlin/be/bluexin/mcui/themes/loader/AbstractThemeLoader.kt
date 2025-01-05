@@ -26,6 +26,7 @@ import java.util.*
 abstract class AbstractThemeLoader(protected val type: HudFormat, protected val settingsLoader: SettingsLoader) {
 
     // TODO : Koinify
+    // TODO : errors per theme
     object Reporter {
         val errors: Deque<String> = LinkedList()
 

@@ -1,0 +1,166 @@
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="cancel_apply_buttons">
+    <expect>
+        <variable key="cancel_text" type="STRING" cache="STATIC">format("mcui.screen.cancel")</variable>
+        <variable key="apply_text" type="STRING" cache="STATIC">format("mcui.screen.apply")</variable>
+        <variable key="initialWidth" type="INT" cache="STATIC">160</variable>
+        <variable key="initialHeight" type="INT" cache="STATIC">16</variable>
+        <variable key="padding" type="INT" cache="STATIC">4</variable>
+        <variable key="xPos" type="DOUBLE">-initialWidth / 2.0</variable>
+        <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
+        <variable key="colour" type="INT" cache="STATIC">0x424242FF</variable>
+        <variable key="hoverColour" type="INT" cache="STATIC">(int) (0x424242FF &amp; 0xAFAFAFFF)</variable>
+        <variable key="isCancelHovered" type="BOOLEAN" cache="STATIC">false</variable>
+        <variable key="isApplyHovered" type="BOOLEAN" cache="STATIC">false</variable>
+        <variable key="oneButtonWidth" type="INT">initialWidth / 2 - padding / 2</variable>
+    </expect>
+    <contentWidth cache="STATIC">0</contentWidth>
+    <contentHeight cache="STATIC">0</contentHeight>
+    <x>xPos</x>
+    <y>yPos</y>
+    <z>isCancelHovered || isApplyHovered? 10: 0</z>
+    <children>
+        <widget name="cancel">
+            <x cache="STATIC">0</x>
+            <y cache="STATIC">0</y>
+            <z>isCancelHovered? 10: 0</z>
+            <contentWidth>oneButtonWidth</contentWidth>
+            <contentHeight>initialHeight</contentHeight>
+            <children>
+                <elementGroup name="bg">
+                    <x>isCancelHovered? -oneButtonWidth * 0.05: 0</x>
+                    <y>isCancelHovered? -initialHeight * 0.05: 0</y>
+                    <scale>isCancelHovered? 1.1: 1.0</scale>
+                    <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
+                    <children>
+                        <glRectangle> <!-- left part of label -->
+                            <rgba>isCancelHovered? hoverColour: colour</rgba>
+                            <srcX cache="STATIC">0.0</srcX>
+                            <srcY cache="STATIC">0.0</srcY>
+                            <srcW cache="STATIC">24.0</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                            <w cache="STATIC">6</w>
+                            <h>initialHeight</h>
+                        </glRectangle>
+
+                        <glRectangle> <!-- middle part of label -->
+                            <rgba>isCancelHovered? hoverColour: colour</rgba>
+                            <x cache="STATIC">6</x>
+                            <srcX cache="STATIC">24.0</srcX>
+                            <srcY cache="STATIC">0.0</srcY>
+                            <srcW cache="STATIC">26.0</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                            <w>oneButtonWidth - 12</w>
+                            <h>initialHeight</h>
+                        </glRectangle>
+
+                        <glRectangle> <!-- right part of label -->
+                            <rgba>isCancelHovered? hoverColour: colour</rgba>
+                            <x>oneButtonWidth - 6</x>
+                            <srcX cache="STATIC">50.0</srcX>
+                            <srcY cache="STATIC">0.0</srcY>
+                            <srcW cache="STATIC">24.0</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                            <w cache="STATIC">6</w>
+                            <h>initialHeight</h>
+                        </glRectangle>
+                    </children>
+                </elementGroup>
+                <glString name="label">
+                    <x>oneButtonWidth / 2 - strWidth(cancel_text) / 2</x>
+                    <y cache="STATIC">9.5</y>
+                    <text>cancel_text</text>
+                </glString>
+            </children>
+            <onMouseOverEvent>
+                local self, _, _, entered = ...
+                self.parentElement.setVariable('isCancelHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
+            </onMouseOverEvent>
+            <onClick>
+                --- @type Widget
+                local self = ...
+
+                --- @type Widget
+                local parent = self.parentElement.parentElement.parentElement
+                if parent.extra.cancel then
+                    parent.extra.cancel()
+                end
+                return true
+            </onClick>
+        </widget>
+        <widget name="apply">
+            <x>oneButtonWidth + padding</x>
+            <y cache="STATIC">0</y>
+            <z>isApplyHovered? 10: 0</z>
+            <contentWidth>oneButtonWidth</contentWidth>
+            <contentHeight>initialHeight</contentHeight>
+            <children>
+                <elementGroup name="bg">
+                    <x>isApplyHovered? -oneButtonWidth * 0.05: 0</x>
+                    <y>isApplyHovered? -initialHeight * 0.05: 0</y>
+                    <scale>isApplyHovered? 1.1: 1.0</scale>
+                    <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
+                    <children>
+                        <glRectangle> <!-- left part of label -->
+                            <rgba>isApplyHovered? hoverColour: colour</rgba>
+                            <srcX cache="STATIC">0.0</srcX>
+                            <srcY cache="STATIC">0.0</srcY>
+                            <srcW cache="STATIC">24.0</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                            <w cache="STATIC">6</w>
+                            <h>initialHeight</h>
+                        </glRectangle>
+
+                        <glRectangle> <!-- middle part of label -->
+                            <rgba>isApplyHovered? hoverColour: colour</rgba>
+                            <x cache="STATIC">6</x>
+                            <srcX cache="STATIC">24.0</srcX>
+                            <srcY cache="STATIC">0.0</srcY>
+                            <srcW cache="STATIC">26.0</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                            <w>oneButtonWidth - 12</w>
+                            <h>initialHeight</h>
+                        </glRectangle>
+
+                        <glRectangle> <!-- right part of label -->
+                            <rgba>isApplyHovered? hoverColour: colour</rgba>
+                            <x>oneButtonWidth - 6</x>
+                            <srcX cache="STATIC">50.0</srcX>
+                            <srcY cache="STATIC">0.0</srcY>
+                            <srcW cache="STATIC">24.0</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                            <w cache="STATIC">6</w>
+                            <h>initialHeight</h>
+                        </glRectangle>
+                    </children>
+                </elementGroup>
+                <glString name="label">
+                    <x>oneButtonWidth / 2 - strWidth(apply_text) / 2</x>
+                    <y cache="STATIC">9.5</y>
+                    <text>apply_text</text>
+                </glString>
+            </children>
+            <onMouseOverEvent>
+                local self, _, _, entered = ...
+                self.parentElement.setVariable('isApplyHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
+            </onMouseOverEvent>
+            <onClick>
+                --- @type Widget
+                local self = ...
+
+                --- @type Widget
+                local parent = self.parentElement.parentElement.parentElement
+                if parent.extra.apply then
+                    parent.extra.apply()
+                end
+                return true
+            </onClick>
+        </widget>
+
+        <glString name="debug">
+            <enabled>settings.boolean("hud:debug_mode")</enabled>
+            <text>"cancel_apply " + xPos</text>
+            <rgba>0x0B8B00</rgba>
+            <x>initialWidth</x>
+        </glString>
+    </children>
+</bl:widget>

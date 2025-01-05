@@ -22,6 +22,7 @@ import be.bluexin.mcui.commands.GeneralCommands
 import be.bluexin.mcui.commands.McuiCommand
 import be.bluexin.mcui.config.ConfigHandler
 import be.bluexin.mcui.logger
+import be.bluexin.mcui.screens.LuaScriptedScreen
 import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.loader.SettingsLoader
@@ -76,6 +77,8 @@ class ThemeManager(
         ThemeAnalyzer.MCUI_SETTINGS to ResourceLocation(Constants.MOD_ID, "hex2")
     )
 
+    private val screenCache = mutableMapOf<ResourceLocation, LuaScriptedScreen?>()
+
     // TODO : this should eventually be replaced with a list of loaded themes and the screens they provide
     // combined with the user setting the theme providing each screen
     var currentTheme: ThemeDefinition = ThemeDefinition(
@@ -119,6 +122,7 @@ class ThemeManager(
 
     fun loadData(resourceManager: ResourceManager): Map<ResourceLocation, ThemeDefinition> {
         availableThemeScreens.clear()
+        screenCache.clear()
         return themeDetector.listThemes(resourceManager).onEach { (_, themeDefinition) ->
             analyzeTheme(
                 resourceManager = resourceManager,
@@ -136,6 +140,7 @@ class ThemeManager(
         failureReport: (() -> String) -> Unit,
     ) {
         availableThemeScreens.clear()
+        screenCache.clear()
         themeList.forEach { (_, themeDefinition) ->
             analyzeTheme(
                 resourceManager = resourceManager,
@@ -223,9 +228,6 @@ class ThemeManager(
     fun getAllScreens(screenId: ResourceLocation): Map<ResourceLocation, (ResourceLocation) -> Unit> =
         availableThemeScreens[screenId].orEmpty()
 
-    fun getConfiguredScreen(screenId: ResourceLocation): ((ResourceLocation) -> Unit)? =
-        availableThemeScreens[screenId]?.get(getScreenConfiguration(screenId))
-
     fun getScreenConfiguration(screenId: ResourceLocation): ResourceLocation? =
         screenConfiguration[screenId]
 
@@ -233,8 +235,31 @@ class ThemeManager(
         val registeredScreen = availableThemeScreens[screenId]?.get(themeId)
         if (registeredScreen != null) {
             screenConfiguration[screenId] = themeId
+            screenCache -= screenId
             // tmp callback to setting the HUD ref...
             if (screenId == ThemeAnalyzer.HUD) registeredScreen(ThemeAnalyzer.HUD)
+            else getScreen(screenId)
+        }
+    }
+
+    /**
+     * This will not cache and is exposed for use in debug commands !
+     * @return a new screen instance for the specified [screenId] as implemented by given [themeId]
+     */
+    fun getThemeScreen(screenId: ResourceLocation, themeId: ResourceLocation): LuaScriptedScreen? =
+        getAllScreens(screenId)[themeId]?.let { callback ->
+            LuaScriptedScreen(screenId, themeId).also {
+                it.load(callback)
+            }
+        }
+
+    /**
+     * This will configure screens lazily and cache results.
+     * @return the screen instance for the specified [screenId]
+     */
+    fun getScreen(screenId: ResourceLocation): LuaScriptedScreen? = screenCache.getOrPut(screenId) {
+        getScreenConfiguration(screenId)?.let {
+            getThemeScreen(screenId, it)
         }
     }
 }

@@ -1,7 +1,6 @@
 package be.bluexin.mcui.commands
 
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.screens.LuaScriptedScreen
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.util.Client
 import com.mojang.brigadier.context.CommandContext
@@ -67,7 +66,7 @@ sealed class DebugCommands(usage: String) : McuiCommand(usage) {
                     when (implementations.size) {
                         0 -> throw missingScreenError.create()
                         1 -> Client.tell {
-                            it.setScreen(LuaScriptedScreen(screenId, implementations.keys.single()))
+                            it.setScreen(themeManager.getThemeScreen(screenId, implementations.keys.single()))
                         }
 
                         else -> {
@@ -91,10 +90,10 @@ sealed class DebugCommands(usage: String) : McuiCommand(usage) {
 
                             if (themeId in implementations) {
                                 Client.tell {
-                                    it.setScreen(LuaScriptedScreen(screenId, themeId))
+                                    it.setScreen(themeManager.getThemeScreen(screenId, themeId))
                                 }
                             } else {
-                                context.source.sendFailure(Component.literal("Screen $screenId not defined by theme $themeId"))
+                                context.source.sendFailure(Component.literal("Screen $screenId not defined by theme $themeId (themes defining this screen : ${implementations.keys.joinToString()})"))
                                 throw missingScreenError.create()
                             }
 

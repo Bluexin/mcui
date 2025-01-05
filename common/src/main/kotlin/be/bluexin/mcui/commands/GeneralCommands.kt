@@ -1,16 +1,17 @@
 package be.bluexin.mcui.commands
 
 import be.bluexin.mcui.logger
-import be.bluexin.mcui.screens.LuaScriptedScreen
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
+import be.bluexin.mcui.themes.meta.ThemeAnalyzer
+import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.error
 import com.mojang.brigadier.context.CommandContext
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands.literal
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 sealed class GeneralCommands(literal: String) : McuiCommand(literal) {
     data object PrintErrors : GeneralCommands("print_errors") {
@@ -30,11 +31,8 @@ sealed class GeneralCommands(literal: String) : McuiCommand(literal) {
                 }
     }
 
-    data object Settings : GeneralCommands("settings") {
-
-        private val screenId = ResourceLocation("mcui", "settings")
-        private val missingScreenError =
-            DynamicCommandExceptionType { Component.translatable("mcui.commands.missingscreen", it) }
+    data object Settings : GeneralCommands("settings"), KoinComponent {
+        private val themeManager: ThemeManager by inject()
 
         private fun openSettings(
             // For reference syntax
@@ -42,7 +40,7 @@ sealed class GeneralCommands(literal: String) : McuiCommand(literal) {
             context: CommandContext<CommandSourceStack>
         ): Int {
             Client.tell {
-                it.setScreen(LuaScriptedScreen(screenId))
+                it.setScreen(themeManager.getScreen(ThemeAnalyzer.MCUI_SETTINGS))
             }
 
             return 1

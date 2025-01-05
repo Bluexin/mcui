@@ -376,6 +376,8 @@
   "mcui.screen.settings.name": "Settings",
   "mcui.screen.testgui.name": "Test Gui",
   "mcui.screen.back": "Back",
+  "mcui.screen.cancel": "Cancel",
+  "mcui.screen.apply": "Apply",
   "mcui.screen.settinglabel": "%1$s : %2$s",
   "# Themes Settings": "",
   "mcui.screen.settings.boolean.true": "Yes",

@@ -116,6 +116,7 @@ class LuaJManager(
                 if (result.arg1().isboolean() && result.arg1().checkboolean()) {
                     logger.debug { "Read $rl : $result" }
                 } else {
+                    // TODO : add to error reporting
                     logger.warn { "Read $rl : $result" }
                 }
 

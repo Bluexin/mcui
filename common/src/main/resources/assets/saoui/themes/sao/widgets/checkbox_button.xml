@@ -71,11 +71,6 @@
         </glString>
     </children>
 
-    <!--<onClick>
-        local mouseX, mouseY, button = ...
-        print("onClick with " .. button .. " from Lua script !")
-    </onClick>-->
-
     <onMouseOverEvent>
         local button, _, _, entered = ...
         button.setVariable('isHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })

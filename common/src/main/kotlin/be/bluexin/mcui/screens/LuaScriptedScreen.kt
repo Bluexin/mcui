@@ -22,7 +22,7 @@ import java.util.*
 
 class LuaScriptedScreen(
     private val screenId: ResourceLocation,
-    private val themeId: ResourceLocation? = null
+    themeId: ResourceLocation? = null
 ) : Screen(Component.literal("Lua Scripted Screen")), WidgetParent, KoinComponent {
 
     private val themeManager: ThemeManager by inject()
@@ -52,15 +52,11 @@ class LuaScriptedScreen(
 
     private var focus: Widget? = null
 
-    init {
+    fun load(callback: (ResourceLocation) -> Unit) {
         LoadWidget[rootId] = this
+        LoadFragment[rootId] = root
         try {
-            // TODO : caching
-            if (themeId != null) {
-                themeManager.getAllScreens(screenId)[themeId]?.invoke(rootId)
-            } else {
-                themeManager.getConfiguredScreen(screenId)?.invoke(rootId)
-            }
+            callback(rootId)
         } catch (e: Throwable) {
             Minecraft.getInstance().player?.sendSystemMessage(Component.literal("Something went wrong : ${e.message}. See console for more info."))
             Constants.LOG.error("Couldn't evaluate initializer for $screenId", e)
@@ -105,12 +101,6 @@ class LuaScriptedScreen(
         super.added()
         LoadFragment[rootId] = root
         LoadWidget[rootId] = this
-    }
-
-    override fun removed() {
-        super.removed()
-        LoadFragment.clear(rootId)
-        LoadWidget.clear(rootId)
     }
 
     override fun plusAssign(widget: Widget) {

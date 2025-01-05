@@ -434,7 +434,7 @@ fun INeoParent.themeButton(theme: ThemeDefinition): IconLabelElement {
             )
         ) {
         override var highlighted: Boolean
-            get() = themeManager.currentTheme === theme && !OptionCore.VANILLA_UI.isEnabled
+            get() = false //themeManager.currentTheme === theme && !OptionCore.VANILLA_UI.isEnabled
             set(_) = (Unit)
     }
     but.onClick { _, _ ->

@@ -111,14 +111,18 @@ class LoadFragment(private val theme: ThemeDefinition) : LuaFunction(), KoinComp
             val id = generateId()
             val serializer = Variables.serializer()
 
-            @OptIn(ExperimentalSerializationApi::class) // TODO : move this special handling to the decoder
-            val fragmentReference = AbstractLuaDecoder
-                .LuaMapDecoder(arg3.checktable(), null, serializer.descriptor.getElementDescriptor(0))
-                .decodeSerializableValue(serializer).let { variables ->
-                    FragmentReference(id = id, serializedVariables = variables).also {
-                        it.setup(target, mapOf(ResourceLocation(id) to { fragment }), theme)
-                    }
-                }
+            val luaVars = arg3.checktable()
+            val variables = if (luaVars.length() > 0) {
+                @OptIn(ExperimentalSerializationApi::class) // TODO : move this special handling to the decoder
+                AbstractLuaDecoder
+                    .LuaMapDecoder(luaVars, null, serializer.descriptor.getElementDescriptor(0))
+                    .decodeSerializableValue(serializer)
+            } else Variables.EMPTY
+
+            // This pops context
+            val fragmentReference = FragmentReference(id = id, serializedVariables = variables).also {
+                it.setup(target, mapOf(ResourceLocation(id) to { fragment }), theme)
+            }
 
             target.add(fragmentReference)
 
@@ -183,18 +187,22 @@ object LoadWidget : LuaFunction(), KoinComponent {
         try {
             val (target, widget) = internalLoad(arg1, arg2)
             val serializer = Variables.serializer()
-            @OptIn(ExperimentalSerializationApi::class) // TODO : move this special handling to the decoder
-            AbstractLuaDecoder.LuaMapDecoder(arg3.checktable(), null, serializer.descriptor.getElementDescriptor(0))
-                .decodeSerializableValue(serializer).let { variables ->
-                    variables.variable.forEach { (key, expressionIntermediate) ->
-                        if (expressionIntermediate.expression.isNotEmpty()) {
-                            val value = expressionIntermediate.type.expressionAdapter.compile(expressionIntermediate)
-                            Constants.LOG.trace { "Deserialized $key -> `${expressionIntermediate.expression}`" }
-                            widget.setVariable(key, value)
+            val luaVars = arg3.checktable()
+            if (luaVars.keyCount() > 0) {
+                @OptIn(ExperimentalSerializationApi::class) // TODO : move this special handling to the decoder
+                AbstractLuaDecoder.LuaMapDecoder(luaVars, null, serializer.descriptor.getElementDescriptor(0))
+                    .decodeSerializableValue(serializer).let { variables ->
+                        variables.variable.forEach { (key, expressionIntermediate) ->
+                            if (expressionIntermediate.expression.isNotEmpty()) {
+                                val value =
+                                    expressionIntermediate.type.expressionAdapter.compile(expressionIntermediate)
+                                Constants.LOG.trace { "Deserialized $key -> `${expressionIntermediate.expression}`" }
+                                widget.setVariable(key, value)
+                            }
                         }
                     }
-                }
-            libHelper.popContext() // from Variables deser
+                libHelper.popContext() // from Variables deser
+            }
 
             target += widget
             Constants.LOG.debug { "Adding ${widget.name} to ${(target as? Widget)?.hierarchyName ?: target.name}" }

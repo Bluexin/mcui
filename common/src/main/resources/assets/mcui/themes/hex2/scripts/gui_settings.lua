@@ -17,7 +17,8 @@ local dropdownSupport = require 'choice_dropdown_support'
 local checkboxSupport = require 'checkbox_support'
 
 --- @param parent Widget the parent's **content** widget
-local function addThemeSettings(parent)
+--- @param changes table
+local function addThemeSettings(parent, changes)
     local settingsCount = 0
     for index, screenId in ipairs(settings.allScreenIds()) do
         local screenLocalKey = screenId.namespace .. '.screen.' .. screenId.path
@@ -41,8 +42,7 @@ local function addThemeSettings(parent)
             ),
             setValue = function(newValue)
                 local themeId, _ = newValue.expression:gsub('mcui.theme.', ''):gsub('"', '')
-                --print('Setting screen ' .. screenId.string .. ' to ' .. themeId)
-                settings.setScreenConfiguration(screenId, themeId)
+                changes[screenId] = themeId
             end,
         }) then
             settingsCount = settingsCount + 1
@@ -143,13 +143,29 @@ local function gui(root)
     print('Starting to analyse settings')
     local themes = wl.loadCategory(root, 'scaledheight / 2 - 10', xPos, 'themeselection', function()
         return 'format("mcui.screen.settings.themeselection")'
-    end)
+    end, true)
     if (themes) then
-        themes.extra.onClose = function()
-            print('Closing themes, add callback to cache screens here ?')
+        local changes = {}
+        themes.extra.cancel = function()
+            -- TODO : update button values
+            wl.onCloseCategory(themes)
         end
+        themes.extra.apply = function()
+            -- TODO : close screen or smth to prevent spam of unregistered setting ? Or even properly fix settings for use in screens
+            for screenId, themeId in pairs(changes) do
+                settings.setScreenConfiguration(screenId, themeId)
+            end
+            wl.onCloseCategory(themes)
+        end
+
+        themes.extra.onClose = function()
+            util.clear(changes)
+            print('Close themes')
+        end
+
         local themesContent = wl.getChildWidget(themes, 'content')
-        addThemeSettings(themesContent)
+        wl.loadCancelApplyButtons(themesContent)
+        addThemeSettings(themesContent, changes)
     end
 
     --- @type table<string, table<string, table<string, Setting>>>

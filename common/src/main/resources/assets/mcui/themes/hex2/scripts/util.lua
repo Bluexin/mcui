@@ -79,6 +79,13 @@ function util.map(from, mapper)
     return r
 end
 
+--- @param tbl table
+function util.clear(tbl)
+    for k in pairs(tbl) do
+        tbl[k] = nil
+    end
+end
+
 --- @param input string
 --- @return boolean
 function util.string_to_boolean(input)
