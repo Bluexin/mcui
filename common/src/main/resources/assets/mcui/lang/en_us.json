@@ -382,6 +382,7 @@
   "# Themes Settings": "",
   "mcui.screen.settings.boolean.true": "Yes",
   "mcui.screen.settings.boolean.false": "No",
+  "mcui.screen.settings.mcui.hex2/debug": "Debug",
   "mcui.screen.settings.mcui.hex2/hud": "HUD",
   "mcui.theme.mcui/hex2.setting.hud/vertical_hotbar.name": "Vertical Hotbar",
   "mcui.theme.mcui/hex2.setting.hud/health_offset_x.name": "Health Box X Offset",

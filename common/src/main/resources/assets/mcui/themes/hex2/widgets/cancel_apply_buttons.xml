@@ -157,7 +157,7 @@
         </widget>
 
         <glString name="debug">
-            <enabled>settings.boolean("mcui:hex2", "hud:debug_mode")</enabled>
+            <enabled>settings.boolean("mcui:hex2", "debug:debug_mode")</enabled>
             <text>"cancel_apply " + xPos</text>
             <rgba>0x0B8B00</rgba>
             <x>initialWidth</x>

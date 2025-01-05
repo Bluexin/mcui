@@ -32,10 +32,10 @@
     "comment": "Hide health numbers section of the HUD"
   },
   {
-    "key": "hud:debug_mode",
+    "key": "debug:debug_mode",
     "type": "boolean",
     "defaultValue": false,
-    "comment": "Enable HUD debug mode"
+    "comment": "Enable the theme\\'s debug mode"
   },
   {
     "key": "hud:test_choice",
