@@ -11,7 +11,7 @@ fun ResourceLocation.append(suffix: String) = ResourceLocation(namespace, "$path
 
 class RLSerializer : KSerializer<ResourceLocation> {
     override fun deserialize(decoder: Decoder): ResourceLocation =
-        decoder.decodeString().let(::ResourceLocation)
+        decoder.decodeString().lowercase().let(::ResourceLocation)
 
     override val descriptor = PrimitiveSerialDescriptor(ResourceLocation::class.qualifiedName!!, PrimitiveKind.STRING)
 

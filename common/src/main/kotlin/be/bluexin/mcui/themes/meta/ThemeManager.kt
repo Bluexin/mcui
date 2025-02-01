@@ -53,6 +53,7 @@ class ThemeManager(
     // TODO: loading reporter (amount of issues, details, missing keys, ..?)
 
     lateinit var HUD: Hud
+        private set
     lateinit var themeList: Map<ResourceLocation, ThemeDefinition>
         private set
 
