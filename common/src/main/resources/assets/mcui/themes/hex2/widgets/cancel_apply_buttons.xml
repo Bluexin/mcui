@@ -71,10 +71,10 @@
                     <text>cancel_text</text>
                 </glString>
             </children>
-            <onMouseOverEvent>
+            <onMouseOver>
                 local self, _, _, entered = ...
                 self.parentElement.setVariable('isCancelHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
-            </onMouseOverEvent>
+            </onMouseOver>
             <onClick>
                 --- @type Widget
                 local self = ...
@@ -139,10 +139,10 @@
                     <text>apply_text</text>
                 </glString>
             </children>
-            <onMouseOverEvent>
+            <onMouseOver>
                 local self, _, _, entered = ...
                 self.parentElement.setVariable('isApplyHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
-            </onMouseOverEvent>
+            </onMouseOver>
             <onClick>
                 --- @type Widget
                 local self = ...

@@ -1,0 +1,66 @@
+{
+  "completion": {
+    "autoRequire": true,
+    "autoRequireFunction": "require",
+    "autoRequireNamingConvention": "snake-case",
+    "callSnippet": false,
+    "postfix": "@"
+  },
+  "signature": {
+    "detailSignatureHelper": false
+  },
+  "diagnostics": {
+    "disable": [
+      "duplicate-type"
+    ],
+    "globals": [],
+    "globalsRegex": [],
+    "severity": {},
+    "enables": []
+  },
+  "hint": {
+    "paramHint": true,
+    "indexHint": true,
+    "localHint": true,
+    "overrideHint": true
+  },
+  "runtime": {
+    "version": "Lua5.1",
+    "requireLikeFunction": [],
+    "frameworkVersions": [],
+    "extensions": [
+      ".lua"
+    ],
+    "requirePattern": [
+      "common/src/main/resources/assets/mcui/library/?.lua"
+    ]
+  },
+  "workspace": {
+    "ignoreDir": [
+      ".idea",
+      ".vs",
+      ".vscode"
+    ],
+    "ignoreGlobs": [],
+    "library": [],
+    "workspaceRoots": [
+      "/common/src/main/resources/assets/mcui/themes/hex2/scripts",
+      "/common/src/main/resources/assets/saoui/themes/sao/scripts"
+    ],
+    "preloadFileSize": 1048576,
+    "encoding": ""
+  },
+  "resource": {
+    "paths": []
+  },
+  "codeLens": {
+    "enable": true
+  },
+  "strict": {
+    "requirePath": true,
+    "typeCall": true
+  },
+  "semanticTokens": {
+    "enable": true
+  }
+}

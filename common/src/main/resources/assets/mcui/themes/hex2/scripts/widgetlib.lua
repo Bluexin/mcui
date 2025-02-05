@@ -60,8 +60,8 @@ function wl.static(value)
 end
 
 --- @param value string|number|boolean
---- @param jtype? JelType|nil
---- @param nowrap? boolean
+--- @param jtype JelType|nil
+--- @param nowrap boolean|nil
 --- @return CValue
 function wl.tstatic(value, jtype, nowrap)
     if (not jtype or type(jtype) ~= "string") then
@@ -88,12 +88,12 @@ function wl.tstatic(value, jtype, nowrap)
 end
 
 --- @param value string|number
---- @param jtype? JelType
---- @param nowrap? boolean
+--- @param jtype JelType|nil
+--- @param nowrap boolean|nil
 --- @return CValue
 function wl.tframe(value, jtype, nowrap)
     local basic = wl.tstatic(value, jtype, nowrap)
-    basic.cache = "PER_FRAME"
+    basic.cache = 'PER_FRAME'
     return basic
 end
 
@@ -145,10 +145,10 @@ end
 
 local label_button_frag = theme.readWidget("mcui.hex2:label_button")
 
---- @shape buttonArgs
+--- @class buttonArgs
 --- @field key string|nil mapped to the widget's name
---- @field xPos? string|number|CDouble
---- @field yPos? string|number|CDouble
+--- @field xPos string|number|CDouble|nil
+--- @field yPos string|number|CDouble|nil
 --- @field width number|nil
 --- @field label string|CString|nil
 --- @field tooltip string|CString|nil
@@ -239,8 +239,8 @@ local category_frag = theme.readWidget("mcui.hex2:category_label_button")
 --- @param yPos string|number|nil|CValue
 --- @param xPos string|number|nil|CValue
 --- @param label string
---- @param display? fun(id: string): string
---- @param noBackButton? boolean
+--- @param display (fun(id: string): string)|nil
+--- @param noBackButton boolean|nil
 --- @return Widget|nil
 function wl.loadCategory(parent, yPos, xPos, label, display, noBackButton)
     local baseArgs = {}

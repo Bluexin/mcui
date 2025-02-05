@@ -1,3 +1,4 @@
+---@diagnostic disable: duplicate-type
 --- @module choice_dropdown_support
 local cds = {}
 
@@ -87,11 +88,11 @@ local function loadDropdownOption(parent, args, index)
     end
 end
 
---- @shape dropdownArgs
+--- @class dropdownArgs
 --- @field currentValue string
 --- @field key string mapped to the widget's name
---- @field xPos? string|number|CDouble
---- @field yPos? string|number|CDouble
+--- @field xPos string|number|CDouble|nil
+--- @field yPos string|number|CDouble|nil
 --- @field width number|nil
 --- @field label string|CString|nil
 --- @field tooltip string|CString|nil
@@ -99,7 +100,7 @@ end
 --- @field variables table<string, CValue>|nil
 --- @field options dropdownOption[]
 
---- @shape dropdownOption
+--- @class dropdownOption
 --- @field key string
 --- @field labelLocalization CValue|nil
 --- @field tooltipLocalization CValue|nil

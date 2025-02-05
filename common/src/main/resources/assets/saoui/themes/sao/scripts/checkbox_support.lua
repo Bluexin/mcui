@@ -23,7 +23,6 @@ local function loadCheckbox(root, args)
 
     local allArgs = util.merge(
             baseArgs,
-    --- @type table<string, CValue>
             args.variables or {}
     )
 
@@ -47,11 +46,11 @@ local function loadCheckbox(root, args)
     return r
 end
 
---- @shape checkboxArgs
+--- @class checkboxArgs
 --- @field currentValue boolean
 --- @field key string mapped to the widget's name
---- @field xPos? string|number|CDouble
---- @field yPos? string|number|CDouble
+--- @field xPos string|number|CDouble|nil
+--- @field yPos string|number|CDouble|nil
 --- @field width number|nil
 --- @field label string|CString|nil
 --- @field tooltip string|CString|nil

@@ -66,10 +66,10 @@
         return true
     </onClick>
 
-    <onMouseOverEvent>
+    <onMouseOver>
         local button, _, _, entered = ...
         button.setVariable('isHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
-    </onMouseOverEvent>
+    </onMouseOver>
 
     <extra>
         <value key="test1">return 3</value>

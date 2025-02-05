@@ -57,8 +57,8 @@
         return true
     </onClick>
 
-    <onMouseOverEvent>
+    <onMouseOver>
         local button, _, _, entered = ...
         button.setVariable('isHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
-    </onMouseOverEvent>
+    </onMouseOver>
 </bl:widget>

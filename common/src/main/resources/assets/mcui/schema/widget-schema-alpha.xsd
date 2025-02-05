@@ -1,0 +1,69 @@
+<?xml version='1.0'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha"
+           targetNamespace="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha">
+
+    <xs:element name="widget" type="Widget" substitutionGroup="bl:element">
+        <xs:annotation>
+            <xs:documentation>Root element, used as 'bl:widget'.</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="glRectangle" substitutionGroup="bl:element" type="bl:GLRectangle"/>
+    <xs:element name="glString" substitutionGroup="bl:element" type="bl:GLString"/>
+    <xs:element name="glHotbarItem" substitutionGroup="bl:element" type="bl:GLHotbarItem"/>
+    <xs:element name="elementGroup" substitutionGroup="bl:element" type="bl:ElementGroup"/>
+    <xs:element name="repetitionGroup" substitutionGroup="bl:element" type="bl:RepetitionGroup"/>
+    <xs:element name="rawElement" substitutionGroup="bl:element" type="bl:RawElement"/>
+    <xs:element name="fragmentReference" substitutionGroup="bl:element" type="bl:FragmentReference"/>
+
+    <xs:complexType name="ExtraValue">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="key" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="Widget">
+        <xs:annotation>
+            <xs:documentation>
+                Defines a widget
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="bl:ElementGroup">
+                <xs:sequence>
+                    <xs:element name="expect">
+                        <xs:complexType>
+                            <xs:sequence maxOccurs="unbounded">
+                                <xs:element name="variable" type="bl:TypedCachedExpression"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="children">
+                        <xs:complexType>
+                            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                                <xs:element ref="bl:element"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="contentWidth" type="bl:CachedExpression"/>
+                    <xs:element name="contentHeight" type="bl:CachedExpression"/>
+                    <xs:element name="active" type="bl:CachedExpression" default="true" minOccurs="0"/>
+                    <xs:element name="onClick" type="xs:string" default="null" minOccurs="0"/>
+                    <xs:element name="onMouseOver" type="xs:string" default="null" minOccurs="0"/>
+                    <xs:element name="tooltip" type="bl:CachedExpression"/>
+                    <xs:element name="onLoseFocus" type="xs:string" default="null" minOccurs="0"/>
+                    <xs:element name="extra" default="null" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence maxOccurs="unbounded">
+                                <xs:element name="value" type="ExtraValue"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>

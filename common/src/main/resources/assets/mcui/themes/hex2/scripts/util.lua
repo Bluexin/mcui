@@ -13,12 +13,11 @@ function util.getOrCreate(t, key)
 end
 
 --- @param tbl table
---- @param indent? number
-function util.tprint (tbl, indent)
+--- @param indent number|nil
+function util.tprint(tbl, indent)
     if not indent then
         indent = 0
     end
-    local indent = --[[---@type number]] indent
     local toprint = "{\r\n"
     indent = indent + 2
     for k, v in pairs(tbl) do

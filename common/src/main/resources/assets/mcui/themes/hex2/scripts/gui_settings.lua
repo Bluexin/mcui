@@ -83,8 +83,8 @@ local function booleanSettingButton(parent, setting, catN)
                     return true
                 end,
                 variables = {
-                    currentValue = wl.tframe('settings.boolean("' .. setting.namespace.string .. '", "' .. setting.key.string .. '")', 'BOOLEAN')
-                }
+                    currentValue = wl.tframe('settings.boolean("' .. setting.namespace.string .. '", "' .. setting.key.string .. '")', 'BOOLEAN'),
+                },
             }
     )
 end

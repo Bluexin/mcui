@@ -70,7 +70,7 @@ class Widget(
     @XmlSerialName("onClick")
     val onClickScript: String? = null,
     @XmlElement
-    @XmlSerialName("onMouseOverEvent")
+    @XmlSerialName("onMouseOver")
     val onMouseOverEventScript: String? = null,
     @XmlElement
     @XmlSerialName
@@ -185,7 +185,7 @@ class Widget(
             try {
                 onMouseOverEvent(mouseX, mouseY, isMouseOver)
             } catch (e: Throwable) {
-                Client.showError("Error while evaluating onMouseOverEvent handler for $name", e)
+                Client.showError("Error while evaluating onMouseOver handler for $name", e)
                 onMouseOverEvent = { _, _, _ -> }
             }
         }
