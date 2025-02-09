@@ -1,0 +1,35 @@
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="menu_page">
+    <expect>
+        <variable key="pageKey" type="STRING"/>
+        <variable key="parentPageKey" type="STRING"/>
+        <variable key="isOpen" type="BOOLEAN" cache="STATIC">false</variable>
+    </expect>
+    <contentWidth>0</contentWidth>
+    <contentHeight>0</contentHeight>
+    <children>
+        <widget name="content">
+            <x cache="STATIC">0</x>
+            <y cache="STATIC">0</y>
+            <enabled>isOpen</enabled>
+            <contentWidth cache="STATIC">0</contentWidth>
+            <contentHeight cache="STATIC">0</contentHeight>
+            <children>
+
+            </children>
+        </widget>
+    </children>
+
+    <extra>
+        <value key="close">
+            --- @type Widget
+            local self = ...
+
+            return function()
+            if self.parentElement.extra.open then
+            self.parentElement.extra.open(self.getVariable('parentPageKey').expression)
+            end
+            return true
+            end
+        </value>
+    </extra>
+</bl:widget>

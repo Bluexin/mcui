@@ -1,0 +1,29 @@
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="menu_parent">
+    <contentWidth>0</contentWidth>
+    <contentHeight>0</contentHeight>
+    <x>xPos</x>
+    <y>yPos</y>
+
+    <extra>
+        <value key="open">
+            local wl = require 'widgetlib'
+            local util = require 'util'
+            --- @type Widget
+            local self = ...
+
+            --- @param key string
+            return function(key)
+            if self.allChildren then
+            for i, child in ipairs(self.allChildren) do
+            if child.name == 'menu_page' then
+            --- @type Widget
+            local child = child
+            local childKey = child.getVariable('pageKey').expression:gsub('"', '')
+            child.setVariable('isOpen', wl.tstatic(childKey == key or childKey == key:gsub('"', '')))
+            end
+            end
+            end
+            end
+        </value>
+    </extra>
+</bl:widget>
