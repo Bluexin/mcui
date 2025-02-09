@@ -57,7 +57,9 @@ sealed class AbstractLuaEncoder(protected val parent: AbstractLuaEncoder? = null
         override fun endStructure(descriptor: SerialDescriptor) {
             parent?.let {
                 when {
-                    properties.keyCount() > 1 -> it.endChild(properties)
+                    // maps should always get serialized in full
+                    descriptor.kind == StructureKind.MAP
+                            || properties.keyCount() > 1 -> it.endChild(properties)
                     // Single non-optional can get serialized as direct value
                     properties.keyCount() == 1 -> it.endChild(properties[properties.keys().single()])
                     else -> it.endChild(LuaTable())

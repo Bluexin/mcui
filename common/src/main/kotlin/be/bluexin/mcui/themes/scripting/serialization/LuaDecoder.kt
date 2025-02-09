@@ -31,19 +31,25 @@ sealed class AbstractLuaDecoder(
             StructureKind.LIST -> LuaListDecoder(popValue as LuaValue, this)
             StructureKind.MAP -> LuaMapDecoder(popValue as LuaValue, this, descriptor)
             else -> {
-                if (descriptor.elementsCount == 1 && descriptor.getElementDescriptor(0).kind == StructureKind.LIST) {
-                    // we use a listDecoder directly when there is only 1 child, and it is a list
-                    LuaListDecoder(popValue as LuaValue, this)
-                } else if (descriptor.elementsCount == 1 && descriptor.getElementDescriptor(0).kind == StructureKind.MAP) {
-                    // we use a mapDecoder directly when there is only 1 child, and it is a map
-                    LuaMapDecoder(popValue as LuaValue, this, descriptor.getElementDescriptor(0))
-                } else when (val value = popValue) {
-                    is LuaTable -> {
-                        if (value.keys().all { it.isnumber() }) LuaListDecoder(value, this)
-                        else LuaDecoder(value, this, descriptor)
+                when {
+                    descriptor.elementsCount == 1 && descriptor.getElementDescriptor(0).kind == StructureKind.LIST -> {
+                        // we use a listDecoder directly when there is only 1 child, and it is a list
+                        LuaListDecoder(popValue as LuaValue, this)
                     }
 
-                    else -> LuaDirectDecoder(value, this)
+                    descriptor.elementsCount == 1 && descriptor.getElementDescriptor(0).kind == StructureKind.MAP -> {
+                        // we use a mapDecoder directly when there is only 1 child, and it is a map
+                        LuaMapDecoder(popValue as LuaValue, this, descriptor.getElementDescriptor(0))
+                    }
+
+                    else -> when (val value = popValue) {
+                        is LuaTable -> {
+                            if (value.keys().all(LuaValue::isnumber)) LuaListDecoder(value, this)
+                            else LuaDecoder(value, this, descriptor)
+                        }
+
+                        else -> LuaDirectDecoder(value, this)
+                    }
                 }
             }
         }

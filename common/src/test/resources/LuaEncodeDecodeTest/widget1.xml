@@ -1,0 +1,31 @@
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="test_widget">
+    <expect>
+        <variable key="one" type="STRING"/>
+        <variable key="two" type="STRING"/>
+        <variable key="three" type="BOOLEAN" cache="STATIC">false</variable>
+    </expect>
+    <contentWidth>0</contentWidth>
+    <contentHeight>0</contentHeight>
+    <x>12</x>
+    <y>15</y>
+    <children>
+        <widget name="content">
+            <x cache="STATIC">0</x>
+            <y cache="STATIC">0</y>
+            <enabled>three</enabled>
+            <contentWidth cache="STATIC">0</contentWidth>
+            <contentHeight cache="STATIC">0</contentHeight>
+            <children>
+
+            </children>
+        </widget>
+    </children>
+
+    <extra>
+        <value key="testExtra">
+            return function(self)
+            return 42
+            end
+        </value>
+    </extra>
+</bl:widget>

@@ -89,6 +89,9 @@ subprojects {
         ksp(libs.koin.processor)
 
         testImplementation(kotlin("test-junit5"))
+        testImplementation(libs.mockk)
+        testImplementation(libs.koin.test)
+
     }
 
     java {
@@ -115,6 +118,10 @@ subprojects {
     base.archivesName.set(property("mod_id").toString())
     version = property("version").toString()
     group = property("group").toString()
+
+    tasks.test {
+        useJUnitPlatform()
+    }
 
     repositories {
         mavenCentral()

@@ -245,7 +245,7 @@ class Widget(
         extraScripts.values.forEach { (key, script) ->
             extra[key] = try {
                 luaJManager.compileSnippet("${this.name}/$name".lowercase(), script, theme)
-                    .call()
+                    .call(toLua())
             } catch (e: Throwable) {
                 LuaValue.varargsOf(
                     arrayOf(LuaValue.NIL, LuaValue.valueOf(e.message))

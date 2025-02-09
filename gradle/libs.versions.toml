@@ -34,6 +34,8 @@ bcel = { require = "6.7.0" }
 luajksp = "0.1-alpha-10"
 ksp = "2.0.20-1.0.25"
 
+mockk = "1.13.16"
+
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 architectury = { module = "dev.architectury:architectury", version.ref = "architectury" }
@@ -86,6 +88,9 @@ koin_core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin_logger = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin" }
 koin_annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin_annotations" }
 koin_processor = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin_annotations" }
+koin_test = { module = "io.insert-koin:koin-test-junit5", version.ref = "koin" }
+
+mockk = { module = "io.mockk:mockk-jvm", version.ref = "mockk" }
 
 [bundles]
 coroutines = [

@@ -6,7 +6,7 @@ local util = require 'util'
 
 --- @param parent Widget|nil
 --- @param name string
---- @return Widget|nil
+--- @return Widget
 function wl.getChildWidget(parent, name)
     if parent then
         local child = (--[[---@type Widget]] parent).getChildByName(name)
@@ -14,8 +14,7 @@ function wl.getChildWidget(parent, name)
             return --[[---@type Widget]] child
         end
     end
-    error('No child widget with name ' .. name .. " on " .. ((parent and (--[[---@type Widget]] parent).name) or 'missing parent'))
-    return nil
+    return error('No child widget with name ' .. name .. " on " .. ((parent and (--[[---@type Widget]] parent).name) or 'missing parent'))
 end
 
 --- @param categoryContent Widget
@@ -60,8 +59,8 @@ function wl.static(value)
 end
 
 --- @param value string|number|boolean
---- @param jtype JelType|nil
---- @param nowrap boolean|nil
+--- @param jtype? JelType
+--- @param nowrap? boolean
 --- @return CValue
 function wl.tstatic(value, jtype, nowrap)
     if (not jtype or type(jtype) ~= "string") then
@@ -88,8 +87,8 @@ function wl.tstatic(value, jtype, nowrap)
 end
 
 --- @param value string|number
---- @param jtype JelType|nil
---- @param nowrap boolean|nil
+--- @param jtype? JelType
+--- @param nowrap? boolean
 --- @return CValue
 function wl.tframe(value, jtype, nowrap)
     local basic = wl.tstatic(value, jtype, nowrap)

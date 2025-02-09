@@ -1,4 +1,3 @@
----@diagnostic disable: duplicate-type
 --- @module choice_dropdown_support
 local cds = {}
 
@@ -44,7 +43,7 @@ local function loadDropdown(root, args)
 
     local r = theme.loadWidget(root, dropdown_frag, allArgs)
     if not r then
-        print('Could not load button ' .. args.label)
+        print('Could not load button ' .. args.label or 'unknown')
     else
         local w = --[[---@type Widget]] r
         setValueFn(w, args.setValue)
