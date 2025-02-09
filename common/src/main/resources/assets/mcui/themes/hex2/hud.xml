@@ -13,7 +13,7 @@
                         <y cache="STATIC">40</y>
                         <variables>
                             <variable type="STRING" key="text">"Choice setting value: " +
-                                settings.string("hud:test_choice")
+                                settings.string("debug:test_choice")
                             </variable>
                         </variables>
                     </fragmentReference>

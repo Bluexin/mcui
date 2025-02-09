@@ -17,35 +17,6 @@ function wl.getChildWidget(parent, name)
     return error('No child widget with name ' .. name .. " on " .. ((parent and (--[[---@type Widget]] parent).name) or 'missing parent'))
 end
 
---- @param categoryContent Widget
---- @param n number amount of children
-function wl.centerCategoryContent(categoryContent, n)
-    if n > 1 then
-        categoryContent.y = -20 * math.floor((n - 2) / 2)
-    end
-
-    local maxWidth = -1
-    local children = categoryContent.allChildren
-    for i, v in ipairs(children) do
-        if i > 1 and type(v) == 'Widget' then
-            -- skipping "back" button
-            local width = tonumber(v.getVariable('initialWidth').expression)
-            --print('Checking width of ' .. util.tprint(v.getVariable('initialWidth')) .. ' in ' .. v.name)
-            if width > maxWidth then
-                maxWidth = width
-            end
-        end
-    end
-    --print('Resizing ' .. tostring(n) .. ' children of ' .. categoryContent.hierarchyName .. ' to a width of ' .. maxWidth)
-    if (maxWidth > 0) then
-        for _, v in ipairs(children) do
-            if type(v) == 'Widget' then
-                v.setVariable('initialWidth', wl.tstatic(maxWidth, 'INT'))
-            end
-        end
-    end
-end
-
 function wl.static(value)
     if (type(value) == "string") then
         value = "\"" .. value .. "\""
@@ -198,89 +169,12 @@ local cancel_apply_button_frag = theme.readWidget("mcui.hex2:cancel_apply_button
 --- @return Widget|boolean
 function wl.loadCancelApplyButtons(parent)
     local r = theme.loadWidget(parent, cancel_apply_button_frag, {
-        yPos = wl.tstatic(-20)
+        yPos = wl.tstatic(-10)
     })
     if not r then
         print('Could not load cancel/apply buttons for ' .. parent.hierarchyName)
     end
     return r
-end
-
---- @param cat Widget
-local function onCloseCategory(cat)
-    cat.setVariable('isOpen', wl.tstatic(false))
-    if (cat.extra.onClose) then
-        cat.extra.onClose()
-    end
-
-    --- @type Element[]
-    local peers = cat.peers
-    for _, peer in ipairs(peers) do
-        if type(peer) == 'Widget' then
-            peer.setVariable('isPeerOpen', wl.tstatic(false))
-        end
-    end
-    return true
-end
-
---- @param self Widget
-local function onClickBackButton(self)
-    local cat = --[[--- @type Widget]] self.parentElement.parentElement
-    return onCloseCategory(cat)
-end
-
-wl.onClickBackButton = onClickBackButton
-wl.onCloseCategory = onCloseCategory
-
-local category_frag = theme.readWidget("mcui.hex2:category_label_button")
-
---- @param parent string|Widget
---- @param yPos string|number|nil|CValue
---- @param xPos string|number|nil|CValue
---- @param label string
---- @param display (fun(id: string): string)|nil
---- @param noBackButton boolean|nil
---- @return Widget|nil
-function wl.loadCategory(parent, yPos, xPos, label, display, noBackButton)
-    local baseArgs = {}
-
-    wl.bind(baseArgs, 'xPos', xPos, wl.tframe, 'DOUBLE')
-    wl.bind(baseArgs, 'yPos', yPos, wl.tframe, 'DOUBLE')
-
-    local allArgs = util.merge(
-            baseArgs, {
-                text = wl.tstatic((display and display(label)) or '"' .. label .. '"', "STRING", true)
-            }
-    )
-
-    local r = theme.loadWidget(parent, category_frag, allArgs)
-    if not r then
-        print('Could not load category ' .. label)
-        return nil
-    else
-        local w = --[[---@type Widget]] r
-        w.name = 'cat_' .. label:lower():gsub(':', '_')
-
-        if not noBackButton then
-            local content = wl.getChildWidget(w, 'content')
-            local bk = w.name .. '_back'
-            local backButton = wl.loadButton(content, {
-                key = bk,
-                --xPos = 0,
-                yPos = -20,
-                label = wl.tstatic('format("mcui.screen.back")', 'STRING', true),
-                onClick = onClickBackButton,
-                variables = {
-                    isPeerOpen = wl.tstatic(false),
-                },
-            })
-            if backButton then
-                (--[[---@type Widget]] backButton).enabled = wl.tframe('!isPeerOpen', 'BOOLEAN')
-            end
-        end
-    end
-
-    return --[[---@type Widget]] r
 end
 
 return wl

@@ -8,15 +8,19 @@
     <contentHeight>0</contentHeight>
     <children>
         <widget name="content">
-            <x cache="STATIC">0</x>
-            <y cache="STATIC">0</y>
+            <x>scaledwidth / 2</x>
+            <y>scaledheight / 2</y>
             <enabled>isOpen</enabled>
             <contentWidth cache="STATIC">0</contentWidth>
             <contentHeight cache="STATIC">0</contentHeight>
-            <children>
-
-            </children>
         </widget>
+        <glString name="debug">
+            <enabled>isOpen &amp;&amp; settings.boolean("mcui:hex2", "debug:debug_mode")</enabled>
+            <text>"menu_page " + parentPageKey + "/" + pageKey</text>
+            <rgba cache="STATIC">0x0B8B00</rgba>
+            <x>5</x>
+            <y>scaledheight - 25</y>
+        </glString>
     </children>
 
     <extra>

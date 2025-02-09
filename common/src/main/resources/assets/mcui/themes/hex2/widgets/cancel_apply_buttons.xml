@@ -158,9 +158,10 @@
 
         <glString name="debug">
             <enabled>settings.boolean("mcui:hex2", "debug:debug_mode")</enabled>
-            <text>"cancel_apply " + xPos</text>
+            <text>"cancel_apply " + xPos + "," + yPos</text>
             <rgba>0x0B8B00</rgba>
             <x>initialWidth</x>
+            <shadow cache="STATIC">false</shadow>
         </glString>
     </children>
 </bl:widget>

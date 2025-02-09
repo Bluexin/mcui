@@ -57,9 +57,10 @@
 
                 <glString name="debug">
                     <enabled>settings.boolean("mcui:hex2", "debug:debug_mode")</enabled>
-                    <text>"label_button " + xPos</text>
+                    <text>"label_button " + xPos + "," + yPos</text>
                     <rgba>0x0B8B00</rgba>
                     <x>initialWidth</x>
+                    <shadow cache="STATIC">false</shadow>
                 </glString>
             </children>
         </elementGroup>

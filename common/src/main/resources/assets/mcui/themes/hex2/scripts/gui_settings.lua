@@ -2,6 +2,7 @@ local theme = require 'theme'
 local settings = require 'settings'
 local wl = require 'widgetlib'
 local util = require 'util'
+local menuSupport = require 'menu_support'
 
 --- @param id string ResourceLocation.string
 local function settingsTabName(id)
@@ -27,7 +28,7 @@ local function addThemeSettings(parent, changes)
             currentValue = 'mcui.theme.' .. (currentValue and currentValue.string or 'none'),
             key = screenLocalKey,
             label = wl.tstatic('format("' .. screenLocalKey .. '.name")', 'STRING', true),
-            yPos = (index - 1) * 20,
+            yPos = index * 20 - 10,
             options = util.map(
                     settings.getThemesImplementingScreenId(screenId),
                     function(it)
@@ -53,7 +54,34 @@ local function addThemeSettings(parent, changes)
             settingsCount = settingsCount + 1
         end
     end
-    wl.centerCategoryContent(parent, settingsCount)
+end
+
+--- @param themeSelectionPage Widget
+local function addThemeSelectionPageContent(themeSelectionPage)
+    local changes = {}
+    local themesContent = wl.getChildWidget(themeSelectionPage, 'content')
+
+    themeSelectionPage.extra.cancel = function()
+        themeSelectionPage.extra.close()
+        if next(changes) then
+            util.clear(changes)
+            for _, v in ipairs(themesContent.allChildren) do
+                if v.extra and v.extra.reloadValue then
+                    v.extra.reloadValue()
+                end
+            end
+        end
+    end
+    themeSelectionPage.extra.apply = function()
+        themeSelectionPage.extra.close()
+        for screenId, themeId in pairs(changes) do
+            settings.setScreenConfiguration(screenId, themeId)
+        end
+        util.clear(changes)
+    end
+
+    wl.loadCancelApplyButtons(themesContent)
+    addThemeSettings(themesContent, changes)
 end
 
 --- @param setting Setting
@@ -61,8 +89,6 @@ end
 local function settingTooltip(setting)
     return (setting.commentKey and wl.tstatic('format("' .. setting.commentKey .. '")', 'STRING', true)) or setting.comment
 end
-
-local xPos = 'scaledwidth / 2 - 60'
 
 --- @param parent Widget
 --- @param setting BooleanSetting
@@ -73,7 +99,7 @@ local function booleanSettingButton(parent, setting, catN)
 
     return checkboxSupport.createCheckbox(
             parent, {
-                yPos = catN * 20,
+                yPos = catN * 20 + 10,
                 label = wl.tframe(fullLabel, 'STRING', true),
                 tooltip = settingTooltip(setting),
                 onClick = function(widget)
@@ -99,10 +125,9 @@ local function choiceSettingButton(parent, setting, catN)
         currentValue = wl.tframe('settings.string("' .. setting.namespace.string .. '", "' .. setting.key.string .. '")', 'STRING', true),
         key = screenLocalKey,
         label = wl.tstatic('format("' .. screenLocalKey .. '.name")', 'STRING', true),
-        yPos = catN * 20,
+        yPos = catN * 20 + 10,
         tooltip = settingTooltip(setting),
         options = util.map(setting.values, function(it)
-            local i18nKey = screenLocalKey .. '/' .. it
             return {
                 key = it,
                 variables = {
@@ -145,49 +170,31 @@ local function settingButton(parent, setting, catN)
         local fullLabel = 'format("mcui.screen.settinglabel", formatOr("' .. screenLocalKey .. '", "' .. setting.key.path .. '"), ' .. valueString .. ')'
 
         return wl.loadButton(
-                parent, {
-                    yPos = catN * 20,
-                    label = wl.tframe(fullLabel, 'STRING', true),
-                    tooltip = settingTooltip(setting),
-                    variables = {
-                        active = wl.tstatic(false)
-                    }
+            parent, {
+                yPos = catN * 20 + 10,
+                label = wl.tframe(fullLabel, 'STRING', true),
+                tooltip = settingTooltip(setting),
+                variables = {
+                    active = wl.tstatic(false)
                 }
+            }
         )
     end
 end
 
 local function gui(root)
     print('Starting to analyse settings')
-    local themes = wl.loadCategory(root, 'scaledheight / 2 - 10', xPos, 'themeselection', function()
-        return 'format("mcui.screen.settings.themeselection")'
-    end, true)
-    if (themes) then
-        local changes = {}
-        local themesContent = wl.getChildWidget(themes, 'content')
+    local menuRoot = menuSupport.addMenu(root)
+    local rootPage = menuSupport.addMenuPage(menuRoot, 'root').getChildByName('content')
 
-        themes.extra.cancel = function()
-            wl.onCloseCategory(themes)
-            if next(changes) then
-                util.clear(changes)
-                for _, v in ipairs(themesContent.allChildren) do
-                    if v.extra.reloadValue then
-                        v.extra.reloadValue()
-                    end
-                end
-            end
-        end
-        themes.extra.apply = function()
-            for screenId, themeId in pairs(changes) do
-                settings.setScreenConfiguration(screenId, themeId)
-            end
-            wl.onCloseCategory(themes)
-            util.clear(changes)
-        end
+    menuSupport.addButtonToPage(
+        menuRoot, rootPage, 'themeselection', function()
+            return 'format("mcui.screen.settings.themeselection")'
+        end, { yPos = -10 }
+    )
 
-        wl.loadCancelApplyButtons(themesContent)
-        addThemeSettings(themesContent, changes)
-    end
+    local themes = menuSupport.addMenuPage(menuRoot, 'themeselection', 'root')
+    addThemeSelectionPageContent(themes)
 
     --- @type table<string, table<string, table<string, Setting>>>
     local topCategories = {}
@@ -204,33 +211,44 @@ local function gui(root)
     print("Analyzed settings")
     --print(tprint(topCategories))
 
-    local yPosBase = 'scaledheight / 2 - 10 + '
-    local yPos = 20
+    local yPos = 10
 
     for topLevelName, topLevelValue in pairs(topCategories) do
-        local topLevel = wl.loadCategory(root, yPosBase .. tostring(yPos), xPos, topLevelName, settingsTabName)
-        if topLevel then
-            local tlN = 0
-            local tlContent = wl.getChildWidget(topLevel, 'content')
-            for catName, catValue in pairs(topLevelValue) do
-                local category = wl.loadCategory(tlContent, wl.tstatic(tlN * 20), nil, catName, settingsCategoryName)
-                local catN = 0
-                if category then
-                    local catContent = wl.getChildWidget(category, 'content')
-                    for _, setting in pairs(catValue) do
-                        if (setting.showInUI) then
-                            settingButton(catContent, setting, catN)
-                            catN = catN + 1
-                        end
-                    end
-                    wl.centerCategoryContent(catContent, catN)
+
+        menuSupport.addButtonToPage(menuRoot, rootPage, topLevelName, settingsTabName, {
+            yPos = yPos,
+        })
+
+        local topLevel = menuSupport.addMenuPage(menuRoot, topLevelName, 'root')
+        menuSupport.addBackButton(topLevel)
+
+        local tlN = 0
+        local tlContent = topLevel.getChildByName('content')
+        for catName, catValue in pairs(topLevelValue) do
+            menuSupport.addButtonToPage(menuRoot, tlContent, catName, settingsCategoryName, {
+                yPos = tlN * 20 + 10
+            })
+            local category = menuSupport.addMenuPage(menuRoot, catName, topLevelName)
+            menuSupport.addBackButton(category, {
+                yPos = -10,
+                width = 160,
+            })
+
+            local catN = 0
+            local catContent = wl.getChildWidget(category, 'content')
+            for _, setting in pairs(catValue) do
+                if (setting.showInUI) then
+                    settingButton(catContent, setting, catN)
+                    catN = catN + 1
                 end
-                tlN = tlN + 1
             end
-            wl.centerCategoryContent(tlContent, tlN)
+
+            tlN = tlN + 1
         end
         yPos = yPos + 20
     end
+
+    menuRoot.extra.open('root')
 end
 
 -- split to avoid tail call, which does not seem to work
