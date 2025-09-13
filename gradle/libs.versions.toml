@@ -63,7 +63,7 @@ serialization_core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cor
 serialization_json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm", version.ref = "serialization" }
 serialization_xml_ser = { module = "io.github.pdvrieze.xmlutil:serialization-jvm", version.ref = "serialization_xml" }
 
-jel = { module = "be.bluexin.gnu.jel:gnu-jel", version.ref = "jel" }
+jel = { module = "be.bluexin.jel:gnu-jel", version.ref = "jel" }
 ph_css = { module = "com.helger:ph-css", version.ref = "ph_css" }
 ph_common = { module = "com.helger.commons:ph-commons", version.ref = "ph_commons" }
 slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }

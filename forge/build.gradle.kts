@@ -103,7 +103,7 @@ dependencies {
     }
 
     // TODO : take out what we don't actually need
-    minecraftEmbed("be.bluexin.gnu.jel:gnu-jel:2.1.3") {
+    minecraftEmbed("be.bluexin.jel:gnu-jel:2.1.3") {
         jarJar.ranged(this, "[2.1,3)")
     }
     minecraftEmbed("com.helger:ph-css:6.5.0") {

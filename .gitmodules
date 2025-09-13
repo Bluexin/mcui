@@ -1,0 +1,6 @@
+[submodule "dep-submodules/luaj-ksp"]
+	path = dep-submodules/luaj-ksp
+	url = git@github.com:Bluexin/luaj-ksp.git
+[submodule "dep-submodules/gnu-jel"]
+	path = dep-submodules/gnu-jel
+	url = git@github.com:Bluexin/gnu-jel.git

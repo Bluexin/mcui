@@ -28,3 +28,6 @@ include(
     "fabric",
     "forge"
 )
+
+includeBuild("dep-submodules/gnu-jel")
+includeBuild("dep-submodules/luaj-ksp")

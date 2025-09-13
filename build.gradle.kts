@@ -70,7 +70,7 @@ subprojects {
 
         implementation(variantOf(libs.jel) {
             // TODO : check this does not get included in the final jar
-            classifier("debug")
+//            classifier("debug")
         })
         implementation(libs.bundles.phcss)
         implementation(libs.slf4j)

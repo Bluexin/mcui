@@ -19,3 +19,13 @@ Releases can be found on CurseForge (link on the badges below)
 ## Third-party licenses
 
 Information on third-party libraries included in this mod can be found [here](common/src/main/resources/third_party).
+
+## Project setup
+
+This project now relies on Git submodules to build certain libraries.
+Run the following commands to set everything up :
+
+```sh
+git submodule init
+git submodule update
+```

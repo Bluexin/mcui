@@ -132,7 +132,7 @@ dependencies {
     // implementation "net.shadowfacts:Forgelin:${forgelin_version}"
     implementation 'io.github.chaosunity:forgelin:1.7.20.0'
     implementation ('com.tencao:saomclib:1.12.2-1.4.11') { changing = true }
-    shadow 'be.bluexin.gnu.jel:gnu-jel:2.1.3'
+    shadow 'be.bluexin.jel:gnu-jel:2.1.3'
     shadow 'com.helger:ph-css:6.5.0'
     shadow 'com.helger.commons:ph-commons:10.1.6'
     shadow 'org.slf4j:slf4j-api:1.7.36'
@@ -197,7 +197,7 @@ tasks.register('shadeJar', ShadowJar.class) {
     from sourceSets.main.output
     configurations = [project.configurations.shadow]
 
-    //relocate 'gnu.jel', 'saoui.shade.gnu.jel'
+    //relocate 'jel', 'saoui.shade.jel'
     relocate 'com.helger', 'saoui.shade.com.helger'
     relocate 'org.slf4j', 'saoui.shade.org.slf4j'
     finalizedBy 'reobfJar'
