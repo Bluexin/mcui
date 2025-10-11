@@ -2,7 +2,6 @@ package be.bluexin.mcui.themes.scripting.lib
 
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.scripting.LuaJManager
-import org.koin.core.component.KoinComponent
 import org.luaj.vm2.Globals
 import org.luaj.vm2.LuaValue
 import org.luaj.vm2.lib.OneArgFunction
@@ -11,7 +10,7 @@ import org.luaj.vm2.lib.TwoArgFunction
 class SafetyLib(
     private val theme: ThemeDefinition,
     private val luajManager: LuaJManager,
-) : TwoArgFunction(), KoinComponent {
+) : TwoArgFunction() {
 
     private lateinit var globals: Globals
 
@@ -30,5 +29,4 @@ class SafetyLib(
             ?.let { luajManager.load(it, theme) }
             ?: NIL
     }
-
 }

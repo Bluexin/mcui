@@ -4,6 +4,7 @@ import be.bluexin.mcui.Constants
 import be.bluexin.mcui.logger
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.LibHelper
+import be.bluexin.mcui.themes.scripting.lib.SafeBaseLib
 import be.bluexin.mcui.themes.scripting.lib.SafetyLib
 import be.bluexin.mcui.themes.scripting.lib.SettingsLib
 import be.bluexin.mcui.themes.scripting.lib.ThemeLib
@@ -18,7 +19,6 @@ import org.koin.core.annotation.Single
 import org.luaj.vm2.*
 import org.luaj.vm2.compiler.LuaC
 import org.luaj.vm2.lib.*
-import org.luaj.vm2.lib.jse.JseBaseLib
 import org.luaj.vm2.lib.jse.JseMathLib
 import org.luaj.vm2.lib.jse.JseStringLib
 import kotlin.jvm.optionals.getOrNull
@@ -36,7 +36,7 @@ class LuaJManager(
     private val logger = logger()
 
     private val serverGlobals = Globals().apply {
-        load(JseBaseLib())
+        load(SafeBaseLib)
         load(PackageLib())
         load(JseStringLib())
         load(JseMathLib())
@@ -61,10 +61,7 @@ class LuaJManager(
 
     private fun getEnvFor(theme: ThemeDefinition) = scriptGlobals.getOrPut(theme.id) {
         val globals = Globals().apply {
-            // TODO : verify & lock down file access
-            // dofile, load, loadfile,
-            load(JseBaseLib())
-            // TODO : verify this can't be used to access bad files
+            load(SafeBaseLib)
             load(PackageLib())
             load(Bit32Lib())
             load(TableLib())
@@ -142,7 +139,7 @@ class LuaJManager(
         return chunk
     }
 
-    fun runCallback(theme: ThemeDefinition, closure: LuaValue, args: Varargs) {
+    fun runCallback(theme: ThemeDefinition, closure: LuaValue, args: Varargs): Varargs {
         require(closure is LuaClosure)
         val (userGlobals, setHook) = getEnvFor(theme)
         val userThread = LuaThread(userGlobals, closure)
@@ -151,7 +148,7 @@ class LuaJManager(
                 arrayOf(userThread, hookFunc, LuaValue.EMPTYSTRING, scriptInstructionsLimit)
             )
         )
-        userThread.resume(args)
+        return userThread.resume(args)
     }
 
     fun clearGlobals(theme: ThemeDefinition) {

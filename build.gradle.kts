@@ -91,7 +91,7 @@ subprojects {
         testImplementation(kotlin("test-junit5"))
         testImplementation(libs.mockk)
         testImplementation(libs.koin.test)
-
+        testImplementation(libs.junit.params)
     }
 
     java {
