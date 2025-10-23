@@ -1,0 +1,4 @@
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="menu_parent">
+    <contentWidth>0</contentWidth>
+    <contentHeight>0</contentHeight>
+</bl:widget>

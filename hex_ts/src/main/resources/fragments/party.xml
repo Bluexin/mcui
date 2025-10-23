@@ -1,0 +1,88 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="experience fragment">
+    <children>
+        <repetitionGroup name="member">
+            <x cache="STATIC">2</x>
+            <y cache="STATIC">35</y>
+            <texture>mcui:themes/hex-ts/textures/hex_labels.png</texture>
+            <amount>party.size</amount>
+            <children>
+                <elementGroup name="bg">
+                    <children>
+                        <!-->label left</!-->
+                        <glRectangle>
+                            <rgba cache="STATIC">0x424242FF</rgba>
+                            <y cache="NONE">15 * i</y>
+                            <w cache="STATIC">10</w>
+                            <h cache="STATIC">13</h>
+
+                            <srcX cache="STATIC">0.0</srcX>
+                            <srcY cache="STATIC">128.0</srcY>
+                            <srcW cache="STATIC">48.0</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                        </glRectangle>
+                        <!-->label middle</!-->
+                        <glRectangle>
+                            <rgba cache="STATIC">0x424242FF</rgba>
+                            <x cache="STATIC">10</x>
+                            <y cache="NONE">15 * i</y>
+                            <w cache="STATIC">24</w>
+                            <h cache="STATIC">13</h>
+
+                            <srcX cache="STATIC">48.0</srcX>
+                            <srcY cache="STATIC">128.0</srcY>
+                            <srcW cache="STATIC">49.5</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                        </glRectangle>
+                        <!-->label right</!-->
+                        <glRectangle>
+                            <rgba cache="STATIC">0x424242FF</rgba>
+                            <x cache="STATIC">34</x>
+                            <y cache="NONE">15 * i</y>
+                            <w cache="STATIC">10</w>
+                            <h cache="STATIC">13</h>
+
+                            <srcX cache="STATIC">97.5</srcX>
+                            <srcY cache="STATIC">128.0</srcY>
+                            <srcW cache="STATIC">48.0</srcW>
+                            <srcH cache="STATIC">64.0</srcH>
+                        </glRectangle>
+                        <!-->bar frame</!-->
+                        <glRectangle>
+                            <rgba cache="STATIC">0x424242FF</rgba>
+                            <texture>mcui:themes/hex-ts/textures/hexbars.png</texture>
+                            <x cache="STATIC">42</x>
+                            <y cache="NONE">15 * i</y>
+                            <w cache="STATIC">100</w>
+                            <h cache="STATIC">13</h>
+
+                            <srcX cache="STATIC">0.0</srcX>
+                            <srcY cache="STATIC">0.0</srcY>
+                            <srcW cache="STATIC">249.5</srcW>
+                            <srcH cache="STATIC">25.6</srcH>
+                        </glRectangle>
+                    </children>
+                </elementGroup>
+                <glRectangle name="health bar">
+                    <texture>mcui:themes/hex-ts/textures/hexbars.png</texture>
+                    <rgba>party(i).healthStep.rgba</rgba>
+                    <x cache="STATIC">42</x>
+                    <y cache="NONE">15 * i</y>
+                    <w cache="NONE">1.796875 + 96.154 * party(i).healthPercent</w>
+                    <h cache="STATIC">13</h>
+
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">25.6</srcY>
+                    <srcW cache="NONE">4.6 + 240.0 * party(i).healthPercent</srcW>
+                    <srcH cache="STATIC">25.6</srcH>
+                </glRectangle>
+                <glString name="pName">
+                    <text>party(i).displayName.length > 5? party(i).displayName.substring(0, 5): party(i).displayName
+                    </text>
+                    <x cache="STATIC">8</x>
+                    <y cache="NONE">15 * i + 7</y>
+                    <rgba>0xFFFFFFFF</rgba>
+                </glString>
+            </children>
+        </repetitionGroup>
+    </children>
+</bl:fragment>

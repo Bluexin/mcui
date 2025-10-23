@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "lib": [
+      "esnext"
+    ],
+    "types": [
+      "@typescript-to-lua/language-extensions",
+      "lua-types/5.2"
+    ],
+    "baseUrl": ".",
+    "rootDir": "src/main/ts",
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "sourceMap": true
+  },
+  "include": [
+    "src/main/ts/**/*.ts",
+    "src/typings/**/*.d.ts"
+  ],
+  "tstl": {
+    "luaTarget": "5.2",
+    "luaLibImport": "require-minimal",
+    //    "luaLibImport": "inline",
+    "noHeader": true,
+    "noImplicitGlobalVariables": true,
+    "noImplicitSelf": true,
+    "sourceMapTraceback": false,
+    // TODO : test this
+    "buildMode": "default"
+    //    "luaBundle": "bundle/theme.lua",
+    //    "luaBundleEntry": "theme.ts",
+  }
+}

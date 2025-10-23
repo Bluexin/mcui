@@ -137,7 +137,7 @@ object ResourceLocationMapper : LKMapper<ResourceLocation> {
     )
 }
 
-@LuajMapped(ResourceLocationMapper::class)
+@LuajMapped(ResourceLocationMapper::class, import = "support")
 typealias LKResourceLocation = @Serializable(RLSerializer::class) ResourceLocation
 
 object HumanoidArmMapper : LKMapper<HumanoidArm> {

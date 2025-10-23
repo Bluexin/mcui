@@ -1,0 +1,173 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="health box fragment">
+    <x>settings.double("hud:health_offset_x")</x>
+    <y>settings.double("hud:health_offset_y")</y>
+    <children>
+        <elementGroup name="background">
+            <children>
+                <glRectangle name="uname_bg_left"> <!-- left part of username label -->
+                    <texture>mcui:themes/hex-ts/textures/hex_labels.png</texture>
+                    <rgba cache="STATIC">0x424242FF</rgba>
+                    <h cache="STATIC">16.0</h>
+                    <w cache="STATIC">11.0</w>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">128.0</srcY>
+                    <srcW cache="STATIC">48.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                </glRectangle>
+
+                <glRectangle name="uname_bg_mid"> <!-- middle part of username label -->
+                    <texture>mcui:themes/hex-ts/textures/hex_labels.png</texture>
+                    <rgba cache="STATIC">0x424242FF</rgba>
+                    <x cache="STATIC">11.0</x>
+                    <w>strWidth(player.displayName) - 2.0</w>
+                    <h cache="STATIC">16.0</h>
+                    <srcX cache="STATIC">48.0</srcX>
+                    <srcY cache="STATIC">128.0</srcY>
+                    <srcW cache="STATIC">49.5</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                </glRectangle>
+
+                <glRectangle name="uname_bg_right"> <!-- right part of username label -->
+                    <texture>mcui:themes/hex-ts/textures/hex_labels.png</texture>
+                    <rgba cache="STATIC">0x424242FF</rgba>
+                    <x>9.0 + strWidth(player.displayName)</x>
+                    <h cache="STATIC">16.0</h>
+                    <w cache="STATIC">11.0</w>
+                    <srcX cache="STATIC">97.5</srcX>
+                    <srcY cache="STATIC">128.0</srcY>
+                    <srcW cache="STATIC">48.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                </glRectangle>
+
+                <glRectangle name="hp_frame"> <!-- health bar frame -->
+                    <texture>mcui:themes/hex-ts/textures/hexbars.png</texture>
+                    <rgba cache="STATIC">0x424242FF</rgba>
+                    <h cache="STATIC">16.0</h>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">249.6</srcW>
+                    <srcH cache="STATIC">25.6</srcH>
+                    <w cache="STATIC">160.0</w>
+                    <x>17.0 + strWidth(player.displayName)</x>
+                </glRectangle>
+
+                <glRectangle name="hp_bg"> <!-- health bar background -->
+                    <texture>mcui:themes/hex-ts/textures/hexbars.png</texture>
+                    <h cache="STATIC">16.0</h>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">51.2</srcY>
+                    <srcW cache="STATIC">249.6</srcW>
+                    <srcH cache="STATIC">25.6</srcH>
+                    <w cache="STATIC">160.0</w>
+                    <x>17.0 + strWidth(player.displayName)</x>
+                </glRectangle>
+            </children>
+        </elementGroup>
+
+        <glString name="username">
+            <text>player.displayName</text>
+            <h cache="STATIC">16.0</h>
+            <x cache="STATIC">10.0</x>
+            <y cache="STATIC">1.0</y>
+        </glString>
+
+        <glRectangle name="health bar">
+            <texture>mcui:themes/hex-ts/textures/hexbars.png</texture>
+            <rgba>player.healthStep.rgba</rgba>
+            <srcH cache="STATIC">25.6</srcH>
+            <srcW>5.8 + (238.2 * player.healthPercent)</srcW>
+            <srcX cache="STATIC">0.0</srcX>
+            <srcY cache="STATIC">76.8</srcY>
+            <h cache="STATIC">16.0</h>
+            <w>3.25 + (153.5 * player.healthPercent)</w>
+            <x>17.0 + strWidth(player.displayName)</x>
+        </glRectangle>
+        <!-->
+        <glRectangle name="player.absorption bar">
+            <enabled>player.statusEffects.contains(ABSORPTION)</enabled>
+            <texture>mcui:themes/hex-ts/textures/hexbars.png</texture>
+            <rgba>0x3E28CCFF</rgba>
+            <srcH cache="STATIC">25.6</srcH>
+            <srcW>5.8 + 238.2 * ( player.absorption/maxHp )</srcW>
+            <srcX cache="STATIC">0.0</srcX>
+            <srcY cache="STATIC">76.8</srcY>
+            <h cache="STATIC">16.0</h>
+            <w>3.25 + 153.5 * (player.absorption/player.maxHealth)</w>
+            <x>22.0 + strWidth(player.displayName) -3.0</x>
+            <z cache="STATIC">1</z>
+        </glRectangle>
+        </!-->
+        <glRectangle name="hunger bar">
+            <texture>mcui:themes/hex-ts/textures/hexbars.png</texture>
+            <rgba>
+                player.healthStep == CREATIVE? 0x4B3F63FF:
+                player.statusEffects.contains(ROTTEN)? 0x829C40FF:
+                0xCD8404FF
+            </rgba>
+            <srcH cache="STATIC">25.6</srcH>
+            <srcW>5.8 + (238.2 * player.foodPercent)</srcW>
+            <srcX cache="STATIC">0.0</srcX>
+            <srcY cache="STATIC">102.4</srcY>
+            <h cache="STATIC">16.0</h>
+            <w>3.25 + (153.5 * player.foodPercent)</w>
+            <x>17.0 + strWidth(player.displayName)</x>
+        </glRectangle>
+
+        <elementGroup name="hp text">
+            <enabled>!settings.boolean("hud:hide_hp")</enabled>
+            <children>
+                <elementGroup name="hp text w/o player.absorption"> <!-- display hp text in middle of health bar -->
+                    <enabled>player.absorption == 0</enabled>
+                    <x>20.0 + strWidth(player.displayName) -3.0 + 76.75 - (strWidth(format("formatHealth",
+                        iceil(player.health), iceil(player.maxHealth))) /
+                        2.0)
+                    </x>
+                    <y cache="STATIC">9</y>
+                    <children>
+                        <glString name="hp text">
+                            <text>format("formatHealth", iceil(player.health), iceil(player.maxHealth))</text>
+                        </glString>
+                    </children>
+                </elementGroup>
+
+                <elementGroup name="hp text w/ player.absorption"> <!-- display hp text in middle of health bar -->
+                    <enabled>!settings.boolean("hud:hide_hp") &amp;&amp; player.absorption > 0 &amp;&amp;
+                        !isEnabled(ALT_ABSORB_POS)
+                    </enabled>
+                    <x>20.0 + strWidth(player.displayName) -3.0 + 76.75 - (strWidth(format("formatHealthAbsorb",
+                        iceil(player.health),
+                        iceil(player.maxHealth),
+                        iceil(player.absorption))) / 2.0)
+                    </x>
+                    <y cache="STATIC">9</y>
+                    <children>
+                        <glString name="hp text">
+                            <text>format("formatHealthAbsorb", iceil(player.health), iceil(player.maxHealth),
+                                iceil(player.absorption))
+                            </text>
+                        </glString>
+                    </children>
+                </elementGroup>
+
+                <elementGroup name="hp text w/ alt player.absorption"> <!-- display hp text in middle of health bar -->
+                    <enabled>!settings.boolean("hud:hide_hp") &amp;&amp; player.absorption > 0 &amp;&amp;
+                        isEnabled(ALT_ABSORB_POS)
+                    </enabled>
+                    <x>20.0 + strWidth(player.displayName) -3.0 + 76.75 - (strWidth(format("formatHealthAbsorbAlt",
+                        iceil(player.health),
+                        iceil(player.maxHealth),
+                        iceil(player.absorption))) / 2.0)
+                    </x>
+                    <y cache="STATIC">9</y>
+                    <children>
+                        <glString name="hp text">
+                            <text>format("formatHealthAbsorbAlt", iceil(player.health), iceil(player.maxHealth),
+                                iceil(player.absorption))
+                            </text>
+                        </glString>
+                    </children>
+                </elementGroup>
+            </children>
+        </elementGroup>
+    </children>
+</bl:fragment>

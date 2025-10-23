@@ -46,7 +46,6 @@
 
     <onClick>
         local self = --[[---@type Widget]]...
-        local wl = require 'widgetlib'
         -- direct parent is the content widget of the choice button
         local parent = --[[---@type Widget]] self.parentElement.parentElement
         -- safety check to make sure this wasn't included in some odd place

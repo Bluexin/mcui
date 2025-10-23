@@ -1,0 +1,79 @@
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="label_button">
+    <expect>
+        <variable key="text" type="STRING"/>
+        <variable key="initialWidth" type="INT" cache="STATIC">80</variable>
+        <variable key="initialHeight" type="INT" cache="STATIC">16</variable>
+        <variable key="xPos" type="DOUBLE">-initialWidth / 2.0</variable>
+        <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
+        <variable key="active" type="BOOLEAN" cache="STATIC">true</variable>
+        <variable key="colour" type="INT" cache="STATIC">0x424242FF</variable>
+        <variable key="hoverColour" type="INT" cache="STATIC">(int) (0x424242FF &amp; 0xAFAFAFFF)</variable>
+        <variable key="isHovered" type="BOOLEAN" cache="STATIC">false</variable>
+    </expect>
+    <contentWidth>initialWidth</contentWidth>
+    <contentHeight>initialHeight</contentHeight>
+    <active>active</active>
+    <x>xPos</x>
+    <y>yPos</y>
+    <z>isHovered? 10: 0</z>
+    <children>
+        <elementGroup name="bg">
+            <x>isHovered? -initialWidth * 0.05: 0</x>
+            <y>isHovered? -initialHeight * 0.05: 0</y>
+            <scale>isHovered? 1.1: 1.0</scale>
+            <texture>mcui:themes/hex-ts/textures/hex_labels.png</texture>
+            <children>
+                <glRectangle> <!-- left part of label -->
+                    <rgba>isHovered? hoverColour: colour</rgba>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">24.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w cache="STATIC">6</w>
+                    <h>initialHeight</h>
+                </glRectangle>
+
+                <glRectangle> <!-- middle part of label -->
+                    <rgba>isHovered? hoverColour: colour</rgba>
+                    <x cache="STATIC">6</x>
+                    <srcX cache="STATIC">24.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">26.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w>initialWidth - 12</w>
+                    <h>initialHeight</h>
+                </glRectangle>
+
+                <glRectangle> <!-- right part of label -->
+                    <rgba>isHovered? hoverColour: colour</rgba>
+                    <x>initialWidth - 6</x>
+                    <srcX cache="STATIC">50.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">24.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w cache="STATIC">6</w>
+                    <h>initialHeight</h>
+                </glRectangle>
+
+                <glString name="debug">
+                    <enabled>settings.boolean("mcui:hex-ts", "debug:debug_mode")</enabled>
+                    <text>"label_button " + xPos + "," + yPos</text>
+                    <rgba>0x0B8B00</rgba>
+                    <x>initialWidth</x>
+                    <shadow cache="STATIC">false</shadow>
+                </glString>
+            </children>
+        </elementGroup>
+
+        <glString name="label">
+            <x>initialWidth / 2 - strWidth(text) / 2</x>
+            <y cache="STATIC">9.5</y>
+            <text>text</text>
+        </glString>
+    </children>
+
+    <onMouseOver>
+        local button, _, _, entered = ...
+        button.setVariable('isHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
+    </onMouseOver>
+</bl:widget>

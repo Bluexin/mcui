@@ -28,7 +28,7 @@ import kotlinx.serialization.Transient
  *
  * @author Bluexin
  */
-@LuajMapped(UnknownCValueMapper::class)
+@LuajMapped(UnknownCValueMapper::class, import = "support")
 sealed class CValue<out T : Any>(@Transient val value: (IHudDrawContext) -> T) : (IHudDrawContext) -> T {
     override fun invoke(ctx: IHudDrawContext) = value(ctx)
 }
@@ -37,7 +37,7 @@ sealed class CValue<out T : Any>(@Transient val value: (IHudDrawContext) -> T) :
  * Custom Int type.
  */
 @Serializable(CIntSerializer::class)
-@LuajMapped(CIntMapper::class)
+@LuajMapped(CIntMapper::class, import = "support")
 class CInt(value: (IHudDrawContext) -> Int) : CValue<Int>(value) {
     companion object {
         val ZERO = CInt { 0 }
@@ -49,7 +49,7 @@ class CInt(value: (IHudDrawContext) -> Int) : CValue<Int>(value) {
  * Custom Double type.
  */
 @Serializable(CDoubleSerializer::class)
-@LuajMapped(CDoubleMapper::class)
+@LuajMapped(CDoubleMapper::class, import = "support")
 class CDouble(value: (IHudDrawContext) -> Double) : CValue<Double>(value) {
     companion object {
         val ZERO = CDouble { 0.0 }
@@ -61,7 +61,7 @@ class CDouble(value: (IHudDrawContext) -> Double) : CValue<Double>(value) {
  * Custom String type.
  */
 @Serializable(CStringSerializer::class)
-@LuajMapped(CStringMapper::class)
+@LuajMapped(CStringMapper::class, import = "support")
 class CString(value: (IHudDrawContext) -> String) : CValue<String>(value) {
     companion object {
         val EMPTY = CString { "" }
@@ -72,7 +72,7 @@ class CString(value: (IHudDrawContext) -> String) : CValue<String>(value) {
  * Custom Boolean type.
  */
 @Serializable(CBooleanSerializer::class)
-@LuajMapped(CBooleanMapper::class)
+@LuajMapped(CBooleanMapper::class, import = "support")
 class CBoolean(value: (IHudDrawContext) -> Boolean) : CValue<Boolean>(value) {
     companion object {
         val TRUE = CBoolean { true }
@@ -84,7 +84,7 @@ class CBoolean(value: (IHudDrawContext) -> Boolean) : CValue<Boolean>(value) {
  * Custom Unit/Void type.
  */
 @Serializable(CUnitSerializer::class)
-@LuajMapped(CUnitMapper::class)
+@LuajMapped(CUnitMapper::class, import = "support")
 class CUnit(value: (IHudDrawContext) -> Unit) : CValue<Unit>(value) {
     companion object {
         val UNIT = CUnit { }

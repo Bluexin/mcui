@@ -1,0 +1,20 @@
+{
+  "name": "mcui-hex-ts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "UI themes authored in TypeScript and compiled to Lua via TypeScriptToLua.",
+  "scripts": {
+    "build": "tstl -p tsconfig.json",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "@typescript-to-lua/language-extensions": "^1.19.0",
+    "lua-types": "^2.13.1",
+    "rimraf": "^5.0.10",
+    "typescript": "^5.9.3",
+    "typescript-to-lua": "^1.32.0"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.2"
+  }
+}

@@ -15,6 +15,7 @@ import be.bluexin.mcui.themes.scripting.LuaJManager
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.debug
+import be.bluexin.mcui.util.warn
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -107,10 +108,10 @@ class Widget(
      * @param mouseX number the mouse's X position, relative to this widget
      * @param mouseY number the mouse's Y position, relative to this widget
      * @param mouseButton mouse_buttons which button was pressed
-     * @return boolean whether the click was handled
+     * @return whether the click was handled
      */
     @LuajExpose
-    var onClick: Widget.(Double, Double, Int) -> Boolean = { _, _, _ -> false }
+    var onClick: Widget.(mouseX: Double, mouseY: Double, mouseButton: Int) -> Boolean = { _, _, _ -> false }
 
     /**
      * Called when the mouse wheel is scrolled over this widget.
@@ -121,10 +122,10 @@ class Widget(
      * @param mouseX number the mouse's X position, relative to this widget
      * @param mouseY number the mouse's Y position, relative to this widget
      * @param delta number the scroll delta
-     * @return boolean whether the click was handled
+     * @return whether the click was handled
      */
     @LuajExpose
-    var onScroll: Widget.(Double, Double, Double) -> Boolean = { _, _, _ -> false }
+    var onScroll: Widget.(mouseX: Double, mouseY: Double, delta: Double) -> Boolean = { _, _, _ -> false }
 
     /**
      * Called when the mouse enters or leaves the widget
@@ -135,7 +136,7 @@ class Widget(
      * @param isMouseOver boolean whether the mouse entered (true) or left (false)
      */
     @LuajExpose
-    var onMouseOverEvent: Widget.(Double, Double, Boolean) -> Unit = { _, _, _ -> }
+    var onMouseOverEvent: Widget.(mouseX: Double, mouseY: Double, isMouseOver: Boolean) -> Unit = { _, _, _ -> }
 
     /**
      * Called when the widget isn't being focused anymore
@@ -244,12 +245,11 @@ class Widget(
         loadCallbackFromScript(access, onLoseFocusScript, ::onLoseFocus.name, theme)
         extraScripts.values.forEach { (key, script) ->
             extra[key] = try {
-                luaJManager.compileSnippet("${this.name}/$name".lowercase(), script, theme)
+                luaJManager.compileSnippet("$name/$key".lowercase(), script, theme)
                     .call(toLua())
             } catch (e: Throwable) {
-                LuaValue.varargsOf(
-                    arrayOf(LuaValue.NIL, LuaValue.valueOf(e.message))
-                ) as LuaValue
+                logger.warn(e) { "Unable to compile extra script $key in $name for ${theme.id}" }
+                LuaValue.error(e.message)
             }
         }
 

@@ -1,0 +1,25 @@
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="menu_page">
+    <expect>
+        <variable key="pageKey" type="STRING"/>
+        <variable key="parentPageKey" type="STRING"/>
+        <variable key="isOpen" type="BOOLEAN" cache="STATIC">false</variable>
+    </expect>
+    <contentWidth>0</contentWidth>
+    <contentHeight>0</contentHeight>
+    <children>
+        <widget name="content">
+            <x>scaledwidth / 2</x>
+            <y>scaledheight / 2</y>
+            <enabled>isOpen</enabled>
+            <contentWidth cache="STATIC">0</contentWidth>
+            <contentHeight cache="STATIC">0</contentHeight>
+        </widget>
+        <glString name="debug">
+            <enabled>isOpen &amp;&amp; settings.boolean("mcui:hex-ts", "debug:debug_mode")</enabled>
+            <text>"menu_page " + parentPageKey + "/" + pageKey</text>
+            <rgba cache="STATIC">0x0B8B00</rgba>
+            <x>5</x>
+            <y>scaledheight - 25</y>
+        </glString>
+    </children>
+</bl:widget>

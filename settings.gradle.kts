@@ -26,7 +26,8 @@ rootProject.name = "mcui"
 include(
     "common",
     "fabric",
-    "forge"
+    "forge",
+    "hex_ts"
 )
 
 includeBuild("dep-submodules/gnu-jel")

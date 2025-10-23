@@ -35,6 +35,7 @@ architectury {
 }
 
 subprojects {
+    if (name == "hex_ts") return@subprojects
     apply<JavaPlugin>()
     apply<MavenPublishPlugin>()
     apply<KotlinPluginWrapper>()

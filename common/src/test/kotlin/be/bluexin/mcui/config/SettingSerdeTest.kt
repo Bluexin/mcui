@@ -113,7 +113,7 @@ class SettingSerdeTest {
                         ]
                     },
                     {
-                        "type": "resource_location",
+                        "type": "resourceLocation",
                         "key": "mcui:key",
                         "defaultValue": "test:default",
                         "comment": "comment"

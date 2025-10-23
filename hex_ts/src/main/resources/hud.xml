@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bl:hud xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/hud-schema-alpha">
+    <version>0.1</version>
+    <parts>
+        <entry>
+            <key>HEALTH_BOX</key>
+            <value name="health box">
+                <children>
+                    <fragmentReference id="mcui.hex-ts:health_box"/>
+                    <fragmentReference id="mcui.hex-ts:label">
+                        <enabled>settings.boolean("debug:debug_mode")</enabled>
+                        <x cache="STATIC">10</x>
+                        <y cache="STATIC">40</y>
+                        <variables>
+                            <variable type="STRING" key="text">"Choice setting value: " +
+                                settings.string("debug:test_choice")
+                            </variable>
+                        </variables>
+                    </fragmentReference>
+                </children>
+            </value>
+        </entry>
+        <entry>
+            <key>EXPERIENCE</key>
+            <value name="exp">
+                <enabled>!settings.boolean("hud:hide_exp")</enabled>
+                <x cache="SIZE_CHANGE">scaledwidth / 2.0</x>
+                <y cache="SIZE_CHANGE">scaledheight - 64</y>
+                <children>
+                    <fragmentReference id="mcui.hex-ts:label">
+                        <variables>
+                            <variable type="STRING" key="text">format("%d", player.level)</variable>
+                            <variable type="BOOLEAN" key="centered" cache="STATIC">true</variable>
+                        </variables>
+                    </fragmentReference>
+                </children>
+            </value>
+        </entry>
+        <entry>
+            <key>HOTBAR</key>
+            <value name="hotbar">
+                <children>
+                    <fragmentReference id="mcui.hex-ts:hotbar"/>
+                </children>
+            </value>
+        </entry>
+        <entry>
+            <key>JUMP_BAR</key>
+            <value name="vanilla horse jump bar">
+                <x cache="SIZE_CHANGE">scaledwidth / 2 - 91</x>
+                <y cache="SIZE_CHANGE">scaledheight - 29</y>
+                <enabled>player.hasMount</enabled>
+                <children>
+                    <fragmentReference id="mcui.hex-ts:jump_bar"/>
+                </children>
+            </value>
+        </entry>
+        <entry>
+            <key>CROSS_HAIR</key>
+            <value name="crosshair">
+                <x cache="SIZE_CHANGE">scaledwidth / 2.0</x>
+                <y cache="SIZE_CHANGE">scaledheight / 2.0</y>
+                <children>
+                    <fragmentReference id="mcui.hex-ts:crosshair"/>
+                </children>
+            </value>
+        </entry>
+        <entry>
+            <key>PARTY</key>
+            <value name="party">
+                <children>
+                    <fragmentReference id="mcui.hex-ts:party"/>
+                </children>
+            </value>
+        </entry>
+        <entry>
+            <key>EFFECTS</key>
+            <value name="effects">
+                <children>
+                    <fragmentReference id="mcui.hex-ts:effects"/>
+                </children>
+            </value>
+        </entry>
+    </parts>
+</bl:hud>

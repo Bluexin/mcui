@@ -1,0 +1,94 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="label fragment">
+    <expect>
+        <variable key="text" type="STRING"/>
+        <variable key="centered" type="BOOLEAN" cache="STATIC">false</variable>
+    </expect>
+    <children>
+        <elementGroup name="centered">
+            <enabled>centered</enabled>
+            <texture>mcui:themes/hex-ts/textures/hex_labels.png</texture>
+            <children>
+                <glRectangle> <!-- left part of label -->
+                    <rgba cache="STATIC">0x424242FF</rgba>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">24.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <x>-6 - strWidth(text)/2.0</x>
+                    <w cache="STATIC">6</w>
+                    <h cache="STATIC">16</h>
+                </glRectangle>
+
+                <glRectangle> <!-- middle part of label -->
+                    <rgba cache="STATIC">0x424242FF</rgba>
+                    <x>- strWidth(text)/2.0</x>
+                    <srcX cache="STATIC">24.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">26.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w>strWidth(text) + 4</w>
+                    <h cache="STATIC">16</h>
+                </glRectangle>
+
+                <glRectangle> <!-- right part of label -->
+                    <rgba cache="STATIC">0x424242FF</rgba>
+                    <x>strWidth(text) / 2.0 + 4</x>
+                    <srcX cache="STATIC">50.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">24.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w cache="STATIC">6</w>
+                    <h cache="STATIC">16</h>
+                </glRectangle>
+                <glString name="label">
+                    <x>-strWidth(text) / 2.0 + 2</x>
+                    <y cache="STATIC">9.5</y>
+                    <text>text</text>
+                </glString>
+            </children>
+        </elementGroup>
+
+        <elementGroup name="uncentered">
+            <enabled>!centered</enabled>
+            <texture>mcui:themes/hex-ts/textures/hex_labels.png</texture>
+            <children>
+                <glRectangle> <!-- left part of label -->
+                    <rgba cache="STATIC">0x424242FF</rgba>
+                    <srcX cache="STATIC">0.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">24.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w cache="STATIC">6</w>
+                    <h cache="STATIC">16</h>
+                </glRectangle>
+
+                <glRectangle> <!-- middle part of label -->
+                    <rgba cache="STATIC">0x424242FF</rgba>
+                    <x cache="STATIC">6</x>
+                    <srcX cache="STATIC">24.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">26.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w>strWidth(text) + 4</w>
+                    <h cache="STATIC">16</h>
+                </glRectangle>
+
+                <glRectangle> <!-- right part of label -->
+                    <rgba cache="STATIC">0x424242FF</rgba>
+                    <x>strWidth(text) + 10</x>
+                    <srcX cache="STATIC">50.0</srcX>
+                    <srcY cache="STATIC">0.0</srcY>
+                    <srcW cache="STATIC">24.0</srcW>
+                    <srcH cache="STATIC">64.0</srcH>
+                    <w cache="STATIC">6</w>
+                    <h cache="STATIC">16</h>
+                </glRectangle>
+                <glString name="label">
+                    <x cache="STATIC">8.7</x>
+                    <y cache="STATIC">9.5</y>
+                    <text>text</text>
+                </glString>
+            </children>
+        </elementGroup>
+    </children>
+</bl:fragment>

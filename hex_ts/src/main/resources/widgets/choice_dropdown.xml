@@ -1,33 +1,44 @@
-<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="choice_option">
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="choice_dropdown">
     <expect>
-        <variable key="thisValue" type="STRING"/>
-        <variable key="translateValue" type="STRING">format(thisValue.replace(":", ".") + ".name")</variable>
-        <variable key="valueTooltip" type="STRING">format(thisValue.replace(":", ".") + ".description")</variable>
+        <variable key="label" type="STRING"/>
+        <variable key="currentValue" type="STRING"/>
+        <variable key="translateValue" type="STRING">format(currentValue.replace(":", ".") + ".name")</variable>
+        <variable key="valueTooltip" type="STRING">format(currentValue.replace(":", ".") + ".description")</variable>
+        <variable key="text" type="STRING">format("mcui.screen.settinglabel", label, translateValue)</variable>
         <variable key="initialWidth" type="INT" cache="STATIC">120</variable>
         <variable key="initialHeight" type="INT" cache="STATIC">16</variable>
-        <variable key="xPos" type="DOUBLE" cache="STATIC">0.0</variable>
+        <variable key="xPos" type="DOUBLE">-initialWidth / 2.0</variable>
         <variable key="yPos" type="DOUBLE" cache="STATIC">0.0</variable>
+        <variable key="active" type="BOOLEAN" cache="STATIC">true</variable>
         <variable key="colour" type="INT" cache="STATIC">0x424242FF</variable>
         <variable key="hoverColour" type="INT" cache="STATIC">(int) (0x424242FF &amp; 0xAFAFAFFF)</variable>
         <variable key="isHovered" type="BOOLEAN" cache="STATIC">false</variable>
+        <variable key="isOpen" type="BOOLEAN" cache="STATIC">false</variable>
     </expect>
     <contentWidth>initialWidth</contentWidth>
     <contentHeight>initialHeight</contentHeight>
     <x>xPos</x>
     <y>yPos</y>
-    <z>isHovered? 10: 0</z>
-    <tooltip>valueTooltip</tooltip>
+    <z>isHovered? 10: isOpen? 1: 0</z>
     <children>
+        <widget name="content">
+            <x>initialWidth + 2</x>
+            <y cache="STATIC">0</y>
+            <enabled>isOpen</enabled>
+            <contentWidth cache="STATIC">0</contentWidth>
+            <contentHeight cache="STATIC">0</contentHeight>
+        </widget>
+
         <elementGroup name="button">
             <children>
                 <elementGroup name="bg">
                     <x>isHovered? -initialWidth * 0.05: 0</x>
                     <y>isHovered? -initialHeight * 0.05: 0</y>
                     <scale>isHovered? 1.1: 1.0</scale>
-                    <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
+                    <texture>mcui:themes/hex-ts/textures/hex_labels.png</texture>
                     <children>
                         <glRectangle> <!-- left part of label -->
-                            <rgba>isHovered? hoverColour: colour</rgba>
+                            <rgba>(isHovered || isOpen)? hoverColour: colour</rgba>
                             <srcX cache="STATIC">0.0</srcX>
                             <srcY cache="STATIC">0.0</srcY>
                             <srcW cache="STATIC">24.0</srcW>
@@ -37,7 +48,7 @@
                         </glRectangle>
 
                         <glRectangle> <!-- middle part of label -->
-                            <rgba>isHovered? hoverColour: colour</rgba>
+                            <rgba>(isHovered || isOpen)? hoverColour: colour</rgba>
                             <x cache="STATIC">6</x>
                             <srcX cache="STATIC">24.0</srcX>
                             <srcY cache="STATIC">0.0</srcY>
@@ -48,7 +59,7 @@
                         </glRectangle>
 
                         <glRectangle> <!-- right part of label -->
-                            <rgba>isHovered? hoverColour: colour</rgba>
+                            <rgba>(isHovered || isOpen)? hoverColour: colour</rgba>
                             <x>initialWidth - 6</x>
                             <srcX cache="STATIC">50.0</srcX>
                             <srcY cache="STATIC">0.0</srcY>
@@ -60,9 +71,16 @@
                     </children>
                 </elementGroup>
                 <glString name="label">
-                    <x>initialWidth / 2 - strWidth(translateValue) / 2</x>
+                    <x>initialWidth / 2 - strWidth(text) / 2</x>
                     <y cache="STATIC">9.5</y>
-                    <text>translateValue</text>
+                    <text>text</text>
+                </glString>
+
+                <glString name="debug">
+                    <enabled>settings.boolean("mcui:hex-ts", "debug:debug_mode")</enabled>
+                    <text>"choice_dropdown " + xPos + " " + currentValue</text>
+                    <rgba>0x0B8B00</rgba>
+                    <x>initialWidth</x>
                 </glString>
             </children>
         </elementGroup>
@@ -70,11 +88,15 @@
 
     <onClick>
         local self = --[[---@type Widget]]...
-        -- direct parent is the content widget of the choice button
-        local parent = --[[---@type Widget]] self.parentElement.parentElement
-        -- safety check to make sure this wasn't included in some odd place
-        if type(parent) == 'Widget' and parent.extra.setValue then
-            parent.extra.setValue(self.getVariable('thisValue'))
+        local wl = require 'widget_lib'
+
+        local isOpen = self.getVariable('isOpen')
+
+        if isOpen.expression and (isOpen.expression:lower() == 'true') then
+        self.setVariable('isOpen', wl.typedStaticValue(false))
+        else
+        self.setVariable('isOpen', wl.typedStaticValue(true))
+        self.setFocus()
         end
 
         return true
@@ -84,4 +106,11 @@
         local button, _, _, entered = ...
         button.setVariable('isHovered', { type = 'BOOLEAN', expression = tostring(entered), cache = 'STATIC' })
     </onMouseOver>
+
+    <onLoseFocus>
+        local self = --[[---@type Widget]]...
+        local wl = require 'widget_lib'
+
+        self.setVariable('isOpen', wl.typedStaticValue(false))
+    </onLoseFocus>
 </bl:widget>

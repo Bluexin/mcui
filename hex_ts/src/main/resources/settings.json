@@ -1,0 +1,51 @@
+[
+  {
+    "key": "hud:vertical_hotbar",
+    "type": "boolean",
+    "defaultValue": true,
+    "comment": "Whether to show a vertical hotbar (true = vertical, false = horizontal)"
+  },
+  {
+    "key": "hud:health_offset_x",
+    "type": "double",
+    "defaultValue": 4.0,
+    "min": 0.0,
+    "comment": "Offset on the X axis for the health bar"
+  },
+  {
+    "key": "hud:health_offset_y",
+    "type": "double",
+    "defaultValue": 4.0,
+    "min": 0.0,
+    "comment": "Offset on the y axis for the health bar"
+  },
+  {
+    "key": "hud:hide_exp",
+    "type": "boolean",
+    "defaultValue": false,
+    "comment": "Hide experience section of the HUD"
+  },
+  {
+    "key": "hud:hide_hp",
+    "type": "boolean",
+    "defaultValue": false,
+    "comment": "Hide health numbers section of the HUD"
+  },
+  {
+    "key": "debug:debug_mode",
+    "type": "boolean",
+    "defaultValue": false,
+    "comment": "Enable the theme\\'s debug mode"
+  },
+  {
+    "key": "debug:test_choice",
+    "type": "choice",
+    "defaultValue": "one",
+    "comment": "Testing choice setting",
+    "values": [
+      "one",
+      "two",
+      "three"
+    ]
+  }
+]

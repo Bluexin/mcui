@@ -1,0 +1,120 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="hotbar fragment">
+    <children>
+        <elementGroup name="vertical">
+            <enabled>settings.boolean("hud:vertical_hotbar")</enabled>
+            <x cache="SIZE_CHANGE">scaledwidth - 24</x>
+            <y cache="SIZE_CHANGE">scaledheight / 2.0</y>
+            <children>
+                <repetitionGroup name="main inventory">
+                    <amount cache="STATIC">9</amount>
+                    <children>
+                        <glHotbarItem>
+                            <rgba cache="NONE">i == player.selectedSlot ? 0xFFBA66FF : 0x424242FF</rgba>
+                            <srcH cache="STATIC">256.0</srcH>
+                            <srcW cache="STATIC">256.0</srcW>
+                            <srcX cache="STATIC">0.0</srcX>
+                            <w cache="STATIC">20.0</w>
+                            <h cache="STATIC">20.0</h>
+                            <y cache="NONE">-99 + 22 * i</y>
+                            <slot cache="NONE">i</slot>
+                            <itemXoffset cache="STATIC">2</itemXoffset>
+                            <itemYoffset cache="STATIC">2</itemYoffset>
+                            <texture>mcui:themes/hex-ts/textures/hexv.png</texture>
+                        </glHotbarItem>
+                    </children>
+                </repetitionGroup>
+                <elementGroup name="offhand">
+                    <enabled>!player.isOffhandEmpty(0)</enabled>
+                    <children>
+                        <glHotbarItem>
+                            <rgba cache="STATIC">0xFFBA66FF</rgba>
+                            <srcH cache="STATIC">256.0</srcH>
+                            <srcW cache="STATIC">256.0</srcW>
+                            <srcX cache="STATIC">0.0</srcX>
+                            <w cache="STATIC">20.0</w>
+                            <h cache="STATIC">20.0</h>
+                            <y cache="STATIC">121</y>
+                            <slot cache="STATIC">0</slot>
+                            <itemXoffset cache="STATIC">2</itemXoffset>
+                            <itemYoffset cache="STATIC">2</itemYoffset>
+                            <hand cache="STATIC">RIGHT</hand>
+                            <texture>mcui:themes/hex-ts/textures/hexh.png</texture>
+                        </glHotbarItem>
+                        <glHotbarItem>
+                            <rgba cache="STATIC">0xFFBA66FF</rgba>
+                            <srcH cache="STATIC">256.0</srcH>
+                            <srcW cache="STATIC">256.0</srcW>
+                            <srcX cache="STATIC">0.0</srcX>
+                            <w cache="STATIC">20.0</w>
+                            <h cache="STATIC">20.0</h>
+                            <y cache="STATIC">121</y>
+                            <slot cache="STATIC">0</slot>
+                            <itemXoffset cache="STATIC">2</itemXoffset>
+                            <itemYoffset cache="STATIC">2</itemYoffset>
+                            <hand cache="STATIC">LEFT</hand>
+                            <texture>mcui:themes/hex-ts/textures/hexh.png</texture>
+                        </glHotbarItem>
+                    </children>
+                </elementGroup>
+            </children>
+        </elementGroup>
+        <elementGroup name="horizontal">
+            <enabled>!(settings.boolean("hud:vertical_hotbar"))</enabled>
+            <x cache="SIZE_CHANGE">scaledwidth / 2.0</x>
+            <y cache="SIZE_CHANGE">scaledheight - 24</y>
+            <children>
+                <repetitionGroup name="main inventory">
+                    <amount cache="STATIC">9</amount>
+                    <children>
+                        <glHotbarItem>
+                            <rgba cache="NONE">i == player.selectedSlot ? 0xFFBA66FF : 0x424242FF</rgba>
+                            <srcH cache="STATIC">256.0</srcH>
+                            <srcW cache="STATIC">256.0</srcW>
+                            <srcX cache="STATIC">0.0</srcX>
+                            <w cache="STATIC">20.0</w>
+                            <h cache="STATIC">20.0</h>
+                            <x cache="NONE">-99 + 22 * i</x>
+                            <slot cache="NONE">i</slot>
+                            <itemXoffset cache="STATIC">2</itemXoffset>
+                            <itemYoffset cache="STATIC">2</itemYoffset>
+                            <texture>mcui:themes/hex-ts/textures/hexv.png</texture>
+                        </glHotbarItem>
+                    </children>
+                </repetitionGroup>
+                <elementGroup name="offhand">
+                    <enabled>!player.isOffhandEmpty(0)</enabled>
+                    <children>
+                        <glHotbarItem>
+                            <rgba cache="STATIC">0xFFBA66FF</rgba>
+                            <srcH cache="STATIC">256.0</srcH>
+                            <srcW cache="STATIC">256.0</srcW>
+                            <srcX cache="STATIC">0.0</srcX>
+                            <w cache="STATIC">20.0</w>
+                            <h cache="STATIC">20.0</h>
+                            <y cache="STATIC">121</y>
+                            <slot cache="STATIC">0</slot>
+                            <itemXoffset cache="STATIC">2</itemXoffset>
+                            <itemYoffset cache="STATIC">2</itemYoffset>
+                            <hand cache="STATIC">RIGHT</hand>
+                            <texture>mcui:themes/hex-ts/textures/hexh.png</texture>
+                        </glHotbarItem>
+                        <glHotbarItem>
+                            <rgba cache="STATIC">0xFFBA66FF</rgba>
+                            <srcH cache="STATIC">256.0</srcH>
+                            <srcW cache="STATIC">256.0</srcW>
+                            <srcX cache="STATIC">0.0</srcX>
+                            <w cache="STATIC">20.0</w>
+                            <h cache="STATIC">20.0</h>
+                            <y cache="STATIC">121</y>
+                            <slot cache="STATIC">0</slot>
+                            <itemXoffset cache="STATIC">2</itemXoffset>
+                            <itemYoffset cache="STATIC">2</itemYoffset>
+                            <hand cache="STATIC">LEFT</hand>
+                            <texture>mcui:themes/hex-ts/textures/hexh.png</texture>
+                        </glHotbarItem>
+                    </children>
+                </elementGroup>
+            </children>
+        </elementGroup>
+    </children>
+</bl:fragment>

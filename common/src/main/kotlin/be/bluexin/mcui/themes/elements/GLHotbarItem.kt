@@ -56,7 +56,7 @@ class GLHotbarItem(
     @SerialName("hand")
     @XmlSerialName("hand")
     @LuajExpose
-    var hand: @LuajMapped(HumanoidArmMapper::class) HumanoidArm? = null
+    var hand: @LuajMapped(HumanoidArmMapper::class, import = "support") HumanoidArm? = null
 ) : GLRectangleParent() {
 
     /*
