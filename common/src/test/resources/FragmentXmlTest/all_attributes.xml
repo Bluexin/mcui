@@ -1,0 +1,26 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="test_fragment_all">
+    <expect>
+        <variable key="width" type="DOUBLE"/>
+        <variable key="height" type="DOUBLE" cache="STATIC">100</variable>
+    </expect>
+
+    <x>20 + scaledwidth / 3</x>
+    <y>30 + scaledheight / 3</y>
+    <z cache="STATIC">4</z>
+    <scale cache="STATIC">2.5</scale>
+    <enabled>width > 0</enabled>
+
+    <texture>my_fragment_texture</texture>
+
+    <children>
+        <elementGroup name="content_group">
+            <x cache="STATIC">5</x>
+            <y cache="STATIC">10</y>
+        </elementGroup>
+        <glString name="label">
+            <x cache="STATIC">15</x>
+            <y cache="STATIC">20</y>
+            <text>"Fragment Label"</text>
+        </glString>
+    </children>
+</bl:fragment>

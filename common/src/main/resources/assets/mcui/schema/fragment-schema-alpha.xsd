@@ -112,7 +112,7 @@
                             </xs:documentation>
                         </xs:annotation>
                     </xs:element>
-                    <xs:element name="texture" default="" type="ResourceLocation">
+                    <xs:element name="texture" default="" type="CachedExpression">
                         <xs:annotation>
                             <xs:documentation>
                                 Texture location, in minecraft format ('modid:path/to/texture' -> ie.
@@ -238,7 +238,7 @@
         <xs:complexContent>
             <xs:extension base="Element">
                 <xs:all>
-                    <xs:element name="texture" default="" minOccurs="0" type="ResourceLocation"/>
+                    <xs:element name="texture" default="" minOccurs="0" type="CachedExpression"/>
                     <xs:element name="children">
                         <xs:complexType>
                             <xs:sequence maxOccurs="unbounded" minOccurs="0">
@@ -340,6 +340,7 @@
         <xs:complexContent>
             <xs:extension base="Element">
                 <xs:all>
+                    <xs:element name="texture" default="" minOccurs="0" type="CachedExpression"/>
                     <xs:element name="expression" type="CachedExpression"/>
                 </xs:all>
             </xs:extension>

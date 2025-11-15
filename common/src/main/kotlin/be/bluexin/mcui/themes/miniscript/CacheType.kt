@@ -18,6 +18,7 @@
 package be.bluexin.mcui.themes.miniscript
 
 import be.bluexin.luajksp.annotations.LuajMapped
+import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
 
 /**
  * Part of saoui by Bluexin.

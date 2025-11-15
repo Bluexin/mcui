@@ -3,6 +3,7 @@ package be.bluexin.mcui.themes.miniscript.serialization
 import be.bluexin.mcui.logger
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.miniscript.*
+import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
 import gnu.jel.CompilationException
 import gnu.jel.CompiledExpression
 import gnu.jel.Evaluator

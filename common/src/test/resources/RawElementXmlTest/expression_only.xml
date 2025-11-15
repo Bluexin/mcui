@@ -1,0 +1,3 @@
+<bl:rawElement xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="custom_draw">
+    <expression cache="NONE">drawCustomEffect()</expression>
+</bl:rawElement>

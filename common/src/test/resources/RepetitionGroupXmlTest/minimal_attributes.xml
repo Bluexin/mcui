@@ -1,0 +1,4 @@
+<bl:repetitionGroup xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha"
+                    name="test_repetition_group_minimal">
+    <amount cache="STATIC">9</amount>
+</bl:repetitionGroup>

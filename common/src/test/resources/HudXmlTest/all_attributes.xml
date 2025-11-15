@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bl:hud xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/hud-schema-alpha" name="test_hud">
+    <version>1.0.0</version>
+    <parts>
+        <entry>
+            <key>HEALTH_BOX</key>
+            <value name="health box">
+                <children>
+                    <fragmentReference id="mcui.test:health_box"/>
+                </children>
+            </value>
+        </entry>
+        <entry>
+            <key>EXPERIENCE</key>
+            <value name="exp">
+                <enabled>!settings.boolean("hud:hide_exp")</enabled>
+                <x cache="SIZE_CHANGE">scaledwidth / 2.0</x>
+                <y cache="SIZE_CHANGE">scaledheight - 64</y>
+                <children>
+                    <fragmentReference id="mcui.test:exp_bar"/>
+                </children>
+            </value>
+        </entry>
+    </parts>
+</bl:hud>

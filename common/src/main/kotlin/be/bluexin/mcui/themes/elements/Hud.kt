@@ -132,11 +132,6 @@ class Hud(
         @XmlSerialName("entry")
         val parts: List<Entry<HudPartType, ElementGroup>>
     ) {
-        companion object {
-            operator fun invoke(parts: List<Pair<HudPartType, ElementGroup>>) = Parts(
-                parts.map { (k, v) -> Entry(k, v) }
-            )
-        }
 
         @Serializable
         data class Entry<K, V>(

@@ -22,6 +22,7 @@ import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.effects.StatusEffect
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.miniscript.api.GameWindowInfo
+import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
 import be.bluexin.mcui.util.HealthStep
 import net.minecraft.util.profiling.InactiveProfiler
 import net.minecraft.util.profiling.ProfilerFiller

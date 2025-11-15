@@ -1,0 +1,52 @@
+<bl:widget xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/widget-schema-alpha" name="test_widget_all">
+    <expect>
+        <variable key="one" type="STRING"/>
+        <variable key="two" type="STRING"/>
+        <variable key="three" type="BOOLEAN" cache="STATIC">false</variable>
+    </expect>
+
+    <x>12 + scaledwidth / 2</x>
+    <y>15 + scaledheight / 2</y>
+    <z cache="STATIC">3</z>
+    <scale cache="STATIC">scale value</scale>
+
+    <enabled>foo() == bar()</enabled>
+
+    <children>
+        <widget name="content">
+            <x cache="STATIC">17</x>
+            <y cache="STATIC">22</y>
+            <enabled>three</enabled>
+            <contentWidth cache="STATIC">100</contentWidth>
+            <contentHeight cache="STATIC">120</contentHeight>
+        </widget>
+    </children>
+
+    <texture>awesome texture !!</texture>
+
+    <contentWidth>13 w</contentWidth>
+    <contentHeight>15 h</contentHeight>
+
+    <tooltip>mia tooltip</tooltip>
+    <active>maybeh</active>
+
+    <onClick>
+        fanceh clicky
+    </onClick>
+
+    <onMouseOver>
+        fanceh hover
+    </onMouseOver>
+
+    <onLoseFocus>
+        big sad
+    </onLoseFocus>
+
+    <extra>
+        <value key="testExtra">
+            return function(self)
+            return 42
+            end
+        </value>
+    </extra>
+</bl:widget>

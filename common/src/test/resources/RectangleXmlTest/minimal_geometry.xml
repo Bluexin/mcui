@@ -1,0 +1,6 @@
+<bl:glRectangle xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="simple_rect">
+    <x cache="STATIC">10</x>
+    <y cache="STATIC">20</y>
+    <w cache="STATIC">100</w>
+    <h cache="STATIC">50</h>
+</bl:glRectangle>

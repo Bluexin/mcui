@@ -1,0 +1,6 @@
+<bl:fragment xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="test_fragment_expect">
+    <expect>
+        <variable key="text" type="STRING"/>
+        <variable key="visible" type="BOOLEAN" cache="STATIC">true</variable>
+    </expect>
+</bl:fragment>

@@ -1,0 +1,13 @@
+<bl:fragmentReference xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="test_fragment_ref_all"
+                      id="mcui.test:my_fragment">
+    <x>50</x>
+    <y>100</y>
+    <z cache="STATIC">2</z>
+    <scale cache="STATIC">1.2</scale>
+    <enabled>player.health > 0</enabled>
+
+    <variables>
+        <variable type="STRING" key="text" cache="STATIC">"Hello Fragment"</variable>
+        <variable type="BOOLEAN" key="enabled">true</variable>
+    </variables>
+</bl:fragmentReference>

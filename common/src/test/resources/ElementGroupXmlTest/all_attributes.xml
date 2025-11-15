@@ -1,0 +1,16 @@
+<bl:elementGroup xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="test_element_group_all">
+    <x>10 + scaledwidth / 4</x>
+    <y>20 + scaledheight / 4</y>
+    <z cache="STATIC">5</z>
+    <scale cache="STATIC">2.0</scale>
+    <enabled>player.health > 0</enabled>
+
+    <texture>my_texture</texture>
+
+    <children>
+        <elementGroup name="nested_group">
+            <x cache="STATIC">5</x>
+            <y cache="STATIC">10</y>
+        </elementGroup>
+    </children>
+</bl:elementGroup>

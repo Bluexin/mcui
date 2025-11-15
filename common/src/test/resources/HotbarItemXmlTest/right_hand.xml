@@ -1,0 +1,4 @@
+<bl:glHotbarItem xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="offhand_item">
+    <slot cache="STATIC">0</slot>
+    <hand cache="STATIC">RIGHT</hand>
+</bl:glHotbarItem>

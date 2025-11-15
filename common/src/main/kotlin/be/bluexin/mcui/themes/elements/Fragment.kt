@@ -3,9 +3,9 @@ package be.bluexin.mcui.themes.elements
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.themes.elements.access.FragmentAccess
 import be.bluexin.mcui.themes.miniscript.LibHelper
-import be.bluexin.mcui.themes.miniscript.NamedExpressionIntermediate
 import be.bluexin.mcui.themes.miniscript.serialization.json.ExpectJsonAdapter
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
+import be.bluexin.mcui.themes.serde.legacyformat.dto.NamedExpressionIntermediate
 import com.google.gson.annotations.JsonAdapter
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

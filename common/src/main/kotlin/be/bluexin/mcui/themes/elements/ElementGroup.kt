@@ -89,7 +89,7 @@ sealed class ElementGroupParent : Element(), ElementParent {
         GLCore.glBlend(true)
         GLCore.color(1f, 1f, 1f, 1f)
 
-        if (this.rl != null) GLCore.glBindTexture(this.rl!!)
+        if (this.rl !== null) GLCore.glBindTexture(this.rl!!)
 
         poseStack.pushPose()
         poseStack.translate(x(ctx), y(ctx), z(ctx))

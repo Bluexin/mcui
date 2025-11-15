@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bl:hud xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/hud-schema-alpha">
+    <parts>
+        <entry>
+            <key>CROSS_HAIR</key>
+            <value name="crosshair">
+            </value>
+        </entry>
+    </parts>
+</bl:hud>

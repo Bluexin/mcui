@@ -2,10 +2,10 @@ package be.bluexin.mcui.themes.miniscript.api
 
 import be.bluexin.mcui.effects.StatusEffect
 import be.bluexin.mcui.social.StaticPlayerHelper.getHungerLevel
-import be.bluexin.mcui.themes.miniscript.AnonymousExpressionIntermediate
 import be.bluexin.mcui.themes.miniscript.FrameCachedExpression
 import be.bluexin.mcui.themes.miniscript.PartialTicksTracker
 import be.bluexin.mcui.themes.miniscript.StaticCachedExpression
+import be.bluexin.mcui.themes.serde.legacyformat.dto.AnonymousExpressionIntermediate
 import be.bluexin.mcui.util.HealthStep
 import net.minecraft.client.player.LocalPlayer
 import org.koin.core.component.KoinComponent

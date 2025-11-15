@@ -1,0 +1,26 @@
+<bl:repetitionGroup xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha"
+                    name="test_repetition_group_all">
+    <amount cache="NONE">player.inventorySize</amount>
+
+    <x>15 + scaledwidth / 5</x>
+    <y>25 + scaledheight / 5</y>
+    <z cache="STATIC">3</z>
+    <scale cache="STATIC">1.8</scale>
+    <enabled>player.inventorySize > 0</enabled>
+
+    <texture>inventory_texture</texture>
+
+    <children>
+        <glRectangle name="slot_bg">
+            <x cache="NONE">i * 20</x>
+            <y cache="STATIC">0</y>
+            <w cache="STATIC">18</w>
+            <h cache="STATIC">18</h>
+        </glRectangle>
+        <glString name="slot_number">
+            <x cache="NONE">i * 20 + 9</x>
+            <y cache="STATIC">20</y>
+            <text>toString(i)</text>
+        </glString>
+    </children>
+</bl:repetitionGroup>

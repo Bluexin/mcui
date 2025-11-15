@@ -8,9 +8,13 @@ import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.elements.access.FragmentReferenceAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.meta.ThemeDefinition
-import be.bluexin.mcui.themes.miniscript.*
+import be.bluexin.mcui.themes.miniscript.CValue
+import be.bluexin.mcui.themes.miniscript.LibHelper
+import be.bluexin.mcui.themes.miniscript.expressionIntermediate
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
+import be.bluexin.mcui.themes.serde.legacyformat.dto.NamedExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.dto.Variables
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

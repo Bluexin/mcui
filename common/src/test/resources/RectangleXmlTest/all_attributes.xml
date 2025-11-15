@@ -1,0 +1,17 @@
+<bl:glRectangle xmlns:bl="https://www.bluexin.be/be/bluexin/mcui/fragment-schema-alpha" name="test_rectangle_all">
+    <x>-6 - strWidth(text)/2.0</x>
+    <y>50</y>
+    <z cache="STATIC">1</z>
+    <scale cache="STATIC">1.2</scale>
+    <enabled>true</enabled>
+
+    <rgba cache="STATIC">0x424242FF</rgba>
+    <srcX cache="STATIC">0.0</srcX>
+    <srcY cache="STATIC">0.0</srcY>
+    <w cache="STATIC">6</w>
+    <h cache="STATIC">16</h>
+    <srcW cache="STATIC">24.0</srcW>
+    <srcH cache="STATIC">64.0</srcH>
+
+    <texture>mcui:themes/hex2/textures/hex_labels.png</texture>
+</bl:glRectangle>
