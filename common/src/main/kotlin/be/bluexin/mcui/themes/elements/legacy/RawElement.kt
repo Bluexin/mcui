@@ -15,11 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package be.bluexin.mcui.themes.elements
+package be.bluexin.mcui.themes.elements.legacy
 
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
-import be.bluexin.mcui.themes.elements.access.RawElementAccess
+import be.bluexin.mcui.themes.elements.legacy.access.RawElementAccess
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.CUnit
 import com.mojang.blaze3d.vertex.PoseStack
@@ -60,16 +60,16 @@ class RawElement(
 
     override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
         poseStack.pushPose()
-        val x = this.x(ctx)
-        val y = this.y(ctx)
-        val z = this.z(ctx) + ctx.z
+        val x = this.x()
+        val y = this.y()
+        val z = this.z() + ctx.z
         poseStack.translate(x, y, z)
 
         scale?.let {
-            val scale = it(ctx).toFloat()
+            val scale = it().toFloat()
             poseStack.scale(scale, scale, scale)
         }
-        expression(ctx)
+        expression()
         poseStack.popPose()
     }
 

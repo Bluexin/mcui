@@ -1,6 +1,5 @@
 package be.bluexin.mcui.themes.serde.legacyformat.dto
 
-import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementXml.Companion.DEFAULT_NAME
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -51,7 +50,6 @@ internal data class RawElementXml(
     val scale: AnonymousExpressionIntermediate? = null,
 
     @XmlSerialName("expression")
-    @LuajExpose
     val expression: AnonymousExpressionIntermediate? = null,
 
     @SerialName("texture")

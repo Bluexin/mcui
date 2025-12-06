@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package be.bluexin.mcui.themes.elements
+package be.bluexin.mcui.themes.elements.legacy
 
 import be.bluexin.luajksp.annotations.LKExposed
 import be.bluexin.luajksp.annotations.LuajExpose
@@ -173,7 +173,7 @@ sealed class Element : LKExposed {
         return name
     }
 
-    open fun getZ(ctx: IHudDrawContext): Double = z(ctx)
+    open fun getZ(ctx: IHudDrawContext): Double = z()
 
     override fun toString() = "$name (${javaClass.simpleName})"
 }

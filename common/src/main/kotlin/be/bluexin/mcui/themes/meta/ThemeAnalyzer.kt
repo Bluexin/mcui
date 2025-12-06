@@ -1,7 +1,7 @@
 package be.bluexin.mcui.themes.meta
 
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.themes.elements.Hud
+import be.bluexin.mcui.themes.elements.legacy.Hud
 import be.bluexin.mcui.themes.scripting.LuaJManager
 import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
 import net.minecraft.resources.ResourceLocation
@@ -23,7 +23,7 @@ class ThemeAnalyzer(
         successReport: (() -> String) -> Unit,
         failureReport: (() -> String) -> Unit,
     ): Map<ResourceLocation, (ResourceLocation) -> Unit> = buildMap {
-        if (theme.hud != null) this[HUD] = {
+        if (theme.hud !== null) this[HUD] = {
             theme.hud
                 .let(HudFormat::fromFile)?.loader
                 ?.load(resourceManager, theme, setHud)

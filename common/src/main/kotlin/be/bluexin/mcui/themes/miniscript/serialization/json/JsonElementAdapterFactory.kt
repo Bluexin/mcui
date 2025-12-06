@@ -1,6 +1,6 @@
 package be.bluexin.mcui.themes.miniscript.serialization.json
 
-import be.bluexin.mcui.themes.elements.Element
+import be.bluexin.mcui.themes.elements.legacy.Element
 import com.google.gson.Gson
 import com.google.gson.TypeAdapter
 import com.google.gson.TypeAdapterFactory

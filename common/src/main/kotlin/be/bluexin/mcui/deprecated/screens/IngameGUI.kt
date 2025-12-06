@@ -19,7 +19,7 @@ package be.bluexin.mcui.deprecated.screens
 
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.config.OptionCore
-import be.bluexin.mcui.themes.elements.HudPartType
+import be.bluexin.mcui.themes.elements.legacy.HudPartType
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.HudDrawContext
 import com.mojang.blaze3d.systems.RenderSystem
@@ -38,18 +38,14 @@ import org.lwjgl.opengl.GL11
 class IngameGUI(private val mc: Minecraft) : Gui(mc, mc.itemRenderer), KoinComponent {
 
     private val themeManager by inject<ThemeManager>()
+    private val context by inject<HudDrawContext>()
 
     //    private var eventParent: RenderGameOverlayEvent? = null
     private var offsetUsername: Int = 0
 //    private val debugOverlay: GuiOverlayDebugForge = GuiOverlayDebugForge(mc)
 
-    private lateinit var context: HudDrawContext
-
     override fun render(poseStack: PoseStack, partialTicks: Float) {
         mc.profiler.push("setup")
-        if (!::context.isInitialized) {
-            this.context = HudDrawContext()
-        }
         val username = mc.player?.displayName
         val maxNameWidth = if (username == null) 0 else font.width(username)
         val usernameBoxes = 1 + (maxNameWidth + 4) / 5
@@ -240,7 +236,7 @@ class IngameGUI(private val mc: Minecraft) : Gui(mc, mc.itemRenderer), KoinCompo
         mc.profiler.push("track enemy")
         val entity = mc.cameraEntity
         var pointedEntity: Entity? = null
-        if (entity != null) {
+        if (entity !== null) {
             if (mc.level != null) {
                 mc.crosshairPickEntity = null
                 val distance = 32.0
@@ -253,7 +249,7 @@ class IngameGUI(private val mc: Minecraft) : Gui(mc, mc.itemRenderer), KoinCompo
                     entity.boundingBox.expandTowards(vec3d1TimesDistance).inflate(1.0, 1.0, 1.0),
                     EntitySelector.NO_SPECTATORS
                         .and { it !== entity }
-                        .and { it != null && it.canBeCollidedWith() }
+                        .and { it !== null && it.canBeCollidedWith() }
                 )
                 var d2 = distance * distance
                 for (j in list.indices) {

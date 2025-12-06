@@ -1,4 +1,4 @@
-package be.bluexin.mcui.themes.elements
+package be.bluexin.mcui.themes.elements.legacy
 
 import be.bluexin.luajksp.annotations.AfterSet
 import be.bluexin.luajksp.annotations.BeforeSet
@@ -6,7 +6,7 @@ import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.logger
-import be.bluexin.mcui.themes.elements.access.WidgetAccess
+import be.bluexin.mcui.themes.elements.legacy.access.WidgetAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.*
@@ -164,9 +164,9 @@ class Widget(
         if (expect != null) libHelper.popContext()
     }
 
-    private inline fun <T> IHudDrawContext.withContext(crossinline body: (IHudDrawContext) -> T): T {
+    private inline fun <T> IHudDrawContext.withVariables(crossinline body: () -> T): T {
         pushContext(variables)
-        val r = body(this)
+        val r = body()
         popContext()
         return r
     }
@@ -177,12 +177,11 @@ class Widget(
     private fun checkMouseOver(
         mouseX: Double,
         mouseY: Double,
-        ctx: IHudDrawContext,
     ): Boolean {
         val wasMouseOver = isMouseOver
-        val scale = scale?.let { it(ctx) } ?: 1.0
-        isMouseOver = isActive(ctx) && mouseX >= 0 && mouseX < contentWidth(ctx) * scale
-                && mouseY >= 0 && mouseY < contentHeight(ctx) * scale
+        val scale = scale?.let { it() } ?: 1.0
+        isMouseOver = shouldRender() && mouseX >= 0 && mouseX < contentWidth() * scale
+                && mouseY >= 0 && mouseY < contentHeight() * scale
         if (isMouseOver != wasMouseOver) {
             try {
                 onMouseOverEvent(mouseX, mouseY, isMouseOver)
@@ -196,14 +195,14 @@ class Widget(
     }
 
     override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
-        ctx.withContext {
-            if (!enabled(it)) return@withContext
-            checkMouseOver(mouseX - x(it), mouseY - y(it), it)
+        ctx.withVariables {
+            if (!enabled()) return@withVariables
+            checkMouseOver(mouseX - x(), mouseY - y())
 
-            prepareDraw(it, poseStack)
-            drawChildren(it, poseStack, mouseX, mouseY)
-            if (isMouseOver) tooltip?.let { tt -> setTooltipForNextRenderPass(Component.literal(tt(it))) }
-            finishDraw(it, poseStack)
+            prepareDraw(poseStack)
+            drawChildren(ctx, poseStack, mouseX, mouseY)
+            if (isMouseOver) tooltip?.let { tt -> setTooltipForNextRenderPass(Component.literal(tt())) }
+            finishDraw(poseStack)
         }
     }
 
@@ -290,32 +289,32 @@ class Widget(
     override fun isFocused(): Boolean = focused
 
     /*override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        return withContext { ctx ->
-            checkMouseOver(mouseX, mouseY, ctx)
+        return withContext {  ->
+            checkMouseOver(mouseX, mouseY, )
             isMouseOver && (
                     children.any { it is Widget && it.mouseClicked(mouseX, mouseY, button) } ||
-                            checkOnClickSafely(ctx, mouseX, mouseY, button)
+                            checkOnClickSafely(, mouseX, mouseY, button)
                     )
         } ?: false
     }*/
 
     fun mouseClicked(mouseX: Double, mouseY: Double, button: Int, ctx: IHudDrawContext): Boolean =
-        ctx.withContext { context ->
-            if (!enabled(ctx)) return@withContext false
-            val relMouseX = mouseX - x(ctx)
-            val relMouseY = mouseY - y(ctx)
-            children.any { it is Widget && it.mouseClicked(relMouseX, relMouseY, button, ctx) }
-                    || (checkMouseOver(relMouseX, relMouseY, context)
+        ctx.withVariables {
+            if (!enabled()) return@withVariables false
+            val relMouseX = mouseX - x()
+            val relMouseY = mouseY - y()
+            children.any { it is Widget && it.mouseClicked(relMouseX, relMouseY, button) }
+                    || (checkMouseOver(relMouseX, relMouseY)
                     && checkOnClickSafely(relMouseX, relMouseY, button))
         }
 
     fun mouseScrolled(mouseX: Double, mouseY: Double, delta: Double, ctx: IHudDrawContext): Boolean =
-        ctx.withContext { context ->
-            if (!enabled(ctx)) return@withContext false
-            val relMouseX = mouseX - x(ctx)
-            val relMouseY = mouseY - y(ctx)
-            children.any { it is Widget && it.mouseScrolled(mouseX, mouseY, delta, ctx) }
-                    || (checkMouseOver(relMouseX, relMouseY, context)
+        ctx.withVariables {
+            if (!enabled()) return@withVariables false
+            val relMouseX = mouseX - x()
+            val relMouseY = mouseY - y()
+            children.any { it is Widget && it.mouseScrolled(mouseX, mouseY, delta) }
+                    || (checkMouseOver(relMouseX, relMouseY)
                     && checkOnScrollSafely(relMouseX, relMouseY, delta))
         }
 
@@ -343,9 +342,7 @@ class Widget(
 
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) = Unit
 
-//    override fun isActive(): Boolean = withContext(::isActive) ?: false
-
-    private fun isActive(ctx: IHudDrawContext) = enabled(ctx) && active(ctx)
+    private fun shouldRender() = enabled() && active()
 
     override fun updateNarration(narrationElementOutput: NarrationElementOutput) {
 //        TODO("Not yet implemented")
@@ -392,7 +389,7 @@ class Widget(
         libHelper.popContext()
     }
 
-    override fun getZ(ctx: IHudDrawContext): Double = ctx.withContext(z::invoke)
+    override fun getZ(ctx: IHudDrawContext): Double = ctx.withVariables(z)
 
     @Serializable
     data class ExtraWrapper(

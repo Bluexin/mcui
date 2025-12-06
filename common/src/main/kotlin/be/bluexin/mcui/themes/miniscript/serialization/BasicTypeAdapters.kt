@@ -10,13 +10,34 @@ import gnu.jel.Evaluator
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+class ExpressionCompilationException(message: String, cause: Throwable?) : RuntimeException(message, cause)
+
 sealed class BasicExpressionAdapter<CValueType : CValue<T>, T : Any> : KoinComponent {
     private val logger = logger()
     private val libHelper: LibHelper by inject()
 
-    fun compile(v: ExpressionIntermediate): CValueType = try {
+    fun compile(v: ExpressionIntermediate): CValueType = tryCompile(v).getOrElse {
+        AbstractThemeLoader.Reporter += it.message?.substringAfterLast("–––COMPILATION ERROR :\n", "")
+            ?.takeIf(String::isNotBlank)
+            ?: ((it.message ?: "unknown error") + " in ${v.expression}")
+        default
+    }
+
+    fun tryCompile(v: ExpressionIntermediate): Result<CValueType> = try {
 //        Constants.LOG.debug("Compiling ${v.expression}")
-        value(v.cacheType.cacheExpression(wrap(Evaluator.compile(v.expression, libHelper.jelLibrary, type)), v))
+        Result.success(
+            value(
+                v.cacheType.cacheExpression(
+                    wrap(
+                        Evaluator.compile(
+                            v.expression,
+                            libHelper.jelLibrary,
+                            type
+                        )
+                    ), v
+                )
+            )
+        )
     } catch (ce: CompilationException) {
         val sb = StringBuilder("A compilation error occurred during theme loading. See more info below.\n")
             .append("–––COMPILATION ERROR :\n")
@@ -27,17 +48,16 @@ sealed class BasicExpressionAdapter<CValueType : CValue<T>, T : Any> : KoinCompo
         for (i in 0 until column + 1) sb.append(' ')
         sb.append('^')
         /*val w = StringWriter()
-        ce.printStackTrace(PrintWriter(w))
-        sb.append('\n').append(w)*/
+            ce.printStackTrace(PrintWriter(w))
+            sb.append('\n').append(w)*/
         val message = sb.toString()
         logger.error(message)
-        AbstractThemeLoader.Reporter += message.substringAfterLast("–––COMPILATION ERROR :\n")
-        default
+        Result.failure(ExpressionCompilationException(message, ce))
     } catch (e: Throwable) {
-        val message = "An unknown error occurred while compiling '${v.expression}'"
+        val message = "An unknown error occurred while compiling '${v.expression}': ${e.message ?: "unknown error"}"
         logger.error(message, e)
         AbstractThemeLoader.Reporter += (e.message ?: "unknown error") + " in ${v.expression}"
-        default
+        Result.failure(ExpressionCompilationException(message, e))
     }
 
     /**

@@ -15,15 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package be.bluexin.mcui.themes.elements
+package be.bluexin.mcui.themes.elements.legacy
 
 import be.bluexin.luajksp.annotations.LuajExpose
-import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
-import be.bluexin.mcui.themes.elements.access.GLStringAccess
-import be.bluexin.mcui.themes.miniscript.CBoolean
+import be.bluexin.mcui.themes.elements.legacy.access.RepetitionGroupAccess
 import be.bluexin.mcui.themes.miniscript.CInt
-import be.bluexin.mcui.themes.miniscript.CString
+import be.bluexin.mcui.themes.miniscript.profile
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -32,48 +30,37 @@ import org.luaj.vm2.LuaValue
 
 /**
  * Part of saoui by Bluexin.
-
+ *
  * @author Bluexin
  */
 @Serializable
-@SerialName("glString")
+@SerialName("repetitionGroup")
 @LuajExpose(LuajExpose.IncludeType.OPT_IN)
-class GLString(
-    @XmlSerialName("text")
+class RepetitionGroup(
+    @SerialName("amount")
+    @XmlSerialName("amount")
     @LuajExpose
-    var text: CString,
-    @LuajExpose
-    @XmlSerialName("shadow")
-    var shadow: CBoolean = CBoolean.TRUE,
-    @LuajExpose
-    @XmlSerialName("centered")
-    var centered: CBoolean = CBoolean.TRUE
-) : GLRectangleParent() {
+    var amount: CInt
+) : ElementGroupParent() {
 
     override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
-        if (!enabled(ctx)) return
+        if (!enabled()) return
 
-        val pushed = scale?.let {
-            val scale = it(ctx).toFloat()
-            poseStack.pushPose()
-            poseStack.scale(scale, scale, scale)
-            true
-        } ?: false
-        val x = this.x(ctx)
-        val y = this.y(ctx) + h(ctx) / 2.0
-        val rgba = (rgba ?: CInt.WHITE)(ctx)
+        prepareDraw(poseStack)
 
-        GLCore.glString(
-            string = this.text(ctx),
-            x = x.toInt(),
-            y = y.toInt(),
-            rgba = rgba,
-            shadow = shadow(ctx),
-            centered = centered(ctx),
-            poseStack = poseStack
-        )
-        if (pushed) poseStack.popPose()
+        val relMouseX = mouseX - x()
+        val relMouseY = mouseY - y()
+
+        val m = amount()
+        for (i in 0 until m) {
+            ctx.profile(i.toString()) {
+                ctx.setI(i)
+                super.drawChildren(ctx, poseStack, relMouseX, relMouseY)
+            }
+        }
+
+        finishDraw(poseStack)
     }
 
-    override fun toLua(): LuaValue = GLStringAccess(this)
+    override fun toLua(): LuaValue = RepetitionGroupAccess(this)
 }

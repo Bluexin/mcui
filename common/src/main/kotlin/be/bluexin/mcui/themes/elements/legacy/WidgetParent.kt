@@ -1,4 +1,4 @@
-package be.bluexin.mcui.themes.elements
+package be.bluexin.mcui.themes.elements.legacy
 
 import net.minecraft.network.chat.Component
 

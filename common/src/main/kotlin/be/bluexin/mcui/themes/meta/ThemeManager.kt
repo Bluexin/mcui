@@ -22,7 +22,7 @@ import be.bluexin.mcui.commands.McuiCommand
 import be.bluexin.mcui.config.ConfigHandler
 import be.bluexin.mcui.logger
 import be.bluexin.mcui.screens.LuaScriptedScreen
-import be.bluexin.mcui.themes.elements.Hud
+import be.bluexin.mcui.themes.elements.legacy.Hud
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.loader.SettingsLoader
 import be.bluexin.mcui.themes.loader.TexturesFallbackHandler

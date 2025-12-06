@@ -54,22 +54,28 @@ internal data class RectangleXml(
     val rgba: AnonymousExpressionIntermediate? = null,
     @SerialName("srcX")
     @XmlSerialName("srcX")
-    val srcX: AnonymousExpressionIntermediate? = null,
+    val sourceX: AnonymousExpressionIntermediate? = null,
     @SerialName("srcY")
     @XmlSerialName("srcY")
-    val srcY: AnonymousExpressionIntermediate? = null,
+    val sourceY: AnonymousExpressionIntermediate? = null,
     @SerialName("w")
     @XmlSerialName("w")
-    val w: AnonymousExpressionIntermediate? = null,
+    val width: AnonymousExpressionIntermediate? = null,
     @SerialName("h")
     @XmlSerialName("h")
-    val h: AnonymousExpressionIntermediate? = null,
+    val height: AnonymousExpressionIntermediate? = null,
     @SerialName("srcW")
     @XmlSerialName("srcW")
-    val srcW: AnonymousExpressionIntermediate? = null,
+    val sourceWidth: AnonymousExpressionIntermediate? = null,
     @SerialName("srcH")
     @XmlSerialName("srcH")
-    val srcH: AnonymousExpressionIntermediate? = null,
+    val sourceHeight: AnonymousExpressionIntermediate? = null,
+    @SerialName("textureWidth")
+    @XmlSerialName("textureWidth")
+    val textureWidth: AnonymousExpressionIntermediate? = null,
+    @SerialName("textureHeight")
+    @XmlSerialName("textureHeight")
+    val textureHeight: AnonymousExpressionIntermediate? = null,
     @SerialName("texture")
     @XmlSerialName("texture")
     val texture: AnonymousExpressionIntermediate? = null,

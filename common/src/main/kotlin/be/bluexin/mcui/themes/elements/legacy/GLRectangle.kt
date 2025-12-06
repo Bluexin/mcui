@@ -15,12 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package be.bluexin.mcui.themes.elements
+package be.bluexin.mcui.themes.elements.legacy
 
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
-import be.bluexin.mcui.themes.elements.access.GLRectangleAccess
+import be.bluexin.mcui.themes.elements.legacy.access.GLRectangleAccess
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.CDouble
 import be.bluexin.mcui.themes.miniscript.CInt
@@ -75,26 +75,26 @@ sealed class GLRectangleParent : Element() {
     private val texture: String? = null
 
     override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
-        if (!enabled(ctx)) return
+        if (!enabled()) return
 
-        val x = this.x(ctx)
-        val y = this.y(ctx)
-        val z = this.z(ctx) + ctx.z
+        val x = this.x()
+        val y = this.y()
+        val z = this.z() + ctx.z // tf ? should ctx.z not be pushed to poseStack ?
 
         val pushed = scale?.let {
-            val scale = it(ctx).toFloat()
+            val scale = it().toFloat()
             poseStack.pushPose()
             poseStack.scale(scale, scale, scale)
             true
         } ?: false
         GLCore.glBlend(true)
-        GLCore.withColor(rgba?.let { it(ctx) }) {
+        GLCore.withColor(rgba?.let { it() }) {
             this.rl?.let(GLCore::glBindTexture)
             GLCore.glTexturedRectV2(
                 x, y, z,
-                w(ctx), h(ctx),
-                srcX(ctx), srcY(ctx),
-                srcW(ctx), srcH(ctx),
+                w(), h(),
+                srcX(), srcY(),
+                srcW(), srcH(),
                 poseStack = poseStack
             )
         }

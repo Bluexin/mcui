@@ -1,6 +1,6 @@
 package be.bluexin.mcui.themes.serde.legacyformat.dto
 
-import be.bluexin.mcui.themes.elements.HudPartType
+import be.bluexin.mcui.themes.elements.legacy.HudPartType
 import be.bluexin.mcui.themes.miniscript.CacheType
 import kotlinx.serialization.decodeFromString
 import nl.adaptivity.xmlutil.serialization.XML

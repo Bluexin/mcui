@@ -2,10 +2,10 @@ package be.bluexin.mcui.themes.loader
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.effects.ColorState
-import be.bluexin.mcui.themes.elements.ElementGroup
-import be.bluexin.mcui.themes.elements.Fragment
-import be.bluexin.mcui.themes.elements.Hud
-import be.bluexin.mcui.themes.elements.Widget
+import be.bluexin.mcui.themes.elements.legacy.ElementGroup
+import be.bluexin.mcui.themes.elements.legacy.Fragment
+import be.bluexin.mcui.themes.elements.legacy.Hud
+import be.bluexin.mcui.themes.elements.legacy.Widget
 import be.bluexin.mcui.themes.meta.HudFormat
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.util.*

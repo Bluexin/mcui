@@ -15,14 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package be.bluexin.mcui.themes.elements
+package be.bluexin.mcui.themes.elements.legacy
 
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.platform.Services
-import be.bluexin.mcui.themes.elements.access.ElementGroupAccess
+import be.bluexin.mcui.themes.elements.legacy.access.ElementGroupAccess
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.profile
 import be.bluexin.mcui.util.Client
@@ -78,40 +78,40 @@ sealed class ElementGroupParent : Element(), ElementParent {
 
     // FIXME : an error in enabled will still crash
     override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
-        if (!enabled(ctx)) return
+        if (!enabled()) return
 
-        prepareDraw(ctx, poseStack)
+        prepareDraw(poseStack)
         drawChildren(ctx, poseStack, mouseX, mouseY)
-        finishDraw(ctx, poseStack)
+        finishDraw(poseStack)
     }
 
-    protected open fun prepareDraw(ctx: IHudDrawContext, poseStack: PoseStack) {
+    protected open fun prepareDraw(poseStack: PoseStack) {
         GLCore.glBlend(true)
         GLCore.color(1f, 1f, 1f, 1f)
 
-        if (this.rl !== null) GLCore.glBindTexture(this.rl!!)
+        this.rl?.let(GLCore::glBindTexture)
 
         poseStack.pushPose()
-        poseStack.translate(x(ctx), y(ctx), z(ctx))
+        poseStack.translate(x(), y(), z())
 
         scale?.let {
-            val scale = it(ctx).toFloat()
+            val scale = it().toFloat()
             poseStack.scale(scale, scale, scale)
         }
     }
 
-    protected open fun finishDraw(ctx: IHudDrawContext, poseStack: PoseStack) {
+    protected open fun finishDraw(poseStack: PoseStack) {
         poseStack.popPose()
     }
 
     protected open fun drawChildren(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
         /*RenderSystem.setShaderTexture(0, AbstractWidget.WIDGETS_LOCATION)
         GuiComponent.renderOutline(
-            poseStack, 0, 0, x(ctx).toInt(), y(ctx).toInt(), 0x00e11dff
+            poseStack, 0, 0, x().toInt(), y().toInt(), 0x00e11dff
         )*/
 
-        val relMouseX = mouseX - x(ctx)
-        val relMouseY = mouseY - y(ctx)
+        val relMouseX = mouseX - x()
+        val relMouseY = mouseY - y()
 
         if (Services.PLATFORM.isDevelopmentEnvironment /* TODO : debug setting ? */) {
             children = children.sortedBy {
@@ -126,7 +126,7 @@ sealed class ElementGroupParent : Element(), ElementParent {
                         false
                     }
                 }
-            }.let(::Children)
+            }.let(ElementGroupParent::Children)
         } else {
             children.sortedBy {
                 it.getZ(ctx)

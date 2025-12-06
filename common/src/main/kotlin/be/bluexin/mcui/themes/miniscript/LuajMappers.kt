@@ -105,6 +105,16 @@ data object CStringMapper : CValueMapper<CString, String>(StringExpressionAdapte
     override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
 }
 
+data object CResourceLocationMapper : LKMapper<CResourceLocation> {
+    override fun toLua(value: CResourceLocation): LuaValue {
+        TODO("Not yet implemented")
+    }
+
+    override fun fromLua(value: LuaValue): CResourceLocation {
+        TODO("Not yet implemented")
+    }
+}
+
 /**
  * Maps an expression that should return a boolean.
  */

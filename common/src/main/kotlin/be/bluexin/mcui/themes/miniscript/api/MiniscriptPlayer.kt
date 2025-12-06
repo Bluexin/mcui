@@ -4,7 +4,6 @@ import be.bluexin.mcui.effects.StatusEffect
 import be.bluexin.mcui.social.StaticPlayerHelper.getHungerLevel
 import be.bluexin.mcui.themes.miniscript.FrameCachedExpression
 import be.bluexin.mcui.themes.miniscript.PartialTicksTracker
-import be.bluexin.mcui.themes.miniscript.StaticCachedExpression
 import be.bluexin.mcui.themes.serde.legacyformat.dto.AnonymousExpressionIntermediate
 import be.bluexin.mcui.util.HealthStep
 import net.minecraft.client.player.LocalPlayer
@@ -119,7 +118,7 @@ internal class MiniscriptPlayerImpl(
     private val statusEffects =
         FrameCachedExpression({ StatusEffect.getEffects(player) }, AnonymousExpressionIntermediate.EMPTY)
 
-    override fun statusEffects(): List<StatusEffect> = statusEffects.invoke(StaticCachedExpression.StubContext)
+    override fun statusEffects(): List<StatusEffect> = statusEffects.invoke()
 
     override fun food() = getHungerLevel(player, partialTicksTracker.partialTicks)
     override fun saturation() = player.foodData.saturationLevel

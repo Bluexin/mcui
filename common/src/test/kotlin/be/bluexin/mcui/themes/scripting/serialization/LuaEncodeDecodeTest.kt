@@ -1,6 +1,6 @@
 package be.bluexin.mcui.themes.scripting.serialization
 
-import be.bluexin.mcui.themes.elements.Widget
+import be.bluexin.mcui.themes.elements.legacy.Widget
 import be.bluexin.mcui.themes.miniscript.LibHelper
 import nl.adaptivity.xmlutil.XmlStreaming
 import nl.adaptivity.xmlutil.serialization.XML

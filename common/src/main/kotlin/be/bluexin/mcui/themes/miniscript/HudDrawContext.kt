@@ -28,13 +28,13 @@ import be.bluexin.mcui.util.HealthStep
 import be.bluexin.mcui.util.HealthStep.Companion.getStep
 import be.bluexin.mcui.util.LayeredMap
 import com.mojang.blaze3d.platform.Window
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
+import org.koin.core.annotation.Single
 import java.lang.ref.WeakReference
 import kotlin.math.min
 
@@ -44,14 +44,15 @@ import kotlin.math.min
  *
  * @author Bluexin
  */
+@Single
 @Suppress("OVERRIDE_DEPRECATION")
-class HudDrawContext(
-    val mc: Minecraft = Client.mc,
-    private val itemRenderer: ItemRenderer = mc.itemRenderer
-) : IHudDrawContext {
+class HudDrawContext : IHudDrawContext {
+    val mc = Client.mc
+    private val itemRenderer = mc.itemRenderer
+
     /*
-    Feel free to add anything you'd need here.
-     */
+        Feel free to add anything you'd need here.
+         */
     private val username: String get() = player.displayName.string
     private val usernameWidth: Double get() = mc.font.width(username).toDouble()
     private val stats: PlayerStatsProvider = object : PlayerStatsProvider {
@@ -75,7 +76,7 @@ private var effects: List<StatusEffect>? = null
     }*/
 
     fun setTargetEntity(entity: LivingEntity?) {
-        if (entity != null) {
+        if (entity !== null) {
             this.targetEntity = entity.let(::WeakReference)
             lastTargetedTick = entity.level.gameTime
         } else if (targetEntity != null && mc.level!!.gameTime - lastTargetedTick > 60) {
@@ -292,7 +293,7 @@ private var effects: List<StatusEffect>? = null
 
     override fun targetMaxHp(): Float = targetEntity?.get()?.maxHealth ?: 0F
 
-    override fun targetHpPct(): Float = if (targetEntity?.get() != null) targetHp() / targetMaxHp() else 0f
+    override fun targetHpPct(): Float = if (targetEntity?.get() !== null) targetHp() / targetMaxHp() else 0f
 
     override fun targetHealthStep(): HealthStep = getStep(targetEntity?.get(), targetHpPct().toDouble())
 
@@ -312,31 +313,31 @@ private var effects: List<StatusEffect>? = null
      */
     override fun getStringProperty(name: String): String = when (val prop = context[name]) {
         null -> "<null>"
-        is CString -> prop.invoke(this)
+        is CString -> prop.invoke()
         else -> "<invalid type of $name>"
     }
 
     override fun getDoubleProperty(name: String): Double = when (val prop = context[name]) {
         null -> 0.0
-        is CDouble -> prop.invoke(this)
+        is CDouble -> prop.invoke()
         else -> -1.0
     }
 
     override fun getIntProperty(name: String): Int = when (val prop = context[name]) {
         null -> 0
-        is CInt -> prop.invoke(this)
+        is CInt -> prop.invoke()
         else -> -1
     }
 
     override fun getBooleanProperty(name: String): Boolean = when (val prop = context[name]) {
         null -> false
-        is CBoolean -> prop.invoke(this)
+        is CBoolean -> prop.invoke()
         else -> false
     }
 
     override fun getUnitProperty(name: String): Unit = when (val prop = context[name]) {
         null -> Unit
-        is CUnit -> prop.invoke(this)
+        is CUnit -> prop.invoke()
         else -> Unit
     }
 

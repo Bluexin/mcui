@@ -1,11 +1,11 @@
-package be.bluexin.mcui.themes.elements
+package be.bluexin.mcui.themes.elements.legacy
 
 import be.bluexin.luajksp.annotations.AfterSet
 import be.bluexin.luajksp.annotations.BeforeSet
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
-import be.bluexin.mcui.themes.elements.access.FragmentReferenceAccess
+import be.bluexin.mcui.themes.elements.legacy.access.FragmentReferenceAccess
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.CValue
@@ -82,7 +82,7 @@ class FragmentReference(
                     libHelper.popContext()
                     val realMissing = missing - defaults
                     if (realMissing.isNotEmpty()) {
-                        val present = variables.mapValues { (_, value) -> value?.value?.expressionIntermediate }
+                        val present = variables.keys
                         val message = "Missing variables $realMissing for $id (present : $present) in "
                         Constants.LOG.warn(message + hierarchyName)
                         AbstractThemeLoader.Reporter += message + nameOrParent()
@@ -95,15 +95,15 @@ class FragmentReference(
     }
 
     override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
-        if (!enabled(ctx)) return
+        if (!enabled()) return
         fragment?.let {
             poseStack.pushPose()
-            val x = x(ctx)
-            val y = y(ctx)
-            poseStack.translate(x, y, z(ctx))
+            val x = x()
+            val y = y()
+            poseStack.translate(x, y, z())
 
             scale?.let {
-                val scale = it(ctx).toFloat()
+                val scale = it().toFloat()
                 poseStack.scale(scale, scale, scale)
             }
             ctx.pushContext(variables)
@@ -122,7 +122,7 @@ class FragmentReference(
 
     override fun getZ(ctx: IHudDrawContext): Double {
         ctx.pushContext(variables)
-        val r = z(ctx)
+        val r = z()
         ctx.popContext()
         return r
     }

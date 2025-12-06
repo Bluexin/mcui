@@ -17,7 +17,7 @@ import org.koin.core.component.inject
  * Need to find a way to properly abstract that & Fabric version
  */
 class McuiGui(private val mc: Minecraft) : Gui(mc, mc.itemRenderer), KoinComponent {
-    private val context = HudDrawContext(mc)
+    private val context by inject<HudDrawContext>()
     private val themeManager by inject<ThemeManager>()
     private val partialTicksTracker by inject<PartialTicksTracker>()
     private val poseStackTracker by inject<PoseStackTracker>()

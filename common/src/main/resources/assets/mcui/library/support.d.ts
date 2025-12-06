@@ -29,25 +29,26 @@ export interface TypeSpecificCValue {
 /**
  * Represents a MiniScript value computing to a generic type.
  */
-export interface CValue extends TypeSpecificCValue {
+export interface CValue<T> extends TypeSpecificCValue {
     /** MiniScript JEL type. */
     type: JelType;
+    // readonly value: T; // TODO
 }
 
 /** Represents a MiniScript value computing to int type */
-export type CInt = (CValue & { type: "INT" }) | string | number;
+export type CInt = (CValue<number> & { type: "INT" }) | string | number;
 
 /** Represents a MiniScript value computing to boolean type */
-export type CBoolean = (CValue & { type: "BOOLEAN" }) | string | number | boolean;
+export type CBoolean = (CValue<boolean> & { type: "BOOLEAN" }) | string | boolean;
 
 /** Represents a MiniScript value computing to double type */
-export type CDouble = (CValue & { type: "DOUBLE" }) | string | number;
+export type CDouble = (CValue<number> & { type: "DOUBLE" }) | string | number;
 
 /** Represents a MiniScript value computing to string type */
-export type CString = (CValue & { type: "STRING" }) | string | number;
+export type CString = (CValue<string> & { type: "STRING" }) | string | number;
 
 /** Represents a MiniScript value computing to void type */
-export type CUnit = (CValue & { type: "UNIT" }) | string;
+export type CUnit = (CValue<void> & { type: "UNIT" }) | string;
 
 /**
  * Minecraft ResourceLocation

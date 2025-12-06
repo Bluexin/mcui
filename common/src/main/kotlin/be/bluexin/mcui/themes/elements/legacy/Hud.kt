@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package be.bluexin.mcui.themes.elements
+package be.bluexin.mcui.themes.elements.legacy
 
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.themes.loader.ThemeLoaderModule
@@ -121,7 +121,7 @@ class Hud(
             parts.parts.forEach { (key, part) ->
                 // Compatibility for old themes
                 if (key != HudPartType.JUMP_BAR || drawContext.player().hasMount()) ctx.profile(key.name) {
-                    part.draw(ctx, poseStack, 0.0, 0.0)
+                    part.draw(ctx, poseStack, -1.0, -1.0)
                 }
             }
         }

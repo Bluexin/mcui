@@ -63,5 +63,5 @@ internal data class RepetitionGroupXml(
      */
     @SerialName("amount")
     @XmlSerialName("amount")
-    var amount: AnonymousExpressionIntermediate,
+    val amount: AnonymousExpressionIntermediate,
 ) : ElementXml

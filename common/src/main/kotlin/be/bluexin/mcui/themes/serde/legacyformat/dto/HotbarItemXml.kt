@@ -1,6 +1,5 @@
 package be.bluexin.mcui.themes.serde.legacyformat.dto
 
-import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.luajksp.annotations.LuajMapped
 import be.bluexin.mcui.themes.miniscript.HumanoidArmMapper
 import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementXml.Companion.DEFAULT_NAME
@@ -87,21 +86,17 @@ internal data class HotbarItemXml(
 
     @SerialName("slot")
     @XmlSerialName("slot")
-    @LuajExpose
     val slot: AnonymousExpressionIntermediate? = null,
 
     @SerialName("itemXoffset")
     @XmlSerialName("itemXoffset")
-    @LuajExpose
     val itemXoffset: AnonymousExpressionIntermediate? = null,
 
     @SerialName("itemYoffset")
     @XmlSerialName("itemYoffset")
-    @LuajExpose
     val itemYoffset: AnonymousExpressionIntermediate? = null,
 
     @SerialName("hand")
     @XmlSerialName("hand")
-    @LuajExpose
     val hand: @LuajMapped(HumanoidArmMapper::class, import = "support") HumanoidArm? = null
 ) : ElementXml

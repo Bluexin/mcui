@@ -41,8 +41,8 @@ class RepetitionGroupXmlTest {
                     name = "slot_bg",
                     x = AnonymousExpressionIntermediate("i * 20", CacheType.NONE),
                     y = AnonymousExpressionIntermediate("0", CacheType.STATIC),
-                    w = AnonymousExpressionIntermediate("18", CacheType.STATIC),
-                    h = AnonymousExpressionIntermediate("18", CacheType.STATIC),
+                    width = AnonymousExpressionIntermediate("18", CacheType.STATIC),
+                    height = AnonymousExpressionIntermediate("18", CacheType.STATIC),
                 ),
                 StringXml(
                     name = "slot_number",

@@ -14,7 +14,7 @@ internal class DrawContextImpl(
     private var playerCache: MiniscriptPlayerImpl? = null
     override fun player(): MiniscriptPlayer {
         val thePlayer = Client.mc.player
-        if (thePlayer == null && playerCache != null) {
+        if (thePlayer === null && playerCache != null) {
             playerCache = null
         } else if (playerCache?.player !== thePlayer) {
             playerCache = thePlayer?.let(::MiniscriptPlayerImpl)

@@ -30,48 +30,49 @@ import org.koin.core.component.inject
  */
 sealed class CompiledExpressionWrapper<out T : Any>(
     val compiledExpression: CompiledExpression
-) : (IHudDrawContext) -> T, KoinComponent {
+) : () -> T, KoinComponent {
     protected val ctx: DrawContext by inject()
+    protected val legacyCtx: IHudDrawContext by inject()
 
     abstract val default: T
 }
 
 class IntExpressionWrapper(compiledExpression: CompiledExpression) :
     CompiledExpressionWrapper<Int>(compiledExpression) {
-    override fun invoke(ctx: IHudDrawContext): Int =
-        compiledExpression.evaluate_int(arrayOf(ctx, this.ctx))
+    override fun invoke(): Int =
+        compiledExpression.evaluate_int(arrayOf(legacyCtx, this.ctx))
 
     override val default = 0
 }
 
 class DoubleExpressionWrapper(compiledExpression: CompiledExpression) :
     CompiledExpressionWrapper<Double>(compiledExpression) {
-    override fun invoke(ctx: IHudDrawContext): Double =
-        compiledExpression.evaluate_double(arrayOf(ctx, this.ctx))
+    override fun invoke(): Double =
+        compiledExpression.evaluate_double(arrayOf(legacyCtx, this.ctx))
 
     override val default = 0.0
 }
 
 class StringExpressionWrapper(compiledExpression: CompiledExpression) :
     CompiledExpressionWrapper<String>(compiledExpression) {
-    override fun invoke(ctx: IHudDrawContext): String =
-        compiledExpression.evaluate(arrayOf(ctx, this.ctx)).toString()
+    override fun invoke(): String =
+        compiledExpression.evaluate(arrayOf(legacyCtx, this.ctx)).toString()
 
     override val default = "--Error!"
 }
 
 class BooleanExpressionWrapper(compiledExpression: CompiledExpression) :
     CompiledExpressionWrapper<Boolean>(compiledExpression) {
-    override fun invoke(ctx: IHudDrawContext): Boolean =
-        compiledExpression.evaluate_boolean(arrayOf(ctx, this.ctx))
+    override fun invoke(): Boolean =
+        compiledExpression.evaluate_boolean(arrayOf(legacyCtx, this.ctx))
 
     override val default = false
 }
 
 class UnitExpressionWrapper(compiledExpression: CompiledExpression) :
     CompiledExpressionWrapper<Unit>(compiledExpression) {
-    override fun invoke(ctx: IHudDrawContext) =
-        compiledExpression.evaluate_void(arrayOf(ctx, this.ctx))
+    override fun invoke() =
+        compiledExpression.evaluate_void(arrayOf(legacyCtx, this.ctx))
 
     override val default = Unit
 }

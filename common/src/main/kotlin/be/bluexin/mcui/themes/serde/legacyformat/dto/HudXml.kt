@@ -1,6 +1,6 @@
 package be.bluexin.mcui.themes.serde.legacyformat.dto
 
-import be.bluexin.mcui.themes.elements.HudPartType
+import be.bluexin.mcui.themes.elements.legacy.HudPartType
 import be.bluexin.mcui.themes.meta.ThemeMetadata
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

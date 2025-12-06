@@ -1,6 +1,6 @@
 package be.bluexin.mcui.themes.miniscript.serialization.json
 
-import be.bluexin.mcui.themes.elements.Expect
+import be.bluexin.mcui.themes.elements.legacy.Expect
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.miniscript.CacheType
 import com.google.gson.TypeAdapter

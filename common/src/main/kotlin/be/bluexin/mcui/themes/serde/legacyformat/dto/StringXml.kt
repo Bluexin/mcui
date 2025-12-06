@@ -1,6 +1,5 @@
 package be.bluexin.mcui.themes.serde.legacyformat.dto
 
-import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementXml.Companion.DEFAULT_NAME
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -55,14 +54,16 @@ internal data class StringXml(
     val rgba: AnonymousExpressionIntermediate? = null,
 
     @XmlSerialName("text")
-    @LuajExpose
-    var text: AnonymousExpressionIntermediate? = null,
+    val text: AnonymousExpressionIntermediate? = null,
 
-    @LuajExpose
     @XmlSerialName("shadow")
-    var shadow: AnonymousExpressionIntermediate? = null,
+    val shadow: AnonymousExpressionIntermediate? = null,
 
-    @LuajExpose
     @XmlSerialName("centered")
-    var centered: AnonymousExpressionIntermediate? = null
+    val centered: AnonymousExpressionIntermediate? = null,
+
+    @Deprecated("This was used in place of <centered> property in some old themes")
+    @SerialName("h")
+    @XmlSerialName("h")
+    val legacyHeight: AnonymousExpressionIntermediate? = null,
 ) : ElementXml

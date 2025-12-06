@@ -1,8 +1,8 @@
 package be.bluexin.mcui.themes.scripting.lib
 
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.themes.elements.*
-import be.bluexin.mcui.themes.elements.access.WidgetAccess
+import be.bluexin.mcui.themes.elements.legacy.*
+import be.bluexin.mcui.themes.elements.legacy.access.WidgetAccess
 import be.bluexin.mcui.themes.loader.XmlThemeLoader
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.LibHelper

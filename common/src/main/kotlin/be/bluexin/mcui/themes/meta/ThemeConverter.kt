@@ -1,7 +1,7 @@
 package be.bluexin.mcui.themes.meta
 
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.themes.elements.Widget
+import be.bluexin.mcui.themes.elements.legacy.Widget
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.loader.JsonThemeLoader
 import be.bluexin.mcui.themes.loader.SettingsLoader

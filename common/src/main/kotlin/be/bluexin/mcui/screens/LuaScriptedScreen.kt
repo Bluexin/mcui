@@ -3,7 +3,7 @@ package be.bluexin.mcui.screens
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.config.OptionCore
 import be.bluexin.mcui.logger
-import be.bluexin.mcui.themes.elements.*
+import be.bluexin.mcui.themes.elements.legacy.*
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.HudDrawContext
 import be.bluexin.mcui.themes.miniscript.PartialTicksTracker
@@ -28,6 +28,7 @@ class LuaScriptedScreen(
     private val themeManager: ThemeManager by inject()
     private val partialTicksTracker by inject<PartialTicksTracker>()
     private val poseStackTracker by inject<PoseStackTracker>()
+    private val context by inject<HudDrawContext>()
 
     override val name = screenId.toString()
 
@@ -42,8 +43,6 @@ class LuaScriptedScreen(
     }
 
     private val rootId = ResourceLocation(root.name)
-
-    private val context by lazy { HudDrawContext() }
 
     override val elements: Iterable<Element>
         get() = widgets

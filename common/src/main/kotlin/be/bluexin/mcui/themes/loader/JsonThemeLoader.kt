@@ -17,10 +17,10 @@
 
 package be.bluexin.mcui.themes.loader
 
-import be.bluexin.mcui.themes.elements.ElementParent
-import be.bluexin.mcui.themes.elements.Fragment
-import be.bluexin.mcui.themes.elements.Hud
-import be.bluexin.mcui.themes.elements.Widget
+import be.bluexin.mcui.themes.elements.legacy.ElementParent
+import be.bluexin.mcui.themes.elements.legacy.Fragment
+import be.bluexin.mcui.themes.elements.legacy.Hud
+import be.bluexin.mcui.themes.elements.legacy.Widget
 import be.bluexin.mcui.themes.meta.HudFormat
 import be.bluexin.mcui.themes.miniscript.CInt
 import be.bluexin.mcui.themes.miniscript.serialization.json.AfterUnmarshalAdapterFactory

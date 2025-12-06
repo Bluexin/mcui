@@ -15,13 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package be.bluexin.mcui.themes.elements
+package be.bluexin.mcui.themes.elements.legacy
 
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.luajksp.annotations.LuajMapped
 import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
-import be.bluexin.mcui.themes.elements.access.GLHotbarItemAccess
+import be.bluexin.mcui.themes.elements.legacy.access.GLHotbarItemAccess
 import be.bluexin.mcui.themes.miniscript.CInt
 import be.bluexin.mcui.themes.miniscript.HumanoidArmMapper
 import com.mojang.blaze3d.vertex.PoseStack
@@ -91,17 +91,17 @@ class GLHotbarItem(
     }
 
     override fun draw(ctx: IHudDrawContext, poseStack: PoseStack, mouseX: Double, mouseY: Double) {
-        if (!enabled(ctx) || hand == ctx.player.mainArm) return
+        if (!enabled() || hand == ctx.player.mainArm) return
         super.draw(ctx, poseStack, mouseX, mouseY)
 
         val pushed = scale?.let {
-            val scale = it(ctx).toFloat()
+            val scale = it().toFloat()
             poseStack.pushPose()
             poseStack.scale(scale, scale, scale)
             true
         } ?: false
-        val it: ItemStack = if (hand == null) ctx.player.inventory.items[slot(ctx)]
-        else ctx.player.inventory.offhand[slot(ctx)]
+        val it: ItemStack = if (hand == null) ctx.player.inventory.items[slot()]
+        else ctx.player.inventory.offhand[slot()]
 
         if (it == ItemStack.EMPTY) return
 
@@ -110,8 +110,8 @@ class GLHotbarItem(
 //        RenderHelper.enableGUIStandardItemLighting()
 
         renderHotbarItem(
-            (x(ctx) + itemXoffset(ctx)).toInt(),
-            (y(ctx) + itemYoffset(ctx)).toInt(),
+            (x() + itemXoffset()).toInt(),
+            (y() + itemYoffset()).toInt(),
             ctx.partialTicks,
             it, ctx, poseStack
         )
