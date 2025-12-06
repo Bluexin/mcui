@@ -1,9 +1,6 @@
 package be.bluexin.mcui.themes.serde.legacyformat.factory
 
 import be.bluexin.mcui.themes.elements.Rectangle
-import be.bluexin.mcui.themes.elements.RenderState
-import be.bluexin.mcui.themes.elements.Transform
-import be.bluexin.mcui.themes.miniscript.CBoolean
 import be.bluexin.mcui.themes.miniscript.CDouble
 import be.bluexin.mcui.themes.miniscript.CInt
 import be.bluexin.mcui.themes.miniscript.CResourceLocation
@@ -16,16 +13,8 @@ internal data object RectangleFactory : LegacyFactory<RectangleXml, Rectangle>()
         input: RectangleXml,
         context: Factory.Context
     ): Result<Rectangle> = context.tryRun("glRectangle[${input.name}]") {
-        val renderState = RenderState(
-            enabled = input::enabled.compileBoolean(context) ?: CBoolean.TRUE,
-            name = input.name,
-        )
-        val transform = Transform(
-            x = input::x.compileDouble(context) ?: CDouble.ZERO,
-            y = input::y.compileDouble(context) ?: CDouble.ZERO,
-            z = input::z.compileDouble(context) ?: CDouble.ZERO,
-            scale = input::scale.compileDouble(context)
-        )
+        val renderState = createRenderState(input, context)
+        val transform = createTransform(input, context)
         val width = input::width.compileDouble(context) ?: CDouble.ZERO
         val height = input::height.compileDouble(context) ?: CDouble.ZERO
         val texture = input::texture.compileString(context)

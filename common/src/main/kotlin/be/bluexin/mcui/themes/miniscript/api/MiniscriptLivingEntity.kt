@@ -1,10 +1,16 @@
 package be.bluexin.mcui.themes.miniscript.api
 
+import be.bluexin.luajksp.annotations.LKExposed
+import be.bluexin.luajksp.annotations.LuajExclude
+import be.bluexin.luajksp.annotations.LuajExpose
+import be.bluexin.mcui.themes.miniscript.api.access.MiniscriptLivingEntityAccess
 import net.minecraft.world.entity.LivingEntity
+import org.luaj.vm2.LuaValue
 import java.lang.ref.WeakReference
 import kotlin.math.min
 
-interface MiniscriptLivingEntity {
+@LuajExpose
+interface MiniscriptLivingEntity : LKExposed {
 
     /**
      * @return the entity's display name (username in case of players)
@@ -60,6 +66,9 @@ interface MiniscriptLivingEntity {
      * @return the current living mount of the player
      */
     fun mount(): MiniscriptLivingEntity?
+
+    @LuajExclude
+    override fun toLua(): LuaValue = MiniscriptLivingEntityAccess(this)
 }
 
 internal class MiniscriptLivingEntityImpl(
@@ -82,7 +91,7 @@ internal class MiniscriptLivingEntityImpl(
     override fun hasMount(): Boolean = entity.vehicle is LivingEntity
     override fun mount(): MiniscriptLivingEntity? {
         val v = entity.vehicle
-        if (v == null && mountCache != null) {
+        if (v === null && mountCache !== null) {
             mountCache = null
         } else if (mountCache?.entity !== v) {
             mountCache = (entity.vehicle as? LivingEntity)

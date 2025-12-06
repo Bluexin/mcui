@@ -18,10 +18,13 @@
 package be.bluexin.mcui.themes.miniscript
 
 import be.bluexin.luajksp.annotations.LuajMapped
+import be.bluexin.mcui.themes.miniscript.api.GameContext
 import be.bluexin.mcui.themes.miniscript.serialization.*
 import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Wraps around custom types implementation for XML loading and value caching.
@@ -29,8 +32,10 @@ import kotlinx.serialization.Transient
  * @author Bluexin
  */
 @LuajMapped(UnknownCValueMapper::class, import = "support")
-sealed class CValue<out T : Any>(@Transient val value: () -> T) : () -> T by value {
+sealed class CValue<out T : Any>(@Transient val value: (GameContext) -> T) : () -> T, KoinComponent {
+    private val context: GameContext by inject()
     abstract val type: JelType
+    override fun invoke(): T = value(context)
 }
 
 /**
@@ -38,7 +43,7 @@ sealed class CValue<out T : Any>(@Transient val value: () -> T) : () -> T by val
  */
 @Serializable(CIntSerializer::class)
 @LuajMapped(CIntMapper::class, import = "support")
-class CInt(value: () -> Int) : CValue<Int>(value) {
+class CInt(value: (GameContext) -> Int) : CValue<Int>(value) {
     override val type: JelType
         get() = JelType.INT
 
@@ -53,7 +58,7 @@ class CInt(value: () -> Int) : CValue<Int>(value) {
  */
 @Serializable(CDoubleSerializer::class)
 @LuajMapped(CDoubleMapper::class, import = "support")
-class CDouble(value: () -> Double) : CValue<Double>(value) {
+class CDouble(value: (GameContext) -> Double) : CValue<Double>(value) {
     override val type: JelType
         get() = JelType.DOUBLE
 
@@ -68,7 +73,7 @@ class CDouble(value: () -> Double) : CValue<Double>(value) {
  */
 @Serializable(CStringSerializer::class)
 @LuajMapped(CStringMapper::class, import = "support")
-class CString(value: () -> String) : CValue<String>(value) {
+class CString(value: (GameContext) -> String) : CValue<String>(value) {
     override val type: JelType
         get() = JelType.STRING
 
@@ -78,13 +83,13 @@ class CString(value: () -> String) : CValue<String>(value) {
 }
 
 @LuajMapped(CResourceLocationMapper::class, import = "support")
-open class CResourceLocation(value: () -> LKResourceLocation) : CValue<LKResourceLocation>(value) {
+open class CResourceLocation(value: (GameContext) -> LKResourceLocation) : CValue<LKResourceLocation>(value) {
     override val type: JelType
         get() = JelType.STRING // TODO : separate type for ResourceLocation ?
 
     constructor(delegate: CString) : this(Delegated(delegate))
 
-    private class Delegated(private val delegate: CString) : () -> LKResourceLocation {
+    private class Delegated(private val delegate: CString) : (GameContext) -> LKResourceLocation {
         private var previousValue: String? = null
         private lateinit var cachedRl: LKResourceLocation
 
@@ -98,7 +103,7 @@ open class CResourceLocation(value: () -> LKResourceLocation) : CValue<LKResourc
             return cachedRl
         }
 
-        override fun invoke(): LKResourceLocation = checkAndGet()
+        override fun invoke(context: GameContext): LKResourceLocation = checkAndGet()
     }
 }
 
@@ -107,7 +112,7 @@ open class CResourceLocation(value: () -> LKResourceLocation) : CValue<LKResourc
  */
 @Serializable(CBooleanSerializer::class)
 @LuajMapped(CBooleanMapper::class, import = "support")
-class CBoolean(value: () -> Boolean) : CValue<Boolean>(value) {
+class CBoolean(value: (GameContext) -> Boolean) : CValue<Boolean>(value) {
     override val type: JelType
         get() = JelType.BOOLEAN
 
@@ -122,7 +127,7 @@ class CBoolean(value: () -> Boolean) : CValue<Boolean>(value) {
  */
 @Serializable(CUnitSerializer::class)
 @LuajMapped(CUnitMapper::class, import = "support")
-class CUnit(value: () -> Unit) : CValue<Unit>(value) {
+class CUnit(value: (GameContext) -> Unit) : CValue<Unit>(value) {
     override val type: JelType
         get() = JelType.UNIT
 
@@ -131,5 +136,5 @@ class CUnit(value: () -> Unit) : CValue<Unit>(value) {
     }
 }
 
-val (() -> Any).expressionIntermediate: ExpressionIntermediate? get() = (this as? CachedExpression<*>)?.expressionIntermediate
-val (() -> Any).expression: String? get() = this.expressionIntermediate?.expression
+val ((GameContext) -> Any).expressionIntermediate: ExpressionIntermediate? get() = (this as? CachedExpression<*>)?.expressionIntermediate
+val ((GameContext) -> Any).expression: String? get() = this.expressionIntermediate?.expression

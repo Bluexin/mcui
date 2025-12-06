@@ -1,14 +1,18 @@
 package be.bluexin.mcui.themes.miniscript.api
 
+import be.bluexin.luajksp.annotations.LuajExclude
+import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.effects.StatusEffect
 import be.bluexin.mcui.social.StaticPlayerHelper.getHungerLevel
 import be.bluexin.mcui.themes.miniscript.FrameCachedExpression
 import be.bluexin.mcui.themes.miniscript.PartialTicksTracker
+import be.bluexin.mcui.themes.miniscript.api.access.MiniscriptPlayerAccess
 import be.bluexin.mcui.themes.serde.legacyformat.dto.AnonymousExpressionIntermediate
 import be.bluexin.mcui.util.HealthStep
 import net.minecraft.client.player.LocalPlayer
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.luaj.vm2.LuaValue
 import java.lang.ref.WeakReference
 import kotlin.math.min
 
@@ -17,6 +21,7 @@ import kotlin.math.min
  * as it doesn't support property access syntax
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate") // Exposed to JEL
+@LuajExpose
 interface MiniscriptPlayer : MiniscriptLivingEntity {
 
     /**
@@ -27,6 +32,7 @@ interface MiniscriptPlayer : MiniscriptLivingEntity {
     /**
      * @return the health step the player is currently at
      */
+    @LuajExclude // TODO : support enums un LuajKSP
     fun healthStep(): HealthStep
 
     /**
@@ -56,11 +62,13 @@ interface MiniscriptPlayer : MiniscriptLivingEntity {
     /**
      * @return the player's current status effects
      */
+    @LuajExclude // TODO : support enums un LuajKSP
     fun statusEffects(): List<StatusEffect>
 
     /**
      * @return the player's current status effect at given [index], or null if [index] is out of bounds
      */
+    @LuajExclude // TODO : support enums un LuajKSP
     fun statusEffect(index: Int): StatusEffect? = statusEffects().getOrNull(index)
 
     /**
@@ -97,6 +105,17 @@ interface MiniscriptPlayer : MiniscriptLivingEntity {
      * @return horse jump value on a scale from 0.0 to 1.0
      */
     fun horseJump(): Float
+
+    fun inventory(): MiniscriptPlayerInventory
+
+    /**
+     * @return the player's main hand
+     */
+    @LuajExclude // TODO : support enums in LuajKSP
+    fun mainArm(): net.minecraft.world.entity.HumanoidArm
+
+    @LuajExclude
+    override fun toLua(): LuaValue = MiniscriptPlayerAccess(this)
 }
 
 internal class MiniscriptPlayerImpl(
@@ -106,6 +125,7 @@ internal class MiniscriptPlayerImpl(
     private val playerRef = WeakReference(player)
     internal val player = requireNotNull(playerRef.get()) { "Player reference was cleared" }
     private val partialTicksTracker by inject<PartialTicksTracker>()
+    private val context by inject<GameContext>()
 
     override fun absorption() = player.absorptionAmount
 
@@ -115,13 +135,20 @@ internal class MiniscriptPlayerImpl(
     override fun level() = player.experienceLevel
     override fun experience() = player.experienceProgress
 
-    private val statusEffects =
-        FrameCachedExpression({ StatusEffect.getEffects(player) }, AnonymousExpressionIntermediate.EMPTY)
+    private val statusEffects = FrameCachedExpression(AnonymousExpressionIntermediate.EMPTY) {
+        StatusEffect.getEffects(player)
+    }
 
-    override fun statusEffects(): List<StatusEffect> = statusEffects.invoke()
+    override fun statusEffects(): List<StatusEffect> = statusEffects.invoke(context)
 
     override fun food() = getHungerLevel(player, partialTicksTracker.partialTicks)
     override fun saturation() = player.foodData.saturationLevel
 
     override fun horseJump(): Float = player.jumpRidingScale
+
+    override fun inventory() = MiniscriptPlayerInventoryImpl(player.inventory)
+
+    override fun mainArm() = player.mainArm
+
+    override fun toLua() = super<MiniscriptPlayer>.toLua()
 }

@@ -43,8 +43,9 @@ sealed class CValueMapper<CValueType : CValue<T>, T : Any>(
     }
 
     override fun toLua(value: CValueType): LuaValue = LuaValue.tableOf(arrayOf(
-        LuaValue.valueOf("expression"), LuaValue.valueOf(value.expression!!),
-        LuaValue.valueOf("cache"), LuaValue.valueOf(value.expressionIntermediate!!.cacheType.toString()),
+        LuaValue.valueOf("expression"), value.value.expression?.let(LuaValue::valueOf) ?: LuaValue.NIL,
+        LuaValue.valueOf("cache"), LuaValue.valueOf(value.value.expressionIntermediate!!.cacheType.toString()),
+//        LuaValue.valueOf("value"), TODO(),
     )).apply {
         val ei = value.value.expressionIntermediate
         if (ei is NamedExpressionIntermediate) {

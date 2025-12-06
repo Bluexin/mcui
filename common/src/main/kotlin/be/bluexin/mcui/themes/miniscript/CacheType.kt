@@ -31,28 +31,28 @@ enum class CacheType(private val provider: (CompiledExpressionWrapper<*>, Expres
     /**
      * Values will be cached per frame rendering.
      */
-    PER_FRAME({ expression, intermediate -> FrameCachedExpression(expression, intermediate) }),
+    PER_FRAME({ expression, intermediate -> FrameCachedExpression(intermediate, expression) }),
 
     /**
      * Values will be cached per frame rendering.
      */
     @Deprecated("Replaced with explicit PER_FRAME", replaceWith = ReplaceWith("PER_FRAME"))
-    DEFAULT({ expression, intermediate -> FrameCachedExpression(expression, intermediate) }),
+    DEFAULT({ expression, intermediate -> FrameCachedExpression(intermediate, expression) }),
 
     /**
      * Values will be cached whenever they're first queried, and never updated.
      */
-    STATIC({ expression, intermediate -> StaticCachedExpression(expression, intermediate) }),
+    STATIC({ expression, intermediate -> StaticCachedExpression(intermediate, expression) }),
 
     /**
      * Values will be cached whenever a screen size change is detected.
      */
-    SIZE_CHANGE({ expression, intermediate -> SizeCachedExpression(expression, intermediate) }),
+    SIZE_CHANGE({ expression, intermediate -> SizeCachedExpression(intermediate, expression) }),
 
     /**
      * Values will not be cached (unrecommended -- in most cases PER_FRAME is better. Use with caution).
      */
-    NONE({ expression, intermediate -> UnCachedExpression(expression, intermediate) });
+    NONE({ expression, intermediate -> UnCachedExpression(intermediate, expression) });
 
     @Suppress("UNCHECKED_CAST")
     fun <T: Any> cacheExpression(expr: CompiledExpressionWrapper<T>, intermediate: ExpressionIntermediate) = provider(expr, intermediate) as CachedExpression<T>

@@ -1,6 +1,8 @@
 package be.bluexin.mcui.themes.serde.legacyformat.factory
 
 import be.bluexin.mcui.themes.elements.Element
+import be.bluexin.mcui.themes.elements.RenderState
+import be.bluexin.mcui.themes.elements.Transform
 import be.bluexin.mcui.themes.miniscript.*
 import be.bluexin.mcui.themes.miniscript.serialization.*
 import be.bluexin.mcui.themes.serde.Factory
@@ -10,6 +12,18 @@ import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
 import kotlin.reflect.KProperty0
 
 internal sealed class LegacyFactory<IN : ElementXml, OUT : Element> : Factory<IN, OUT> {
+
+    fun <T : ElementXml.WithRenderState> createRenderState(input: T, context: Context) = RenderState(
+        enabled = input::enabled.compileBoolean(context) ?: CBoolean.TRUE,
+        name = input.name,
+    )
+
+    fun <T : ElementXml.WithTransform> createTransform(input: T, context: Context) = Transform(
+        x = input::x.compileDouble(context) ?: CDouble.ZERO,
+        y = input::y.compileDouble(context) ?: CDouble.ZERO,
+        z = input::z.compileDouble(context) ?: CDouble.ZERO,
+        scale = input::scale.compileDouble(context)
+    )
 
     private fun <T> KProperty0<ExpressionIntermediate?>.compile(
         context: Context,

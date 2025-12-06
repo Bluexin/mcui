@@ -22,7 +22,7 @@ import be.bluexin.mcui.config.OptionCore
 import be.bluexin.mcui.deprecated.api.info.IOption
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
 import be.bluexin.mcui.effects.StatusEffect
-import be.bluexin.mcui.themes.miniscript.api.DrawContext
+import be.bluexin.mcui.themes.miniscript.api.GameContext
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptLivingEntity
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptPlayer
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptSettings
@@ -61,7 +61,7 @@ class LibHelper {
         )
         val dynLib = arrayOf(
             IHudDrawContext::class.java,
-            DrawContext::class.java,
+            GameContext::class.java,
         )
         val dotClasses = arrayOf(
             String::class.java,

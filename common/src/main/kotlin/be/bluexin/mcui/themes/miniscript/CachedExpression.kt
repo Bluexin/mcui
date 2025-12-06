@@ -19,6 +19,7 @@ package be.bluexin.mcui.themes.miniscript
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
+import be.bluexin.mcui.themes.miniscript.api.GameContext
 import be.bluexin.mcui.themes.miniscript.api.GameWindowInfo
 import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
 import org.koin.core.component.KoinComponent
@@ -30,9 +31,9 @@ import org.koin.core.component.inject
  * @author Bluexin
  */
 sealed class CachedExpression<T : Any>(
-    var expression: () -> T,
-    val expressionIntermediate: ExpressionIntermediate
-) : () -> T, KoinComponent {
+    val expressionIntermediate: ExpressionIntermediate,
+    var expression: (GameContext) -> T
+) : (GameContext) -> T, KoinComponent {
     protected abstract val cache: T?
 
     protected fun warn(e: Throwable) {
@@ -43,8 +44,8 @@ sealed class CachedExpression<T : Any>(
 //        throw RuntimeException(message, e)
     }
 
-    protected fun safeCall(): T = try {
-        expression()
+    protected fun safeCall(context: GameContext): T = try {
+        expression(context)
     } catch (e: Exception) {
         warn(e)
         val expr = expression
@@ -61,9 +62,9 @@ sealed class CachedExpression<T : Any>(
 }
 
 class FrameCachedExpression<T : Any>(
-    expression: () -> T,
-    expressionIntermediate: ExpressionIntermediate
-) : CachedExpression<T>(expression, expressionIntermediate) {
+    expressionIntermediate: ExpressionIntermediate,
+    expression: (GameContext) -> T
+) : CachedExpression<T>(expressionIntermediate, expression) {
     override var cache: T? = null
 
     private val gameWindowInfo: GameWindowInfo by inject()
@@ -71,30 +72,29 @@ class FrameCachedExpression<T : Any>(
     private var lastTime = -1.0F
 
     private fun checkUpdateTime() =
-        if (lastTime == gameWindowInfo.partialTicks) false
+        if (lastTime == gameWindowInfo.partialTicks()) false
         else {
-            lastTime = gameWindowInfo.partialTicks
+            lastTime = gameWindowInfo.partialTicks()
             true
         }
 
-    override fun invoke(): T = cache
+    override fun invoke(context: GameContext): T = cache
         .takeUnless { checkUpdateTime() }
-        ?: safeCall().also { cache = it }
+        ?: safeCall(context).also { cache = it }
 }
 
 class StaticCachedExpression<T : Any>(
-    expression: () -> T,
-    expressionIntermediate: ExpressionIntermediate
-) : CachedExpression<T>(expression, expressionIntermediate) {
-    override val cache: T by lazy { safeCall() }
-
-    override fun invoke() = cache
+    expressionIntermediate: ExpressionIntermediate,
+    expression: (GameContext) -> T
+) : CachedExpression<T>(expressionIntermediate, expression) {
+    override var cache: T? = null
+    override fun invoke(context: GameContext) = cache ?: safeCall(context).also { cache = it }
 }
 
 class SizeCachedExpression<T : Any>(
-    expression: () -> T,
-    expressionIntermediate: ExpressionIntermediate
-) : CachedExpression<T>(expression, expressionIntermediate) {
+    expressionIntermediate: ExpressionIntermediate,
+    expression: (GameContext) -> T
+) : CachedExpression<T>(expressionIntermediate, expression) {
     override var cache: T? = null
 
     private val gameWindowInfo: GameWindowInfo by inject()
@@ -103,24 +103,24 @@ class SizeCachedExpression<T : Any>(
     private var lastH = 0
 
     private fun checkUpdateSize() =
-        if (lastW == gameWindowInfo.scaledWidth && lastH == gameWindowInfo.scaledHeight) false
+        if (lastW == gameWindowInfo.scaledWidth() && lastH == gameWindowInfo.scaledHeight()) false
         else {
-            lastW = gameWindowInfo.scaledWidth
-            lastH = gameWindowInfo.scaledHeight
+            lastW = gameWindowInfo.scaledWidth()
+            lastH = gameWindowInfo.scaledHeight()
             true
         }
 
-    override fun invoke(): T = cache
+    override fun invoke(context: GameContext): T = cache
         .takeUnless { checkUpdateSize() }
-        ?: safeCall().also { cache = it }
+        ?: safeCall(context).also { cache = it }
 }
 
 class UnCachedExpression<T : Any>(
-    expression: () -> T,
-    expressionIntermediate: ExpressionIntermediate
-) : CachedExpression<T>(expression, expressionIntermediate) {
+    expressionIntermediate: ExpressionIntermediate,
+    expression: (GameContext) -> T
+) : CachedExpression<T>(expressionIntermediate, expression) {
     override val cache: T
         get() = throw UnsupportedOperationException()
 
-    override fun invoke() = expression()
+    override fun invoke(context: GameContext) = safeCall(context)
 }

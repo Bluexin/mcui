@@ -6,10 +6,11 @@ import org.koin.core.annotation.Single
 
 // TODO : migrate more hooks
 @Single
-internal class DrawContextImpl(
+internal class GameContextImpl(
     private val gameWindowInfo: GameWindowInfo,
     private val miniscriptSettings: MiniscriptSettings
-) : DrawContext {
+) : GameContext {
+    override fun party() = emptyList<MiniscriptPlayer>()
 
     private var playerCache: MiniscriptPlayerImpl? = null
     override fun player(): MiniscriptPlayer {
@@ -24,4 +25,6 @@ internal class DrawContextImpl(
 
     override fun settings() = miniscriptSettings
     override fun gameWindowInfo() = gameWindowInfo
+
+    override fun currentlyOpenContainer(): MiniscriptContainer? = null // TODO
 }

@@ -24,7 +24,7 @@ import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.meta.ThemeMetaModule
 import be.bluexin.mcui.themes.meta.ThemeMetadata
 import be.bluexin.mcui.themes.miniscript.MiniscriptModule
-import be.bluexin.mcui.themes.miniscript.api.DrawContext
+import be.bluexin.mcui.themes.miniscript.api.GameContext
 import be.bluexin.mcui.themes.miniscript.profile
 import be.bluexin.mcui.themes.scripting.ScriptingModule
 import com.mojang.blaze3d.vertex.PoseStack
@@ -103,7 +103,7 @@ class Hud(
     @JvmTransient
     private val indexedParts = parts.parts.associate { (k, v) -> k to v }
 
-    private val drawContext by inject<DrawContext>()
+    private val gameContext by inject<GameContext>()
 
     operator fun get(key: HudPartType) = indexedParts[key]
 
@@ -120,7 +120,7 @@ class Hud(
         ctx.profile(javaClass.simpleName) {
             parts.parts.forEach { (key, part) ->
                 // Compatibility for old themes
-                if (key != HudPartType.JUMP_BAR || drawContext.player().hasMount()) ctx.profile(key.name) {
+                if (key != HudPartType.JUMP_BAR || gameContext.player().hasMount()) ctx.profile(key.name) {
                     part.draw(ctx, poseStack, -1.0, -1.0)
                 }
             }

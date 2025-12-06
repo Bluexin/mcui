@@ -5,6 +5,8 @@ import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.themes.miniscript.CBoolean
 import be.bluexin.mcui.themes.miniscript.CDouble
 import be.bluexin.mcui.themes.miniscript.CResourceLocation
+import be.bluexin.mcui.themes.miniscript.api.GameContext
+import be.bluexin.mcui.themes.miniscript.api.MiniscriptItemStack
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2dc
@@ -25,7 +27,11 @@ data class Transform(
     var y: CDouble,
     var z: CDouble,
     var scale: CDouble?
-)
+) {
+    companion object {
+        val ZERO = Transform(CDouble.ZERO, CDouble.ZERO, CDouble.ZERO, null)
+    }
+}
 
 interface WithTexture {
     val texture: CResourceLocation?
@@ -46,7 +52,8 @@ interface ElementVisitor {
     data class Context(
         val poseStack: PoseStack,
         val mouse: Vector2dc,
-        val partialTicks: Float
+        val partialTicks: Float,
+        val gameInfo: GameContext,
     )
 }
 
@@ -77,6 +84,14 @@ interface GLOperations {
         sourceHeight: Double,
         textureWidth: Int,
         textureHeight: Int,
+    )
+
+    fun renderItemStack(
+        x: Int,
+        y: Int,
+        partialTicks: Float,
+        stack: MiniscriptItemStack,
+        poseStack: PoseStack
     )
 
     companion object {

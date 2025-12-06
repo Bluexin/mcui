@@ -18,7 +18,7 @@
 package be.bluexin.mcui.themes.miniscript
 
 import be.bluexin.mcui.deprecated.api.themes.IHudDrawContext
-import be.bluexin.mcui.themes.miniscript.api.DrawContext
+import be.bluexin.mcui.themes.miniscript.api.GameContext
 import gnu.jel.CompiledExpression
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -30,8 +30,7 @@ import org.koin.core.component.inject
  */
 sealed class CompiledExpressionWrapper<out T : Any>(
     val compiledExpression: CompiledExpression
-) : () -> T, KoinComponent {
-    protected val ctx: DrawContext by inject()
+) : (GameContext) -> T, KoinComponent {
     protected val legacyCtx: IHudDrawContext by inject()
 
     abstract val default: T
@@ -39,40 +38,40 @@ sealed class CompiledExpressionWrapper<out T : Any>(
 
 class IntExpressionWrapper(compiledExpression: CompiledExpression) :
     CompiledExpressionWrapper<Int>(compiledExpression) {
-    override fun invoke(): Int =
-        compiledExpression.evaluate_int(arrayOf(legacyCtx, this.ctx))
+    override fun invoke(context: GameContext): Int =
+        compiledExpression.evaluate_int(arrayOf(legacyCtx, context))
 
     override val default = 0
 }
 
 class DoubleExpressionWrapper(compiledExpression: CompiledExpression) :
     CompiledExpressionWrapper<Double>(compiledExpression) {
-    override fun invoke(): Double =
-        compiledExpression.evaluate_double(arrayOf(legacyCtx, this.ctx))
+    override fun invoke(context: GameContext): Double =
+        compiledExpression.evaluate_double(arrayOf(legacyCtx, context))
 
     override val default = 0.0
 }
 
 class StringExpressionWrapper(compiledExpression: CompiledExpression) :
     CompiledExpressionWrapper<String>(compiledExpression) {
-    override fun invoke(): String =
-        compiledExpression.evaluate(arrayOf(legacyCtx, this.ctx)).toString()
+    override fun invoke(context: GameContext): String =
+        compiledExpression.evaluate(arrayOf(legacyCtx, context)).toString()
 
     override val default = "--Error!"
 }
 
 class BooleanExpressionWrapper(compiledExpression: CompiledExpression) :
     CompiledExpressionWrapper<Boolean>(compiledExpression) {
-    override fun invoke(): Boolean =
-        compiledExpression.evaluate_boolean(arrayOf(legacyCtx, this.ctx))
+    override fun invoke(context: GameContext): Boolean =
+        compiledExpression.evaluate_boolean(arrayOf(legacyCtx, context))
 
     override val default = false
 }
 
 class UnitExpressionWrapper(compiledExpression: CompiledExpression) :
     CompiledExpressionWrapper<Unit>(compiledExpression) {
-    override fun invoke() =
-        compiledExpression.evaluate_void(arrayOf(legacyCtx, this.ctx))
+    override fun invoke(context: GameContext) =
+        compiledExpression.evaluate_void(arrayOf(legacyCtx, context))
 
     override val default = Unit
 }

@@ -20,7 +20,7 @@ package be.bluexin.mcui.deprecated.api.themes;
 
 import be.bluexin.mcui.effects.StatusEffect;
 import be.bluexin.mcui.themes.miniscript.CValue;
-import be.bluexin.mcui.themes.miniscript.api.DrawContext;
+import be.bluexin.mcui.themes.miniscript.api.GameContext;
 import be.bluexin.mcui.util.HealthStep;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -41,7 +41,7 @@ import java.util.Map;
  * to 1.0 (included).
  * <p>
  * Deprecation notice : things are being deprecated and moved to a more structured place.
- * @see DrawContext replacement implementation
+ * @see GameContext replacement implementation
  *
  * @author Bluexin
  */
@@ -205,7 +205,7 @@ public interface IHudDrawContext {
     /**
      * @param index the index of the party member to check
      * @return username of the party member at given index
-     * @deprecated use `party(index).displayName` instead
+     * @deprecated use `partyMember(index).displayName` instead
      */
     @Deprecated
     String ptName(int index);
@@ -213,7 +213,7 @@ public interface IHudDrawContext {
     /**
      * @param index the index of the party member to check
      * @return hp of the party member at given index
-     * @deprecated use `party(index).health` instead
+     * @deprecated use `partyMember(index).health` instead
      */
     @Deprecated
     float ptHp(int index);
@@ -221,7 +221,7 @@ public interface IHudDrawContext {
     /**
      * @param index the index of the party member to check
      * @return max hp of the party member at given index
-     * @deprecated use `party(index).maxHealth` instead
+     * @deprecated use `partyMember(index).maxHealth` instead
      */
     @Deprecated
     float ptMaxHp(int index);
@@ -229,7 +229,7 @@ public interface IHudDrawContext {
     /**
      * @param index the index of the party member to check
      * @return hp percent of the party member at given index
-     * @deprecated use `party(index).healthPercent` instead
+     * @deprecated use `partyMember(index).healthPercent` instead
      */
     @Deprecated
     float ptHpPct(int index);
@@ -237,7 +237,7 @@ public interface IHudDrawContext {
     /**
      * @param index the index of the party member to check
      * @return health step of the party member at given index
-     * @deprecated use `party(index).healthStep` instead
+     * @deprecated use `partyMember(index).healthStep` instead
      */
     @Deprecated
     HealthStep ptHealthStep(int index);

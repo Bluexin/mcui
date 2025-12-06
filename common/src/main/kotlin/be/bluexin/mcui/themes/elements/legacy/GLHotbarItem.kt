@@ -83,7 +83,7 @@ class GLHotbarItem(
         }
 
         GLCore.color(0xFFFFFFFFu.toInt())
-        ctx.itemRenderer.renderGuiItem(poseStack, stack, x, y)
+        ctx.itemRenderer.renderAndDecorateItem(poseStack, stack, x, y)
 
         if (f > 0.0f) poseStack.popPose()
 
