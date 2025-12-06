@@ -47,8 +47,8 @@ import kotlin.math.min
 @Single
 @Suppress("OVERRIDE_DEPRECATION")
 class HudDrawContext : IHudDrawContext {
-    val mc = Client.mc
-    private val itemRenderer = mc.itemRenderer
+    private val mc by lazy { Client.mc }
+    private val itemRenderer by lazy { mc.itemRenderer }
 
     /*
         Feel free to add anything you'd need here.
