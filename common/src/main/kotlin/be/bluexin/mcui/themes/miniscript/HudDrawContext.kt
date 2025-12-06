@@ -48,7 +48,7 @@ import kotlin.math.min
 @Suppress("OVERRIDE_DEPRECATION")
 class HudDrawContext : IHudDrawContext {
     private val mc by lazy { Client.mc }
-    private val itemRenderer by lazy { mc.itemRenderer }
+    private val itemRendererField by lazy { mc.itemRenderer }
 
     /*
         Feel free to add anything you'd need here.
@@ -134,7 +134,7 @@ private var effects: List<StatusEffect>? = null
     override fun getPlayer(): Player = mc.player!!
 
     override fun getItemRenderer(): ItemRenderer {
-        return itemRenderer
+        return itemRendererField
     }
 
     override fun healthStep(): HealthStep {
