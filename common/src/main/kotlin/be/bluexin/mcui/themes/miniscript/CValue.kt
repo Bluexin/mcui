@@ -136,5 +136,9 @@ class CUnit(value: (GameContext) -> Unit) : CValue<Unit>(value) {
     }
 }
 
+class CValueWrapper<T : Any>(value: (GameContext) -> T) : CValue<T>(value) {
+    override val type get() = JelType.ERROR
+}
+
 val ((GameContext) -> Any).expressionIntermediate: ExpressionIntermediate? get() = (this as? CachedExpression<*>)?.expressionIntermediate
 val ((GameContext) -> Any).expression: String? get() = this.expressionIntermediate?.expression

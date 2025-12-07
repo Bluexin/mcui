@@ -8,8 +8,10 @@ import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
 import be.bluexin.mcui.themes.serde.legacyformat.dto.HotbarItemXml
+import org.koin.core.annotation.Single
 
-internal data object HotbarItemFactory : LegacyFactory<HotbarItemXml, Group>() {
+@Single
+internal class HotbarItemFactory : LegacyFactory<HotbarItemXml, Group>(HotbarItemXml::class) {
     override fun create(
         input: HotbarItemXml,
         context: Factory.Context

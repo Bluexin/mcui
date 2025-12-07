@@ -4,6 +4,7 @@ import be.bluexin.luajksp.annotations.LuajExclude
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.effects.StatusEffect
 import be.bluexin.mcui.social.StaticPlayerHelper.getHungerLevel
+import be.bluexin.mcui.themes.miniscript.CValueWrapper
 import be.bluexin.mcui.themes.miniscript.FrameCachedExpression
 import be.bluexin.mcui.themes.miniscript.PartialTicksTracker
 import be.bluexin.mcui.themes.miniscript.api.access.MiniscriptPlayerAccess
@@ -125,7 +126,6 @@ internal class MiniscriptPlayerImpl(
     private val playerRef = WeakReference(player)
     internal val player = requireNotNull(playerRef.get()) { "Player reference was cleared" }
     private val partialTicksTracker by inject<PartialTicksTracker>()
-    private val context by inject<GameContext>()
 
     override fun absorption() = player.absorptionAmount
 
@@ -137,9 +137,9 @@ internal class MiniscriptPlayerImpl(
 
     private val statusEffects = FrameCachedExpression(AnonymousExpressionIntermediate.EMPTY) {
         StatusEffect.getEffects(player)
-    }
+    }.let(::CValueWrapper)
 
-    override fun statusEffects(): List<StatusEffect> = statusEffects.invoke(context)
+    override fun statusEffects(): List<StatusEffect> = statusEffects.invoke()
 
     override fun food() = getHungerLevel(player, partialTicksTracker.partialTicks)
     override fun saturation() = player.foodData.saturationLevel

@@ -12,6 +12,9 @@ import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2dc
 
 interface Element : LKExposed {
+    val renderState: RenderState
+    val transform: Transform
+    
     fun visit(visitor: ElementVisitor, context: ElementVisitor.Context)
 }
 
@@ -52,7 +55,6 @@ interface ElementVisitor {
     data class Context(
         val poseStack: PoseStack,
         val mouse: Vector2dc,
-        val partialTicks: Float,
         val gameInfo: GameContext,
     )
 }

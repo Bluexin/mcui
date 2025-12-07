@@ -10,8 +10,8 @@ import org.luaj.vm2.LuaValue
 
 @LuajExpose
 data class Text(
-    val renderState: RenderState,
-    val transform: Transform,
+    override val renderState: RenderState,
+    override val transform: Transform,
     val textProperties: TextProperties,
 ) : Element {
 

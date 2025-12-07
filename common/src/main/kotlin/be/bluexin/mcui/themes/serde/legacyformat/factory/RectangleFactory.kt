@@ -7,8 +7,10 @@ import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
 import be.bluexin.mcui.themes.serde.legacyformat.dto.RectangleXml
+import org.koin.core.annotation.Single
 
-internal data object RectangleFactory : LegacyFactory<RectangleXml, Rectangle>() {
+@Single
+internal class RectangleFactory : LegacyFactory<RectangleXml, Rectangle>(RectangleXml::class) {
     override fun create(
         input: RectangleXml,
         context: Factory.Context

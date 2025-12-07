@@ -8,8 +8,10 @@ import be.bluexin.mcui.themes.miniscript.CString
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
 import be.bluexin.mcui.themes.serde.legacyformat.dto.StringXml
+import org.koin.core.annotation.Single
 
-internal data object TextFactory : LegacyFactory<StringXml, Text>() {
+@Single
+internal class TextFactory : LegacyFactory<StringXml, Text>(StringXml::class) {
     override fun create(
         input: StringXml,
         context: Factory.Context

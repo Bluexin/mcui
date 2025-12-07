@@ -9,9 +9,12 @@ import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context
 import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementXml
 import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
 
-internal sealed class LegacyFactory<IN : ElementXml, OUT : Element> : Factory<IN, OUT> {
+internal sealed class LegacyFactory<IN : ElementXml, OUT : Element>(
+    val xmlType: KClass<out IN>
+) : Factory<IN, OUT> {
 
     fun <T : ElementXml.WithRenderState> createRenderState(input: T, context: Context) = RenderState(
         enabled = input::enabled.compileBoolean(context) ?: CBoolean.TRUE,

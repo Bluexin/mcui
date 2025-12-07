@@ -10,8 +10,8 @@ import org.luaj.vm2.LuaValue
 
 @LuajExpose
 data class ItemStackDisplay(
-    val renderState: RenderState,
-    val transform: Transform,
+    override val renderState: RenderState,
+    override val transform: Transform,
     val properties: ItemSlotProperties,
 ) : Element {
 
@@ -29,7 +29,7 @@ data class ItemStackDisplay(
                 renderItemStack(
                     x = 0,
                     y = 0,
-                    partialTicks = context.partialTicks,
+                    partialTicks = context.gameInfo.gameWindowInfo().partialTicks(),
                     stack = itemStack,
                     poseStack = context.poseStack,
                 )

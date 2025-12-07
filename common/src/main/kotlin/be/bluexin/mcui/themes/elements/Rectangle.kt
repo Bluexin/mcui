@@ -11,8 +11,8 @@ import org.luaj.vm2.LuaValue
 
 @LuajExpose
 data class Rectangle(
-    val renderState: RenderState,
-    val transform: Transform,
+    override val renderState: RenderState,
+    override val transform: Transform,
     val geometry: Geometry,
 ) : Element {
 
