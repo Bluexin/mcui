@@ -8,7 +8,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class ElementGroupXmlTest {
+class GroupXmlTest {
 
     private val xml = XML {
         autoPolymorphic = true
@@ -20,7 +20,7 @@ class ElementGroupXmlTest {
             javaClass.getResourceAsStream("/${this::class.simpleName}/all_attributes.xml")
         ).use {
             val serialized = it.bufferedReader().readText()
-            xml.decodeFromString<ElementGroupXml>(serialized)
+            xml.decodeFromString<GroupXml>(serialized)
         }
 
         assertEquals("test_element_group_all", elementGroup.name)
@@ -35,7 +35,7 @@ class ElementGroupXmlTest {
 
         assertContentEquals(
             listOf(
-                ElementGroupXml(
+                GroupXml(
                     name = "nested_group",
                     x = AnonymousExpressionIntermediate("5", CacheType.STATIC),
                     y = AnonymousExpressionIntermediate("10", CacheType.STATIC),
@@ -51,7 +51,7 @@ class ElementGroupXmlTest {
             javaClass.getResourceAsStream("/${this::class.simpleName}/no_attributes.xml")
         ).use {
             val serialized = it.bufferedReader().readText()
-            xml.decodeFromString<ElementGroupXml>(serialized)
+            xml.decodeFromString<GroupXml>(serialized)
         }
 
         assertEquals("test_element_group_no", elementGroup.name)

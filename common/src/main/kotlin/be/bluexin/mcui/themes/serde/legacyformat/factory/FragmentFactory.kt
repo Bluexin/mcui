@@ -1,22 +1,23 @@
 package be.bluexin.mcui.themes.serde.legacyformat.factory
 
+import be.bluexin.mcui.themes.elements.Fragment
 import be.bluexin.mcui.themes.elements.Group
 import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
-import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementGroupXml
 import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementXml
+import be.bluexin.mcui.themes.serde.legacyformat.dto.FragmentXml
 import org.koin.core.annotation.Single
 
 @Single
-internal class ElementGroupFactory(
+internal class FragmentFactory(
     private val registry: LegacyFactoryRegistry
-) : LegacyFactory<ElementGroupXml, Group>(ElementGroupXml::class) {
+) : LegacyFactory<FragmentXml, Fragment>(FragmentXml::class) {
 
     override fun create(
-        input: ElementGroupXml,
+        input: FragmentXml,
         context: Factory.Context
-    ): Result<Group> = context.tryRun("elementGroup[${input.name}]") {
+    ): Result<Fragment> = context.tryRun("fragment[${input.name}]") {
         val renderState = createRenderState(input, context)
         val transform = createTransform(input, context)
         val texture = input::texture.compileString(context)?.let(::CResourceLocation)
@@ -34,6 +35,11 @@ internal class ElementGroupFactory(
             result.getOrNull()
         } ?: emptyList()
 
-        Group(renderState, transform, children, texture)
+        val group = Group(renderState, transform, children, texture)
+
+        Fragment(
+            group = group,
+            expect = input.expect?.variables.orEmpty()
+        )
     }
 }

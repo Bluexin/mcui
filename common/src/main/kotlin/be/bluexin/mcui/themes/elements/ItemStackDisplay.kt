@@ -10,7 +10,7 @@ import org.luaj.vm2.LuaValue
 
 @LuajExpose
 data class ItemStackDisplay(
-    override val renderState: RenderState,
+    val renderState: RenderState,
     override val transform: Transform,
     val properties: ItemSlotProperties,
 ) : Element {

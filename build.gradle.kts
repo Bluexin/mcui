@@ -22,10 +22,6 @@ kotlin {
     explicitApiWarning()
 }
 
-ksp {
-    arg("KOIN_CONFIG_CHECK", "true")
-}
-
 repositories(RepositoryHandler::mavenCentral)
 
 val mcVersion = libs.versions.minecraft.get()
@@ -93,6 +89,11 @@ subprojects {
         testImplementation(libs.mockk)
         testImplementation(libs.koin.test)
         testImplementation(libs.junit.params)
+    }
+
+    ksp {
+        arg("KOIN_CONFIG_CHECK", "true")
+        arg("packagePaths", "be.bluexin.mcui.themes.elements.legacy=legacy")
     }
 
     java {

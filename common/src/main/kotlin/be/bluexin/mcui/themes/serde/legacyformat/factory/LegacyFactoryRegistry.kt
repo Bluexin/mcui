@@ -7,7 +7,7 @@ import org.koin.core.annotation.Single
 
 @Single
 internal class LegacyFactoryRegistry(
-    factories: List<LegacyFactory<out ElementXml, out Element>>
+    factories: List<LegacyFactory<ElementXml, Element>>
 ) {
     private val factoryMap = factories.associateBy { it.xmlType }
 
@@ -16,7 +16,6 @@ internal class LegacyFactoryRegistry(
             IllegalArgumentException("No factory registered for ${xml::class.simpleName}")
         )
 
-        @Suppress("UNCHECKED_CAST")
-        return (factory as LegacyFactory<ElementXml, Element>).create(xml, context)
+        return factory.create(xml, context)
     }
 }

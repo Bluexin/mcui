@@ -64,7 +64,7 @@ class HudXmlTest {
 
         val crosshairEntry = entries[0]
         assertEquals(HudPartType.CROSS_HAIR, crosshairEntry.key)
-        val crosshairValue = crosshairEntry.value as ElementGroupXml
+        val crosshairValue = crosshairEntry.value as GroupXml
         assertEquals("crosshair", crosshairValue.name)
         assertNull(crosshairValue.children)
     }

@@ -11,7 +11,7 @@ import org.luaj.vm2.LuaValue
 
 @LuajExpose
 data class Rectangle(
-    override val renderState: RenderState,
+    val renderState: RenderState,
     override val transform: Transform,
     val geometry: Geometry,
 ) : Element {
@@ -47,14 +47,14 @@ data class Rectangle(
         var rgba: CInt?,
         var width: CDouble,
         var height: CDouble,
-        override var texture: CResourceLocation?,
+        var texture: CResourceLocation?,
         var sourceX: CDouble,
         var sourceY: CDouble,
         var sourceWidth: CDouble,
         var sourceHeight: CDouble,
         var textureWidth: CInt,
         var textureHeight: CInt,
-    ) : WithTexture
+    )
 
     @LuajExclude
     override fun toLua(): LuaValue = RectangleAccess(this)

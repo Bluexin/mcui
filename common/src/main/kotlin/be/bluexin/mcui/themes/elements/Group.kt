@@ -10,10 +10,10 @@ import org.luaj.vm2.LuaValue
 
 @LuajExpose
 data class Group(
-    override val renderState: RenderState,
+    val renderState: RenderState,
     override val transform: Transform,
     val children: List<Element>,
-    val texture: CResourceLocation? = null,
+    val texture: CResourceLocation?,
 ) : Element {
 
     @LuajExclude

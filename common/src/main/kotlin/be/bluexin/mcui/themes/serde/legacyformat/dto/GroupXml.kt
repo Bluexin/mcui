@@ -7,7 +7,7 @@ import nl.adaptivity.xmlutil.serialization.XmlSerialName
 
 @Serializable
 @SerialName("elementGroup")
-internal data class ElementGroupXml(
+internal data class GroupXml(
 
     /**
      * Friendly name for this element. Mostly used for debug purposes.

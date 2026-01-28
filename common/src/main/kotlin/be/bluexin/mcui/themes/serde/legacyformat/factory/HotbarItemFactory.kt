@@ -87,7 +87,8 @@ internal class HotbarItemFactory : LegacyFactory<HotbarItemXml, Group>(HotbarIte
         Group(
             renderState = renderState,
             transform = transform,
-            children = listOf(background, itemStackDisplay)
+            children = listOf(background, itemStackDisplay),
+            texture = null,
         )
     }
 }

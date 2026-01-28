@@ -24,7 +24,7 @@ internal data class HudXml(
     @Serializable
     data class Parts(
         @XmlSerialName("entry")
-        val parts: List<Entry<HudPartType, ElementGroupXml>>
+        val parts: List<Entry<HudPartType, GroupXml>>
     ) {
 
         @Serializable

@@ -47,7 +47,7 @@ class FragmentXmlTest {
 
         assertContentEquals(
             listOf(
-                ElementGroupXml(
+                GroupXml(
                     name = "content_group",
                     x = AnonymousExpressionIntermediate("5", CacheType.STATIC),
                     y = AnonymousExpressionIntermediate("10", CacheType.STATIC),

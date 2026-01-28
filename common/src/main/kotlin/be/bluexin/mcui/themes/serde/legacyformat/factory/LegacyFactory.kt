@@ -12,7 +12,7 @@ import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
 
-internal sealed class LegacyFactory<IN : ElementXml, OUT : Element>(
+internal sealed class LegacyFactory<IN : ElementXml, out OUT : Element>(
     val xmlType: KClass<out IN>
 ) : Factory<IN, OUT> {
 

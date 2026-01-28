@@ -2,7 +2,7 @@ package be.bluexin.mcui.themes.serde
 
 import be.bluexin.mcui.themes.elements.Element
 
-internal interface Factory<IN, OUT : Element> {
+internal interface Factory<in IN, out OUT : Element> {
     fun create(input: IN, context: Context): Result<OUT>
 
     interface Context {
