@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package be.bluexin.mcui.themes.serde.legacyformat.dto
+package be.bluexin.mcui.themes.serde.legacyformat.xml
 
 import be.bluexin.mcui.themes.miniscript.CacheType
 import kotlinx.serialization.SerialName

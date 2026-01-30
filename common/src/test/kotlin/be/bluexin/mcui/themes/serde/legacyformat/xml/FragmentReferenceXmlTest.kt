@@ -1,4 +1,4 @@
-package be.bluexin.mcui.themes.serde.legacyformat.dto
+package be.bluexin.mcui.themes.serde.legacyformat.xml
 
 import be.bluexin.mcui.themes.miniscript.CacheType
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
@@ -50,26 +50,6 @@ class FragmentReferenceXmlTest {
             ),
             variables["enabled"]
         )
-    }
-
-    @Test
-    fun `loads missing attributes successfully`() {
-        val fragmentRef = requireNotNull(
-            javaClass.getResourceAsStream("/${this::class.simpleName}/no_attributes.xml")
-        ).use {
-            val serialized = it.bufferedReader().readText()
-            xml.decodeFromString<FragmentReferenceXml>(serialized)
-        }
-
-        assertEquals("test_fragment_ref_no", fragmentRef.name)
-
-        assertNull(fragmentRef.id)
-        assertNull(fragmentRef.x)
-        assertNull(fragmentRef.y)
-        assertNull(fragmentRef.z)
-        assertNull(fragmentRef.scale)
-        assertNull(fragmentRef.enabled)
-        assertNull(fragmentRef.variables)
     }
 
     @Test

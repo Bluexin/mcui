@@ -5,7 +5,7 @@ import be.bluexin.mcui.themes.elements.legacy.access.FragmentAccess
 import be.bluexin.mcui.themes.miniscript.LibHelper
 import be.bluexin.mcui.themes.miniscript.serialization.json.ExpectJsonAdapter
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
-import be.bluexin.mcui.themes.serde.legacyformat.dto.NamedExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.NamedExpressionIntermediate
 import com.google.gson.annotations.JsonAdapter
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

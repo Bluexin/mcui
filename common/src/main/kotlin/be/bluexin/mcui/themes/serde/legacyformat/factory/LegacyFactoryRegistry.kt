@@ -2,7 +2,7 @@ package be.bluexin.mcui.themes.serde.legacyformat.factory
 
 import be.bluexin.mcui.themes.elements.Element
 import be.bluexin.mcui.themes.serde.Factory
-import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementXml
+import be.bluexin.mcui.themes.serde.legacyformat.xml.ElementXml
 import org.koin.core.annotation.Single
 
 @Single

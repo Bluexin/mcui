@@ -1,6 +1,6 @@
-package be.bluexin.mcui.themes.serde.legacyformat.dto
+package be.bluexin.mcui.themes.serde.legacyformat.xml
 
-import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementXml.Companion.DEFAULT_NAME
+import be.bluexin.mcui.themes.serde.legacyformat.xml.ElementXml.Companion.DEFAULT_NAME
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.ExperimentalXmlUtilApi

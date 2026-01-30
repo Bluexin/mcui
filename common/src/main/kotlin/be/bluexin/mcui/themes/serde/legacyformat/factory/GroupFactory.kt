@@ -4,8 +4,8 @@ import be.bluexin.mcui.themes.elements.Group
 import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
-import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementXml
-import be.bluexin.mcui.themes.serde.legacyformat.dto.GroupXml
+import be.bluexin.mcui.themes.serde.legacyformat.xml.ElementXml
+import be.bluexin.mcui.themes.serde.legacyformat.xml.GroupXml
 import org.koin.core.annotation.Single
 
 @Single

@@ -13,7 +13,7 @@ import be.bluexin.mcui.themes.miniscript.*
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
 import be.bluexin.mcui.themes.scripting.LuaJManager
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
-import be.bluexin.mcui.themes.serde.legacyformat.dto.NamedExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.NamedExpressionIntermediate
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.debug
 import be.bluexin.mcui.util.warn

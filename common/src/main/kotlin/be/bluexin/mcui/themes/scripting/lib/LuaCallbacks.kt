@@ -8,7 +8,7 @@ import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.miniscript.LibHelper
 import be.bluexin.mcui.themes.scripting.serialization.AbstractLuaDecoder
 import be.bluexin.mcui.themes.scripting.serialization.AbstractLuaEncoder
-import be.bluexin.mcui.themes.serde.legacyformat.dto.Variables
+import be.bluexin.mcui.themes.serde.legacyformat.xml.Variables
 import be.bluexin.mcui.util.debug
 import be.bluexin.mcui.util.trace
 import kotlinx.serialization.ExperimentalSerializationApi

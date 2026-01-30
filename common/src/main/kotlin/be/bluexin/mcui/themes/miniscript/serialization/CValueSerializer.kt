@@ -18,7 +18,7 @@
 package be.bluexin.mcui.themes.miniscript.serialization
 
 import be.bluexin.mcui.themes.miniscript.*
-import be.bluexin.mcui.themes.serde.legacyformat.dto.AnonymousExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.AnonymousExpressionIntermediate
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor

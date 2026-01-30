@@ -6,8 +6,8 @@ import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.miniscript.LibHelper
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
-import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementXml
-import be.bluexin.mcui.themes.serde.legacyformat.dto.FragmentXml
+import be.bluexin.mcui.themes.serde.legacyformat.xml.ElementXml
+import be.bluexin.mcui.themes.serde.legacyformat.xml.FragmentXml
 import org.koin.core.annotation.Single
 
 @Single

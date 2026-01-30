@@ -5,7 +5,7 @@ import be.bluexin.mcui.themes.miniscript.CValue
 import be.bluexin.mcui.themes.miniscript.CacheType
 import be.bluexin.mcui.themes.miniscript.expressionIntermediate
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
-import be.bluexin.mcui.themes.serde.legacyformat.dto.NamedExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.NamedExpressionIntermediate
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken

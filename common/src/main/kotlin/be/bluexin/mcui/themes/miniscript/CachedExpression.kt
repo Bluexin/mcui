@@ -21,7 +21,7 @@ import be.bluexin.mcui.Constants
 import be.bluexin.mcui.themes.loader.AbstractThemeLoader
 import be.bluexin.mcui.themes.miniscript.api.GameContext
 import be.bluexin.mcui.themes.miniscript.api.GameWindowInfo
-import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.ExpressionIntermediate
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 

@@ -6,8 +6,8 @@ import be.bluexin.mcui.themes.miniscript.*
 import be.bluexin.mcui.themes.miniscript.serialization.*
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context
-import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementXml
-import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.ElementXml
+import be.bluexin.mcui.themes.serde.legacyformat.xml.ExpressionIntermediate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
 

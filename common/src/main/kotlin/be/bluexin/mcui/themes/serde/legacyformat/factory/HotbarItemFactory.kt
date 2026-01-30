@@ -7,7 +7,7 @@ import be.bluexin.mcui.themes.miniscript.CInt
 import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
-import be.bluexin.mcui.themes.serde.legacyformat.dto.HotbarItemXml
+import be.bluexin.mcui.themes.serde.legacyformat.xml.HotbarItemXml
 import org.koin.core.annotation.Single
 
 @Single

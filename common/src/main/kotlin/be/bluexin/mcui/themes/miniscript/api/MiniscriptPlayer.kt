@@ -8,7 +8,7 @@ import be.bluexin.mcui.themes.miniscript.CValueWrapper
 import be.bluexin.mcui.themes.miniscript.FrameCachedExpression
 import be.bluexin.mcui.themes.miniscript.PartialTicksTracker
 import be.bluexin.mcui.themes.miniscript.api.access.MiniscriptPlayerAccess
-import be.bluexin.mcui.themes.serde.legacyformat.dto.AnonymousExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.AnonymousExpressionIntermediate
 import be.bluexin.mcui.util.HealthStep
 import net.minecraft.client.player.LocalPlayer
 import org.koin.core.component.KoinComponent

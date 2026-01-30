@@ -1,8 +1,8 @@
-package be.bluexin.mcui.themes.serde.legacyformat.dto
+package be.bluexin.mcui.themes.serde.legacyformat.xml
 
 import be.bluexin.luajksp.annotations.LuajMapped
 import be.bluexin.mcui.themes.miniscript.HumanoidArmMapper
-import be.bluexin.mcui.themes.serde.legacyformat.dto.ElementXml.Companion.DEFAULT_NAME
+import be.bluexin.mcui.themes.serde.legacyformat.xml.ElementXml.Companion.DEFAULT_NAME
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.minecraft.world.entity.HumanoidArm

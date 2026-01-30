@@ -6,7 +6,7 @@ import be.bluexin.mcui.themes.miniscript.CInt
 import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
-import be.bluexin.mcui.themes.serde.legacyformat.dto.RectangleXml
+import be.bluexin.mcui.themes.serde.legacyformat.xml.RectangleXml
 import org.koin.core.annotation.Single
 
 @Single

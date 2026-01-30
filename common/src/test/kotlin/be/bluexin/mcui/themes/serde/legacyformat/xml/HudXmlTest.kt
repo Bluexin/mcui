@@ -1,4 +1,4 @@
-package be.bluexin.mcui.themes.serde.legacyformat.dto
+package be.bluexin.mcui.themes.serde.legacyformat.xml
 
 import be.bluexin.mcui.themes.elements.legacy.HudPartType
 import be.bluexin.mcui.themes.miniscript.CacheType

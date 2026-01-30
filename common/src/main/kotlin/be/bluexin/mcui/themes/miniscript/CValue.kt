@@ -20,7 +20,7 @@ package be.bluexin.mcui.themes.miniscript
 import be.bluexin.luajksp.annotations.LuajMapped
 import be.bluexin.mcui.themes.miniscript.api.GameContext
 import be.bluexin.mcui.themes.miniscript.serialization.*
-import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.ExpressionIntermediate
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.koin.core.component.KoinComponent

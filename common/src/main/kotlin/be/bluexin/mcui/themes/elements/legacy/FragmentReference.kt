@@ -13,8 +13,8 @@ import be.bluexin.mcui.themes.miniscript.LibHelper
 import be.bluexin.mcui.themes.miniscript.expressionIntermediate
 import be.bluexin.mcui.themes.miniscript.serialization.JelType
 import be.bluexin.mcui.themes.scripting.serialization.DeserializationOrder
-import be.bluexin.mcui.themes.serde.legacyformat.dto.NamedExpressionIntermediate
-import be.bluexin.mcui.themes.serde.legacyformat.dto.Variables
+import be.bluexin.mcui.themes.serde.legacyformat.xml.NamedExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.Variables
 import com.mojang.blaze3d.vertex.PoseStack
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

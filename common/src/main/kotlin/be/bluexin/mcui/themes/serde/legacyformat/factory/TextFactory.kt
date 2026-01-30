@@ -7,7 +7,7 @@ import be.bluexin.mcui.themes.miniscript.CInt
 import be.bluexin.mcui.themes.miniscript.CString
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
-import be.bluexin.mcui.themes.serde.legacyformat.dto.StringXml
+import be.bluexin.mcui.themes.serde.legacyformat.xml.StringXml
 import org.koin.core.annotation.Single
 
 @Single

@@ -1,4 +1,4 @@
-package be.bluexin.mcui.themes.serde.legacyformat.dto
+package be.bluexin.mcui.themes.serde.legacyformat.xml
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

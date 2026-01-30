@@ -5,7 +5,7 @@ import be.bluexin.mcui.themes.miniscript.CValue
 import be.bluexin.mcui.themes.miniscript.LibHelper
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
-import be.bluexin.mcui.themes.serde.legacyformat.dto.FragmentReferenceXml
+import be.bluexin.mcui.themes.serde.legacyformat.xml.FragmentReferenceXml
 import net.minecraft.resources.ResourceLocation
 import org.koin.core.annotation.Single
 

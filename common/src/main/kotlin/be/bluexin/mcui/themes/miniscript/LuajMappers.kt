@@ -3,8 +3,8 @@ package be.bluexin.mcui.themes.miniscript
 import be.bluexin.luajksp.annotations.LKMapper
 import be.bluexin.luajksp.annotations.LuajMapped
 import be.bluexin.mcui.themes.miniscript.serialization.*
-import be.bluexin.mcui.themes.serde.legacyformat.dto.AnonymousExpressionIntermediate
-import be.bluexin.mcui.themes.serde.legacyformat.dto.NamedExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.AnonymousExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.NamedExpressionIntermediate
 import be.bluexin.mcui.util.RLSerializer
 import kotlinx.serialization.Serializable
 import net.minecraft.resources.ResourceLocation
