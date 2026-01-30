@@ -1,6 +1,5 @@
 package be.bluexin.mcui.themes.serde.legacyformat.factory
 
-import be.bluexin.mcui.themes.elements.Element
 import be.bluexin.mcui.themes.elements.RenderState
 import be.bluexin.mcui.themes.elements.Transform
 import be.bluexin.mcui.themes.miniscript.*
@@ -12,7 +11,7 @@ import be.bluexin.mcui.themes.serde.legacyformat.dto.ExpressionIntermediate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
 
-internal sealed class LegacyFactory<IN : ElementXml, out OUT : Element>(
+internal sealed class LegacyFactory<IN : ElementXml, out OUT : Any>(
     val xmlType: KClass<out IN>
 ) : Factory<IN, OUT> {
 

@@ -25,7 +25,7 @@ data class NamedExpressionIntermediate(
     override val cacheType: CacheType = CacheType.PER_FRAME
 ) : ExpressionIntermediate() {
 
-    fun hasDefault() = expression.isNotEmpty()
+    fun hasExpression() = expression.isNotBlank()
 }
 
 @SerialName("variables")

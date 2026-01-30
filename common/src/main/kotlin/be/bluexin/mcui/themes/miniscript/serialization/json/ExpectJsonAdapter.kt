@@ -19,7 +19,7 @@ class ExpectJsonAdapter : TypeAdapter<Expect>() {
             out.beginObject()
             value.variables.forEach { (key, it) ->
                 out.name(key)
-                if (it.hasDefault()) {
+                if (it.hasExpression()) {
                     out.beginObject()
                         .name("type")
                         .value(it.type.name)

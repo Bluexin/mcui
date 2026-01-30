@@ -34,9 +34,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.luaj.vm2.LuaTable
 import org.luaj.vm2.LuaValue
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.set
 
 /**
  * Widget
@@ -227,7 +224,7 @@ class Widget(
             }
             expect.pushContext()
             val defaults = missing.onEach { (key, it) ->
-                if (it.hasDefault()) variables[key] = it.type.expressionAdapter.compile(it)
+                if (it.hasExpression()) variables[key] = it.type.expressionAdapter.compile(it)
             }.keys
             libHelper.popContext()
             val realMissing = missing - defaults

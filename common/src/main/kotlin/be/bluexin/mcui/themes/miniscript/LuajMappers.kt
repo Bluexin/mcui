@@ -22,13 +22,12 @@ sealed class CValueMapper<CValueType : CValue<T>, T : Any>(
     private val expressionAdapter: BasicExpressionAdapter<CValueType, T>
 ) : LKMapper<CValueType> {
     override fun fromLua(value: LuaValue): CValueType = when {
-        value.isboolean() -> expressionAdapter.compile(
+        value.isboolean() || value.isnumber() -> expressionAdapter.compile(
             AnonymousExpressionIntermediate(
-                value.tojstring(),
+                expression = value.tojstring(),
                 cacheType = CacheType.STATIC
             )
         )
-        value.isnumber() -> expressionAdapter.compile(AnonymousExpressionIntermediate(value.checkjstring(), cacheType = CacheType.STATIC))
         value.isstring() -> expressionAdapter.compile(AnonymousExpressionIntermediate(value.checkjstring()))
         value.istable() -> {
             val expression = value["expression"].checkjstring()
@@ -165,7 +164,6 @@ object HumanoidArmMapper : LKMapper<HumanoidArm> {
     override fun toLua(value: HumanoidArm): LuaValue = LuaValue.valueOf(value.name)
 }
 
-@Suppress("UnusedReceiverParameter") // Used to get T
 private inline fun <reified T : Any> LKMapper<T>.argError(arg: Int, message: String): Nothing {
     LuaValue.argerror(arg, "Couldn't read ${T::class.simpleName}: $message")
     error("Never reach here, argerror throws")

@@ -77,7 +77,7 @@ class FragmentReference(
                     }
                     expect.pushContext()
                     val defaults = missing.onEach { (key, it) ->
-                        if (it.hasDefault()) variables[key] = it.type.expressionAdapter.compile(it)
+                        if (it.hasExpression()) variables[key] = it.type.expressionAdapter.compile(it)
                     }.keys
                     libHelper.popContext()
                     val realMissing = missing - defaults
