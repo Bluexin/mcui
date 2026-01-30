@@ -46,12 +46,10 @@ interface ElementVisitor {
 
     fun draw(context: Context, body: GLOperations.() -> Unit)
 
-    interface Context {
-        val gameInfo: GameContext
-        val mouse: Vector2dc
-
-        fun copy(gameInfo: GameContext = this.gameInfo, mouse: Vector2dc = this.mouse): Context
-    }
+    data class Context(
+        val gameInfo: GameContext,
+        val mouse: Vector2dc,
+    )
 }
 
 interface GLOperations {

@@ -1,5 +1,6 @@
 package be.bluexin.mcui.themes.elements.renderer
 
+import be.bluexin.mcui.GLCore
 import be.bluexin.mcui.themes.elements.GLOperations
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptItemStack
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptItemStackImpl
@@ -11,27 +12,27 @@ class MinecraftGlOperations(
     private val poseStack: PoseStack,
 ) : GLOperations {
     override fun configureBlend(enabled: Boolean) {
-        TODO("Not yet implemented")
+        GLCore.glBlend(enabled)
     }
 
     override fun setColor(red: Float, green: Float, blue: Float, alpha: Float) {
-        TODO("Not yet implemented")
+        GLCore.color(red, green, blue, alpha)
     }
 
     override fun setColor(rgba: Int) {
-        TODO("Not yet implemented")
+        GLCore.color(rgba)
     }
 
     override fun getShaderColor(): FloatArray {
-        TODO("Not yet implemented")
+        return GLCore.getShaderColor()
     }
 
     override fun bindTexture(texture: () -> ResourceLocation) {
-        TODO("Not yet implemented")
+        GLCore.glBindTexture(texture())
     }
 
     override fun drawString(string: String, x: Float, y: Float, rgba: Int, shadow: Boolean, centered: Boolean) {
-        TODO("Not yet implemented")
+        GLCore.glString(string, x.toInt(), y.toInt(), rgba, shadow, centered, poseStack)
     }
 
     override fun drawRectangle(
@@ -47,7 +48,20 @@ class MinecraftGlOperations(
         textureWidth: Int,
         textureHeight: Int
     ) {
-        TODO("Not yet implemented")
+        GLCore.glTexturedRectV2(
+            x,
+            y,
+            z,
+            width,
+            height,
+            sourceX,
+            sourceY,
+            sourceWidth,
+            sourceHeight,
+            textureWidth,
+            textureHeight,
+            poseStack
+        )
     }
 
     override fun renderItemStack(
