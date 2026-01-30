@@ -7,7 +7,9 @@ import be.bluexin.mcui.util.Client
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.resources.ResourceLocation
 
-class MinecraftGlOperations : GLOperations {
+class MinecraftGlOperations(
+    private val poseStack: PoseStack,
+) : GLOperations {
     override fun configureBlend(enabled: Boolean) {
         TODO("Not yet implemented")
     }
@@ -52,8 +54,7 @@ class MinecraftGlOperations : GLOperations {
         x: Int,
         y: Int,
         partialTicks: Float,
-        stack: MiniscriptItemStack,
-        poseStack: PoseStack
+        stack: MiniscriptItemStack
     ) {
         val mcStack = (stack as MiniscriptItemStackImpl).itemStack
         val f = mcStack.popTime - partialTicks

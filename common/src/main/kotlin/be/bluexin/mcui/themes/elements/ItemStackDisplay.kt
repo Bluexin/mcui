@@ -31,9 +31,10 @@ data class ItemStackDisplay(
                     y = 0,
                     partialTicks = context.gameInfo.gameWindowInfo().partialTicks(),
                     stack = itemStack,
-                    poseStack = context.poseStack,
                 )
             }
+
+            visitor.popTransform(context)
         }
     }
 

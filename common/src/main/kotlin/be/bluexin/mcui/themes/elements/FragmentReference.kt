@@ -20,6 +20,7 @@ data class FragmentReference(
         if (visitor.start(renderState, context)) {
             visitor.transform(transform, context)
             group.visit(visitor, context)
+            visitor.popTransform(context)
         }
     }
 

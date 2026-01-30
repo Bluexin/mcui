@@ -37,6 +37,8 @@ data class Group(
             children.sortedBy { it.transform.z() }.forEach { child ->
                 child.visit(visitor, relativeContext)
             }
+
+            visitor.popTransform(context)
         }
     }
 

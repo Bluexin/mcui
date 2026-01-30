@@ -6,7 +6,6 @@ import be.bluexin.mcui.themes.miniscript.CBoolean
 import be.bluexin.mcui.themes.miniscript.CDouble
 import be.bluexin.mcui.themes.miniscript.api.GameContext
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptItemStack
-import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector2dc
 
@@ -43,15 +42,16 @@ interface ElementVisitor {
     fun start(renderState: RenderState, context: Context): Boolean
 
     fun transform(transform: Transform, context: Context)
+    fun popTransform(context: Context)
 
     fun draw(context: Context, body: GLOperations.() -> Unit)
 
+    interface Context {
+        val gameInfo: GameContext
+        val mouse: Vector2dc
 
-    data class Context(
-        val poseStack: PoseStack,
-        val mouse: Vector2dc,
-        val gameInfo: GameContext,
-    )
+        fun copy(gameInfo: GameContext = this.gameInfo, mouse: Vector2dc = this.mouse): Context
+    }
 }
 
 interface GLOperations {
@@ -87,8 +87,7 @@ interface GLOperations {
         x: Int,
         y: Int,
         partialTicks: Float,
-        stack: MiniscriptItemStack,
-        poseStack: PoseStack
+        stack: MiniscriptItemStack
     )
 
     companion object {

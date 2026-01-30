@@ -31,6 +31,8 @@ data class Text(
                     centered = centered()
                 )
             }
+
+            visitor.popTransform(context)
         }
     }
 
