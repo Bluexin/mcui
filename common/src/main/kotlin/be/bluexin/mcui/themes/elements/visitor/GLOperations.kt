@@ -1,56 +1,7 @@
-package be.bluexin.mcui.themes.elements
+package be.bluexin.mcui.themes.elements.visitor
 
-import be.bluexin.luajksp.annotations.LKExposed
-import be.bluexin.luajksp.annotations.LuajExpose
-import be.bluexin.mcui.themes.miniscript.CBoolean
-import be.bluexin.mcui.themes.miniscript.CDouble
-import be.bluexin.mcui.themes.miniscript.api.GameContext
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptItemStack
 import net.minecraft.resources.ResourceLocation
-import org.joml.Vector2dc
-
-interface Element : LKExposed {
-    val transform: Transform
-    
-    fun visit(visitor: ElementVisitor, context: ElementVisitor.Context)
-}
-
-@LuajExpose
-data class RenderState(
-    var enabled: CBoolean,
-    var name: String
-)
-
-@LuajExpose
-data class Transform(
-    var x: CDouble,
-    var y: CDouble,
-    var z: CDouble,
-    var scale: CDouble?
-) {
-    companion object {
-        val ZERO = Transform(CDouble.ZERO, CDouble.ZERO, CDouble.ZERO, null)
-    }
-}
-
-interface ElementVisitor {
-    fun visit(element: Element, context: Context): Unit = element.visit(this, context)
-
-    /**
-     * @return whether the element should continue the visit
-     */
-    fun start(renderState: RenderState, context: Context): Boolean
-
-    fun transform(transform: Transform, context: Context)
-    fun popTransform(context: Context)
-
-    fun draw(context: Context, body: GLOperations.() -> Unit)
-
-    data class Context(
-        val gameInfo: GameContext,
-        val mouse: Vector2dc,
-    )
-}
 
 interface GLOperations {
     fun configureBlend(enabled: Boolean)

@@ -3,6 +3,7 @@ package be.bluexin.mcui.themes.elements
 import be.bluexin.luajksp.annotations.LuajExclude
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.themes.elements.access.TextAccess
+import be.bluexin.mcui.themes.elements.visitor.ElementVisitor
 import be.bluexin.mcui.themes.miniscript.CBoolean
 import be.bluexin.mcui.themes.miniscript.CInt
 import be.bluexin.mcui.themes.miniscript.CString

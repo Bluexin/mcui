@@ -4,6 +4,7 @@ import be.bluexin.luajksp.annotations.LuajExclude
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.themes.elements.access.HudAccess
 import be.bluexin.mcui.themes.elements.legacy.HudPartType
+import be.bluexin.mcui.themes.elements.visitor.ElementVisitor
 import org.luaj.vm2.LuaValue
 
 /**

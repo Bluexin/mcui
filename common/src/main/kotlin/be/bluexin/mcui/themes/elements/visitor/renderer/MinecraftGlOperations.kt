@@ -1,14 +1,14 @@
-package be.bluexin.mcui.themes.elements.renderer
+package be.bluexin.mcui.themes.elements.visitor.renderer
 
 import be.bluexin.mcui.GLCore
-import be.bluexin.mcui.themes.elements.GLOperations
+import be.bluexin.mcui.themes.elements.visitor.GLOperations
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptItemStack
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptItemStackImpl
 import be.bluexin.mcui.util.Client
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.resources.ResourceLocation
 
-class MinecraftGlOperations(
+internal class MinecraftGlOperations(
     private val poseStack: PoseStack,
 ) : GLOperations {
     override fun configureBlend(enabled: Boolean) {

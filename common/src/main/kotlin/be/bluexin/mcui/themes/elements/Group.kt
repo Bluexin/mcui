@@ -4,6 +4,7 @@ import be.bluexin.luajksp.annotations.LuajExclude
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.deprecated.api.elements.animator.internal.minus
 import be.bluexin.mcui.themes.elements.access.GroupAccess
+import be.bluexin.mcui.themes.elements.visitor.ElementVisitor
 import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import org.joml.Vector2d
 import org.luaj.vm2.LuaValue
