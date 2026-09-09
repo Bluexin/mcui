@@ -1,4 +1,4 @@
-import {Setting} from "./Setting";
+import {Setting} from "./generated/Setting";
 import {LKResourceLocation} from "./support";
 
 /**

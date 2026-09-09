@@ -1,4 +1,4 @@
-import type {Widget} from "../../typings/Widget";
+import type {Widget} from "@mcui/types/generated/legacy/Widget";
 import {addBackButton, addMenu, addMenuPage} from "./menu_support";
 import {loadExpandingButton, typedStaticValue} from "./widget_lib";
 
@@ -13,7 +13,7 @@ const colourButtons = (colour: string) => {
     })
 }
 
-const gui = (root: string) => {
+theme.registerScreen('mcui:tstestgui', (root: string) => {
     const menu = addMenu(root)
     const page1w = addMenuPage(menu, 'p1')
     const page2w = addMenuPage(menu, 'p2', 'p1')
@@ -55,6 +55,4 @@ const gui = (root: string) => {
     })
 
     menu.extra.open('p1')
-}
-
-theme.registerScreen('mcui:tstestgui', gui)
+})

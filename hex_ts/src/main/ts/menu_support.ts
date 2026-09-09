@@ -1,4 +1,4 @@
-import type {Widget} from "../../typings/Widget";
+import type {Widget} from "@mcui/types/generated/legacy/Widget";
 import {type ButtonArgs, loadButton, typedStaticValue} from "./widget_lib";
 
 const menu_frag = theme.readWidget("mcui.hex-ts:menu_parent");

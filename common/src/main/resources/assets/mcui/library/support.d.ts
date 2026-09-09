@@ -29,7 +29,7 @@ export interface TypeSpecificCValue {
 /**
  * Represents a MiniScript value computing to a generic type.
  */
-export interface CValue<T> extends TypeSpecificCValue {
+export interface CValue<T = unknown> extends TypeSpecificCValue {
     /** MiniScript JEL type. */
     type: JelType;
     // readonly value: T; // TODO

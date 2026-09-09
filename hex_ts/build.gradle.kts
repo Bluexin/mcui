@@ -10,17 +10,13 @@ val packDescription = "TS-based theme for MCUI [BETA]"
 val sourcesDir = layout.projectDirectory.dir("src")
 val tsDir = sourcesDir.dir("main/ts")
 val resourcesDir = sourcesDir.dir("main/resources")
-val typingsDir = sourcesDir.dir("typings")
+val typingsDir = layout.projectDirectory.dir("node_modules/@mcui/types")
 
 val prepareTypings = tasks.register("prepareTypings", Copy::class) {
-    // Ensure the jar is built in the :common project
-    dependsOn(":common:typingsJar")
-    from({
-        // Resolve the output jar from the :common task
-        val jarTask = project.tasks.getByPath(":common:typingsJar") as Jar
-        zipTree(jarTask.archiveFile.get().asFile)
-    })
-    exclude("META-INF/**")
+    dependsOn(":common:assembleNpmTypings")
+    from(project.findProject(":common")!!.layout.buildDirectory.dir("npm-typings")) {
+        exclude("*.tgz")
+    }
     into(typingsDir)
 }
 
