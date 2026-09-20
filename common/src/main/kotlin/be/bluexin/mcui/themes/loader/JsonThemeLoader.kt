@@ -24,6 +24,7 @@ import be.bluexin.mcui.themes.elements.legacy.Widget
 import be.bluexin.mcui.themes.meta.HudFormat
 import be.bluexin.mcui.themes.miniscript.CInt
 import be.bluexin.mcui.themes.miniscript.serialization.json.AfterUnmarshalAdapterFactory
+import be.bluexin.mcui.themes.serde.legacyformat.factory.ModernHudBuilder
 import com.google.gson.GsonBuilder
 import org.koin.core.annotation.Single
 import java.io.File
@@ -37,7 +38,10 @@ import java.io.InputStream
  */
 // TODO : convert to kotlinx.serialization
 @Single
-class JsonThemeLoader(settingsLoader: SettingsLoader) : AbstractThemeLoader(HudFormat.JSON, settingsLoader) {
+class JsonThemeLoader internal constructor(
+    settingsLoader: SettingsLoader,
+    modernHudBuilder: ModernHudBuilder?,
+) : AbstractThemeLoader(HudFormat.JSON, settingsLoader, modernHudBuilder) {
 
     private val gson = GsonBuilder()
         .registerTypeAdapterFactory(AfterUnmarshalAdapterFactory())

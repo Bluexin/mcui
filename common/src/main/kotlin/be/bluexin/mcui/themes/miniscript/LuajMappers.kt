@@ -4,6 +4,7 @@ import be.bluexin.luajksp.annotations.LKMapper
 import be.bluexin.luajksp.annotations.LuajMapped
 import be.bluexin.mcui.themes.miniscript.serialization.*
 import be.bluexin.mcui.themes.serde.legacyformat.xml.AnonymousExpressionIntermediate
+import be.bluexin.mcui.themes.serde.legacyformat.xml.ExpressionIntermediate
 import be.bluexin.mcui.themes.serde.legacyformat.xml.NamedExpressionIntermediate
 import be.bluexin.mcui.util.RLSerializer
 import kotlinx.serialization.Serializable
@@ -19,21 +20,22 @@ object CacheTypeMapper : LKMapper<CacheType> {
 }
 
 sealed class CValueMapper<CValueType : CValue<T>, T : Any>(
-    private val expressionAdapter: BasicExpressionAdapter<CValueType, T>
+    private val compile: (ExpressionIntermediate) -> CValueType
 ) : LKMapper<CValueType> {
     override fun fromLua(value: LuaValue): CValueType = when {
-        value.isboolean() || value.isnumber() -> expressionAdapter.compile(
+        value.isboolean() || value.isnumber() -> compile(
             AnonymousExpressionIntermediate(
                 expression = value.tojstring(),
                 cacheType = CacheType.STATIC
             )
         )
-        value.isstring() -> expressionAdapter.compile(AnonymousExpressionIntermediate(value.checkjstring()))
+
+        value.isstring() -> compile(AnonymousExpressionIntermediate(value.checkjstring()))
         value.istable() -> {
             val expression = value["expression"].checkjstring()
             val cacheType = if (value["cache"].isnil()) null else CacheTypeMapper.fromLua(value["cache"])
 
-            expressionAdapter.compile(
+            compile(
                 if (cacheType == null) AnonymousExpressionIntermediate(expression)
                 else AnonymousExpressionIntermediate(expression, cacheType)
             )
@@ -41,14 +43,18 @@ sealed class CValueMapper<CValueType : CValue<T>, T : Any>(
         else -> typesafeArgError(1, "Expected number, string or table - found $value")
     }
 
-    override fun toLua(value: CValueType): LuaValue = LuaValue.tableOf(arrayOf(
-        LuaValue.valueOf("expression"), value.value.expression?.let(LuaValue::valueOf) ?: LuaValue.NIL,
-        LuaValue.valueOf("cache"), LuaValue.valueOf(value.value.expressionIntermediate!!.cacheType.toString()),
-//        LuaValue.valueOf("value"), TODO(),
-    )).apply {
-        val ei = value.value.expressionIntermediate
-        if (ei is NamedExpressionIntermediate) {
-            set("type", ei.type.toString())
+    override fun toLua(value: CValueType): LuaValue = when (val ei = value.value.expressionIntermediate) {
+        null -> LuaValue.NIL
+        else -> LuaValue.tableOf(
+            arrayOf(
+                LuaValue.valueOf("expression"), LuaValue.valueOf(ei.expression),
+                LuaValue.valueOf("cache"), LuaValue.valueOf(ei.cacheType.toString()),
+                //        LuaValue.valueOf("value"), TODO(),
+            )
+        ).apply {
+            if (ei is NamedExpressionIntermediate) {
+                set("type", ei.type.toString())
+            }
         }
     }
 
@@ -87,45 +93,41 @@ data object UnknownCValueMapper: LKMapper<CValue<*>> {
 /**
  * Maps an expression that should return an int.
  */
-data object CIntMapper : CValueMapper<CInt, Int>(IntExpressionAdapter) {
+data object CIntMapper : CValueMapper<CInt, Int>(IntExpressionAdapter::compile) {
     override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
 }
 
 /**
  * Maps an expression that should return a double.
  */
-data object CDoubleMapper : CValueMapper<CDouble, Double>(DoubleExpressionAdapter) {
+data object CDoubleMapper : CValueMapper<CDouble, Double>(DoubleExpressionAdapter::compile) {
     override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
 }
 
 /**
  * Maps an expression that should return a String.
  */
-data object CStringMapper : CValueMapper<CString, String>(StringExpressionAdapter) {
+data object CStringMapper : CValueMapper<CString, String>(StringExpressionAdapter::compile) {
     override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
 }
 
-data object CResourceLocationMapper : LKMapper<CResourceLocation> {
-    override fun toLua(value: CResourceLocation): LuaValue {
-        TODO("Not yet implemented")
-    }
-
-    override fun fromLua(value: LuaValue): CResourceLocation {
-        TODO("Not yet implemented")
-    }
+data object CResourceLocationMapper : CValueMapper<CResourceLocation, LKResourceLocation>(
+    { CResourceLocation(StringExpressionAdapter.compile(it)) }
+) {
+    override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
 }
 
 /**
  * Maps an expression that should return a boolean.
  */
-data object CBooleanMapper : CValueMapper<CBoolean, Boolean>(BooleanExpressionAdapter) {
+data object CBooleanMapper : CValueMapper<CBoolean, Boolean>(BooleanExpressionAdapter::compile) {
     override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
 }
 
 /**
  * Maps an expression that should return [Unit] (aka void).
  */
-data object CUnitMapper : CValueMapper<CUnit, Unit>(UnitExpressionAdapter) {
+data object CUnitMapper : CValueMapper<CUnit, Unit>(UnitExpressionAdapter::compile) {
     override fun typesafeArgError(arg: Int, message: String) = argError(arg, message)
 }
 

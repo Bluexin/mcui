@@ -20,13 +20,17 @@ class ThemeAnalyzer(
          * Temporary (tm)
          */
         setHud: (Hud) -> Unit,
+        /**
+         * Modern element tree sink (A/B migration) - only fed for XML themes.
+         */
+        setModernHud: (be.bluexin.mcui.themes.elements.Hud) -> Unit = {},
         successReport: (() -> String) -> Unit,
         failureReport: (() -> String) -> Unit,
     ): Map<ResourceLocation, (ResourceLocation) -> Unit> = buildMap {
         if (theme.hud !== null) this[HUD] = {
             theme.hud
                 .let(HudFormat::fromFile)?.loader
-                ?.load(resourceManager, theme, setHud)
+                ?.load(resourceManager, theme, setHud, setModernHud)
         }
 
         RegisterScreen.clear()

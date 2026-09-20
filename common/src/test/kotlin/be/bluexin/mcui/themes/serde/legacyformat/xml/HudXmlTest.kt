@@ -1,6 +1,5 @@
 package be.bluexin.mcui.themes.serde.legacyformat.xml
 
-import be.bluexin.mcui.themes.elements.legacy.HudPartType
 import be.bluexin.mcui.themes.miniscript.CacheType
 import kotlinx.serialization.decodeFromString
 import nl.adaptivity.xmlutil.serialization.XML
@@ -29,7 +28,7 @@ class HudXmlTest {
 
         // First entry: HEALTH_BOX
         val healthEntry = entries[0]
-        assertEquals(HudPartType.HEALTH_BOX, healthEntry.key)
+        assertEquals("HEALTH_BOX", healthEntry.key)
         val healthValue = healthEntry.value
         assertEquals("health box", healthValue.name)
         val children = assertNotNull(healthValue.children?.elements)
@@ -39,7 +38,7 @@ class HudXmlTest {
 
         // Second entry: EXPERIENCE
         val expEntry = entries[1]
-        assertEquals(HudPartType.EXPERIENCE, expEntry.key)
+        assertEquals("EXPERIENCE", expEntry.key)
         val expValue = expEntry.value
         assertEquals("exp", expValue.name)
         assertEquals(AnonymousExpressionIntermediate("scaledwidth / 2.0", CacheType.SIZE_CHANGE), expValue.x)
@@ -63,8 +62,8 @@ class HudXmlTest {
         assertEquals(1, entries.size)
 
         val crosshairEntry = entries[0]
-        assertEquals(HudPartType.CROSS_HAIR, crosshairEntry.key)
-        val crosshairValue = crosshairEntry.value as GroupXml
+        assertEquals("CROSS_HAIR", crosshairEntry.key)
+        val crosshairValue = crosshairEntry.value
         assertEquals("crosshair", crosshairValue.name)
         assertNull(crosshairValue.children)
     }

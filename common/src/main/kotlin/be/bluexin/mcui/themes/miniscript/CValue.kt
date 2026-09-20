@@ -83,13 +83,13 @@ class CString(value: (GameContext) -> String) : CValue<String>(value) {
 }
 
 @LuajMapped(CResourceLocationMapper::class, import = "support")
-open class CResourceLocation(value: (GameContext) -> LKResourceLocation) : CValue<LKResourceLocation>(value) {
+class CResourceLocation(value: (GameContext) -> LKResourceLocation) : CValue<LKResourceLocation>(value) {
     override val type: JelType
         get() = JelType.STRING // TODO : separate type for ResourceLocation ?
 
     constructor(delegate: CString) : this(Delegated(delegate))
 
-    private class Delegated(private val delegate: CString) : (GameContext) -> LKResourceLocation {
+    internal class Delegated(internal val delegate: CString) : (GameContext) -> LKResourceLocation {
         private var previousValue: String? = null
         private lateinit var cachedRl: LKResourceLocation
 
@@ -140,5 +140,10 @@ class CValueWrapper<T : Any>(value: (GameContext) -> T) : CValue<T>(value) {
     override val type get() = JelType.ERROR
 }
 
-val ((GameContext) -> Any).expressionIntermediate: ExpressionIntermediate? get() = (this as? CachedExpression<*>)?.expressionIntermediate
+val ((GameContext) -> Any).expressionIntermediate: ExpressionIntermediate?
+    get() = when (this) {
+        is CachedExpression<*> -> expressionIntermediate
+        is CResourceLocation.Delegated -> delegate.value.expressionIntermediate
+        else -> null
+    }
 val ((GameContext) -> Any).expression: String? get() = this.expressionIntermediate?.expression

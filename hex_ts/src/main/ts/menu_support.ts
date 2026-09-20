@@ -11,7 +11,7 @@ export interface Menu extends Widget {
 }
 
 /**
- * Adds a paged menu to given widget
+ * Adds a paged menu to the given widget
  */
 export function addMenu(parent: Widget | string): Menu {
     const r = theme.loadWidget(parent, menu_frag) as Menu || error(`Unable to load menu`);

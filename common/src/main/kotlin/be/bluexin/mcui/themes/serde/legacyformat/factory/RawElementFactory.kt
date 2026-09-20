@@ -1,26 +1,25 @@
 package be.bluexin.mcui.themes.serde.legacyformat.factory
 
-import be.bluexin.mcui.themes.elements.Group
+import be.bluexin.mcui.themes.elements.RawElement
 import be.bluexin.mcui.themes.miniscript.CResourceLocation
+import be.bluexin.mcui.themes.miniscript.CUnit
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
-import be.bluexin.mcui.themes.serde.legacyformat.xml.GroupXml
+import be.bluexin.mcui.themes.serde.legacyformat.xml.RawElementXml
 import org.koin.core.annotation.Single
 
 @Single
-internal class GroupFactory(
-    private val registry: LegacyFactoryRegistry
-) : LegacyFactory<GroupXml, Group>(GroupXml::class) {
+internal class RawElementFactory : LegacyFactory<RawElementXml, RawElement>(RawElementXml::class) {
 
     override fun create(
-        input: GroupXml,
+        input: RawElementXml,
         context: Factory.Context
-    ): Result<Group> = context.tryRun("elementGroup[${input.name}]") {
+    ): Result<RawElement> = context.tryRun("rawElement[${input.name}]") {
         val renderState = createRenderState(input, context)
         val transform = createTransform(input, context)
         val texture = input::texture.compileString(context)?.let(::CResourceLocation)
-        val children = createChildren(input.children, context, registry)
+        val expression = input::expression.compileUnit(context) ?: CUnit.UNIT
 
-        Group(renderState, transform, children, texture)
+        RawElement(renderState, transform, expression, texture)
     }
 }

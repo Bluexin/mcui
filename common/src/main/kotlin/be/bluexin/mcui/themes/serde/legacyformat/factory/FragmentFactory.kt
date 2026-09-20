@@ -6,7 +6,6 @@ import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.miniscript.LibHelper
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
-import be.bluexin.mcui.themes.serde.legacyformat.xml.ElementXml
 import be.bluexin.mcui.themes.serde.legacyformat.xml.FragmentXml
 import org.koin.core.annotation.Single
 
@@ -26,19 +25,7 @@ internal class FragmentFactory(
         val renderState = createRenderState(input, context)
         val transform = createTransform(input, context)
         val texture = input::texture.compileString(context)?.let(::CResourceLocation)
-
-        // Recursively create child elements
-        val children = input.children?.elements?.mapNotNull { childXml ->
-            val childName = (childXml as? ElementXml.WithRenderState)?.name ?: "unknown"
-            context.nested(childName)
-            val result = registry.createFromXml(childXml, context)
-            context.pop()
-
-            if (result.isFailure) {
-                context.error("Failed to create child element: ${result.exceptionOrNull()?.message}")
-            }
-            result.getOrNull()
-        } ?: emptyList()
+        val children = createChildren(input.children, context, registry)
 
         libHelper.popContext()
 

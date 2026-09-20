@@ -8,6 +8,7 @@ import be.bluexin.mcui.themes.elements.legacy.Hud
 import be.bluexin.mcui.themes.elements.legacy.Widget
 import be.bluexin.mcui.themes.meta.HudFormat
 import be.bluexin.mcui.themes.meta.ThemeDefinition
+import be.bluexin.mcui.themes.serde.legacyformat.factory.ModernHudBuilder
 import be.bluexin.mcui.util.*
 import com.helger.commons.io.IHasInputStream
 import com.helger.css.ECSSVersion
@@ -23,7 +24,11 @@ import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.util.*
 
-abstract class AbstractThemeLoader(protected val type: HudFormat, protected val settingsLoader: SettingsLoader) {
+abstract class AbstractThemeLoader internal constructor(
+    protected val type: HudFormat,
+    protected val settingsLoader: SettingsLoader,
+    private val modernHudBuilder: ModernHudBuilder,
+) {
 
     // TODO : Koinify
     // TODO : errors per theme
@@ -35,7 +40,12 @@ abstract class AbstractThemeLoader(protected val type: HudFormat, protected val 
         }
     }
 
-    fun load(resourceManager: ResourceManager, theme: ThemeDefinition, sink: (Hud) -> Unit) {
+    fun load(
+        resourceManager: ResourceManager,
+        theme: ThemeDefinition,
+        sink: (Hud) -> Unit,
+        modernSink: (be.bluexin.mcui.themes.elements.Hud) -> Unit = {},
+    ) {
 //        if (OptionCore.CUSTOM_FONT.isEnabled) GLCore.setFont(Minecraft.getMinecraft(), OptionCore.CUSTOM_FONT.isEnabled)
         Reporter.errors.clear()
 
@@ -49,6 +59,12 @@ abstract class AbstractThemeLoader(protected val type: HudFormat, protected val 
         }.onSuccess { (hud, fragments) ->
             hud.setup(fragments, theme)
             sink(hud)
+
+            // Build the modern element tree from the same legacy XML (A/B migration).
+            // Only XML is wired up so far ; JSON modern loading is deferred.
+            if (type == HudFormat.XML) {
+                modernHudBuilder.buildHud(resourceManager, theme)?.onSuccess(modernSink)
+            }
         }.onFailure {
             Constants.LOG.warn("Failed to load $theme", it)
             Reporter += it.message ?: "unknown error"

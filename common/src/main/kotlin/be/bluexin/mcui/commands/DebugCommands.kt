@@ -103,6 +103,22 @@ sealed class DebugCommands(usage: String) : McuiCommand(usage) {
         )
     }
 
+    data object Modern : DebugCommands("modern"), KoinComponent {
+        private val themeManager: ThemeManager by inject()
+
+        override fun register(): CommandRegistrar = literal(literal).executes {
+            val themeManager = themeManager
+            themeManager.renderModernHud = !themeManager.renderModernHud
+            it.source.sendSuccess(
+                Component.literal(
+                    "Modern HUD rendering " + if (themeManager.renderModernHud) "enabled" else "disabled"
+                ),
+                false
+            )
+            1
+        }
+    }
+
     override val defaultUseCommand = "$DEBUG_LITERAL $literal"
 
     companion object {
@@ -112,6 +128,7 @@ sealed class DebugCommands(usage: String) : McuiCommand(usage) {
             literal(DEBUG_LITERAL)
                 .then(Reload.register())
                 .then(Open.register())
+                .then(Modern.register())
         )
     }
 }

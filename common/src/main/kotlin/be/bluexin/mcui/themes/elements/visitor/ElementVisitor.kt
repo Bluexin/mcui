@@ -22,5 +22,16 @@ interface ElementVisitor {
     data class Context(
         val gameInfo: GameContext,
         val mouse: Vector2dc,
+        /**
+         * Set the current repetition-group loop index while visiting a repeated group.
+         * Wired to the legacy expression draw context so `i()`-style JEL expressions keep working.
+         * No-op when no [be.bluexin.mcui.themes.elements.RepetitionGroup] is active.
+         */
+        val loopIndex: (Int) -> Unit = {},
+        /**
+         * Profiling hook, keyed by name. Defaults to identity so the element model stays Minecraft-free ;
+         * wired to the legacy debug profiler during rendering (A/B parity).
+         */
+        val profile: (String, () -> Unit) -> Unit = { _, block -> block() },
     )
 }

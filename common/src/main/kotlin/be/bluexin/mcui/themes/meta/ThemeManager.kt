@@ -54,6 +54,21 @@ class ThemeManager(
 
     lateinit var HUD: Hud
         private set
+
+    /**
+     * Modern element tree (from the DTO/factory pipeline), built alongside the legacy one during
+     * the A/B migration. Null until an XML theme has been loaded successfully.
+     */
+    var modernHUD: be.bluexin.mcui.themes.elements.Hud? = null
+        private set
+
+    /**
+     * A/B toggle : when true, [modernHUD] (new element tree) is rendered instead of the legacy
+     * HUD. Falls back to legacy rendering when no modern tree is available.
+     * Controlled via the `/mcui debug modern` command.
+     */
+    var renderModernHud: Boolean = false
+
     lateinit var themeList: Map<ResourceLocation, ThemeDefinition>
         private set
 
@@ -141,6 +156,10 @@ class ThemeManager(
                 // This only handles status effects icons atm, which are primarily for use in HUD
                 texturesFallbackHandler.init(themeDefinition)
                 HUD = it
+            },
+            setModernHud = {
+                logger.info("Setting modern HUD to ${themeDefinition.id}")
+                modernHUD = it
             },
             successReport = successReport,
             failureReport = failureReport

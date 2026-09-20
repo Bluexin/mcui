@@ -1,6 +1,5 @@
 package be.bluexin.mcui.themes.serde.legacyformat.xml
 
-import be.bluexin.mcui.themes.elements.legacy.HudPartType
 import be.bluexin.mcui.themes.meta.ThemeMetadata
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -24,11 +23,13 @@ internal data class HudXml(
     @Serializable
     data class Parts(
         @XmlSerialName("entry")
-        val parts: List<Entry<HudPartType, GroupXml>>
+        val parts: List<Entry<String, GroupXml>>
     ) {
 
         @Serializable
         data class Entry<K, V>(
+            // Element (not attribute) : matches the legacy enum-key encoding (`<key>HEALTH_BOX</key>`)
+            @XmlElement
             @XmlSerialName("key")
             val key: K,
             @XmlSerialName("value")

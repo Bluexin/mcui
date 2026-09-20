@@ -4,10 +4,12 @@ import be.bluexin.mcui.config.ConfigHandler
 import be.bluexin.mcui.config.OptionCore
 import be.bluexin.mcui.config.Settings
 import be.bluexin.mcui.platform.Services
+import be.bluexin.mcui.themes.elements.ElementModule
 import be.bluexin.mcui.themes.loader.ThemeLoaderModule
 import be.bluexin.mcui.themes.meta.ThemeMetaModule
 import be.bluexin.mcui.themes.miniscript.MiniscriptModule
 import be.bluexin.mcui.themes.scripting.ScriptingModule
+import be.bluexin.mcui.themes.serde.legacyformat.LegacyFormatModule
 import org.koin.core.context.startKoin
 import org.koin.ksp.generated.module
 import org.koin.logger.slf4jLogger
@@ -28,7 +30,9 @@ object MCUICore {
                 ThemeMetaModule().module,
                 ScriptingModule().module,
                 ThemeLoaderModule().module,
+                LegacyFormatModule().module,
                 MiniscriptModule().module,
+                ElementModule().module,
             )
         }
 

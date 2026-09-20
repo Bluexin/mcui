@@ -1,5 +1,6 @@
 package be.bluexin.mcui.screens
 
+import be.bluexin.mcui.themes.elements.visitor.renderer.ModernElementRenderer
 import be.bluexin.mcui.themes.meta.ThemeManager
 import be.bluexin.mcui.themes.miniscript.HudDrawContext
 import be.bluexin.mcui.themes.miniscript.PartialTicksTracker
@@ -21,6 +22,7 @@ class McuiGui(private val mc: Minecraft) : Gui(mc, mc.itemRenderer), KoinCompone
     private val themeManager by inject<ThemeManager>()
     private val partialTicksTracker by inject<PartialTicksTracker>()
     private val poseStackTracker by inject<PoseStackTracker>()
+    private val modernElementRenderer by inject<ModernElementRenderer>()
 
     private val debugScreen by lazy { DebugScreenOverlay(mc) }
 
@@ -28,9 +30,17 @@ class McuiGui(private val mc: Minecraft) : Gui(mc, mc.itemRenderer), KoinCompone
         context.setTime(partialTick)
         partialTicksTracker.partialTicks = partialTick
         poseStackTracker.poseStack = poseStack
+        mc.profiler.push("hud")
         poseStackTracker.withStack(poseStack) {
-            themeManager.HUD.drawAll(context, poseStack)
+            // A/B migration : `/mcui debug modern` switches (XML-only) themes to the new element tree
+            if (themeManager.renderModernHud) {
+                themeManager.modernHUD?.let { modernElementRenderer.render(it, poseStack) }
+                    ?: themeManager.HUD.drawAll(context, poseStack)
+            } else {
+                themeManager.HUD.drawAll(context, poseStack)
+            }
         }
+        mc.profiler.pop()
 
         mc.profiler.push("chat")
         val window = mc.window
