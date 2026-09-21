@@ -19,12 +19,12 @@ data class ItemStackDisplay(
     @LuajExclude
     override fun visit(visitor: ElementVisitor, context: ElementVisitor.Context) {
         if (visitor.start(renderState, context)) {
-            visitor.transform(transform, context)
-
             val (slotIndex, inventorySource) = properties
             val itemStack = inventorySource(context.gameInfo, slotIndex())
 
             if (itemStack.isEmpty()) return
+
+            visitor.transform(transform, context)
 
             visitor.draw(context) {
                 renderItemStack(

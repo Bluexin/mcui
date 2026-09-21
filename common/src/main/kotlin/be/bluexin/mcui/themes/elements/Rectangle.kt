@@ -40,6 +40,8 @@ data class Rectangle(
                     )
                 }
             }
+
+            visitor.popTransform(context)
         }
     }
 
