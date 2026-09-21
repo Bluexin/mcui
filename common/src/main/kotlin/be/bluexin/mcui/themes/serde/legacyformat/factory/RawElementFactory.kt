@@ -1,7 +1,6 @@
 package be.bluexin.mcui.themes.serde.legacyformat.factory
 
 import be.bluexin.mcui.themes.elements.RawElement
-import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.miniscript.CUnit
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
@@ -17,7 +16,7 @@ internal class RawElementFactory : LegacyFactory<RawElementXml, RawElement>(RawE
     ): Result<RawElement> = context.tryRun("rawElement[${input.name}]") {
         val renderState = createRenderState(input, context)
         val transform = createTransform(input, context)
-        val texture = input::texture.compileString(context)?.let(::CResourceLocation)
+        val texture = input::texture.compileTextureCompat(context)
         val expression = input::expression.compileUnit(context) ?: CUnit.UNIT
 
         RawElement(renderState, transform, expression, texture)

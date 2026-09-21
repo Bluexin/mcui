@@ -32,12 +32,14 @@ class McuiGui(private val mc: Minecraft) : Gui(mc, mc.itemRenderer), KoinCompone
         poseStackTracker.poseStack = poseStack
         mc.profiler.push("hud")
         poseStackTracker.withStack(poseStack) {
-            // A/B migration : `/mcui debug modern` switches (XML-only) themes to the new element tree
-            if (themeManager.renderModernHud) {
-                themeManager.modernHUD?.let { modernElementRenderer.render(it, poseStack) }
-                    ?: themeManager.HUD.drawAll(context, poseStack)
-            } else {
-                themeManager.HUD.drawAll(context, poseStack)
+            val activeHud = themeManager.activeHudAssets
+            if (activeHud != null) {
+                // A/B migration : `/mcui debug modern` switches (XML-only) themes to the new element tree
+                if (themeManager.renderModernHud) {
+                    activeHud.modernHud?.let { modernElementRenderer.render(it, poseStack) }
+                } else {
+                    activeHud.hud.drawAll(context, poseStack)
+                }
             }
         }
         mc.profiler.pop()

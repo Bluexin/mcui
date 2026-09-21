@@ -1,11 +1,9 @@
 package be.bluexin.mcui.themes.meta
 
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.themes.elements.legacy.Hud
 import be.bluexin.mcui.themes.scripting.LuaJManager
 import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.server.packs.resources.ResourceManager
 import org.koin.core.annotation.Single
 
 @Single
@@ -13,26 +11,16 @@ class ThemeAnalyzer(
     private val luaJManager: LuaJManager
 ) {
 
+    /**
+     * Runs a theme's (optional) main Lua script and collects the screens it registered.
+     * The HUD itself is not a screen : it is loaded separately by [ThemeManager].
+     */
     fun analyzeThemeScreens(
-        resourceManager: ResourceManager,
         theme: ThemeDefinition,
-        /**
-         * Temporary (tm)
-         */
-        setHud: (Hud) -> Unit,
-        /**
-         * Modern element tree sink (A/B migration) - only fed for XML themes.
-         */
-        setModernHud: (be.bluexin.mcui.themes.elements.Hud) -> Unit = {},
         successReport: (() -> String) -> Unit,
         failureReport: (() -> String) -> Unit,
     ): Map<ResourceLocation, (ResourceLocation) -> Unit> = buildMap {
-        if (theme.hud !== null) this[HUD] = {
-            theme.hud
-                .let(HudFormat::fromFile)?.loader
-                ?.load(resourceManager, theme, setHud, setModernHud)
-        }
-
+        // TODO : replace with using exported globals ?
         RegisterScreen.clear()
         luaJManager.clearGlobals(theme)
         theme.scripts[theme.themeResource("theme")]

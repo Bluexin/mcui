@@ -3,7 +3,6 @@ package be.bluexin.mcui.themes.serde.legacyformat.factory
 import be.bluexin.mcui.themes.elements.Rectangle
 import be.bluexin.mcui.themes.miniscript.CDouble
 import be.bluexin.mcui.themes.miniscript.CInt
-import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
 import be.bluexin.mcui.themes.serde.legacyformat.xml.RectangleXml
@@ -19,12 +18,12 @@ internal class RectangleFactory : LegacyFactory<RectangleXml, Rectangle>(Rectang
         val transform = createTransform(input, context)
         val width = input::width.compileDouble(context) ?: CDouble.ZERO
         val height = input::height.compileDouble(context) ?: CDouble.ZERO
-        val texture = input::texture.compileString(context)
+        val texture = input::texture.compileTextureCompat(context)
         val props = Rectangle.Geometry(
             rgba = input::rgba.compileInt(context),
             width = width,
             height = height,
-            texture = texture?.let(::CResourceLocation),
+            texture = texture,
             sourceX = input::sourceX.compileDouble(context) ?: CDouble.ZERO,
             sourceY = input::sourceY.compileDouble(context) ?: CDouble.ZERO,
             sourceWidth = input::sourceWidth.compileDouble(context) ?: width,

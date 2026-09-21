@@ -1,8 +1,5 @@
 package be.bluexin.mcui.themes.meta
 
-import be.bluexin.mcui.themes.loader.AbstractThemeLoader
-import be.bluexin.mcui.themes.loader.JsonThemeLoader
-import be.bluexin.mcui.themes.loader.XmlThemeLoader
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -10,8 +7,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import net.minecraft.resources.ResourceLocation
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 
 data class ThemeDefinition(
     val id: ResourceLocation,
@@ -41,26 +36,8 @@ data class ThemeDefinition(
         fun ResourceLocation.themeResource(path: String) = ResourceLocation(
             this.toString().replace(':', '.'), path
         )
-    }
-}
 
-// this is actually hud format and should not matter much
-enum class HudFormat(val hudFileSuffix: String, private val loaderP: KoinComponent.() -> AbstractThemeLoader) :
-    KoinComponent {
-    XML("hud.xml", { get<XmlThemeLoader>() }),
-    JSON("hud.json", { get<JsonThemeLoader>() });
-
-    val loader: AbstractThemeLoader get() = loaderP()
-
-    companion object {
-        private val fromFileExtension = entries.associateBy { it.hudFileSuffix.substringAfterLast('.') }
-
-        fun fromFile(fileName: String): HudFormat? =
-            entries.firstOrNull { fileName.endsWith(it.hudFileSuffix) }
-
-        fun fromFile(location: ResourceLocation): HudFormat? = fromFile(location.path)
-
-        fun fromFileExtension(fileName: String): HudFormat? = fromFileExtension[fileName.substringAfterLast('.')]
+        const val HUD_FILE = "hud.xml"
     }
 }
 
@@ -71,9 +48,20 @@ data class ThemeMetadata(
     val fragments: String = "fragments",
     val widgets: String = "widgets",
     val scripts: String = "scripts",
+    /**
+     * Format id selecting the theme's [ThemeLoader][be.bluexin.mcui.themes.loader.ThemeLoaderRegistry]
+     * (one loader per serialized format). Defaults to [LEGACY_XML] ; new serialized formats
+     * (xml_v1, json_v1, ...) add their own loader and [ThemeMetadata.modernSource] value.
+     */
+    val modernSource: String = LEGACY_XML,
 ) {
     companion object {
         const val UNKNOWN_VERSION = "unknown"
+
+        /**
+         * Legacy-SAOUI XML format : serialized via the legacy DTO/factory pipeline.
+         */
+        const val LEGACY_XML = "legacy_xml"
     }
 }
 

@@ -57,6 +57,11 @@ internal sealed class LegacyFactory<IN : ElementXml, out OUT : Any>(
     protected fun KProperty0<ExpressionIntermediate?>.compileUnit(context: Context): CUnit? =
         compile(context, UnitExpressionAdapter::tryCompile)
 
+    protected fun KProperty0<ExpressionIntermediate?>.compileTextureCompat(context: Context): CResourceLocation? =
+        compile(context) { expr ->
+            StringExpressionAdapter.tryCompile(expr).recover { CString { expr.expression.lowercase() } }
+        }?.let(::CResourceLocation)
+
     protected fun createChildren(
         children: ChildrenXml?,
         context: Context,

@@ -2,16 +2,18 @@ package be.bluexin.mcui.themes.serde.legacyformat.factory
 
 import be.bluexin.mcui.themes.elements.RepetitionGroup
 import be.bluexin.mcui.themes.miniscript.CInt
-import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
 import be.bluexin.mcui.themes.serde.legacyformat.xml.RepetitionGroupXml
 import org.koin.core.annotation.Single
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 @Single
-internal class RepetitionGroupFactory(
-    private val registry: LegacyFactoryRegistry
-) : LegacyFactory<RepetitionGroupXml, RepetitionGroup>(RepetitionGroupXml::class) {
+internal class RepetitionGroupFactory :
+    LegacyFactory<RepetitionGroupXml, RepetitionGroup>(RepetitionGroupXml::class), KoinComponent {
+
+    private val registry: LegacyFactoryRegistry by inject()
 
     override fun create(
         input: RepetitionGroupXml,
@@ -19,7 +21,7 @@ internal class RepetitionGroupFactory(
     ): Result<RepetitionGroup> = context.tryRun("repetitionGroup[${input.name}]") {
         val renderState = createRenderState(input, context)
         val transform = createTransform(input, context)
-        val texture = input::texture.compileString(context)?.let(::CResourceLocation)
+        val texture = input::texture.compileTextureCompat(context)
         val children = createChildren(input.children, context, registry)
         val amount = input::amount.compileInt(context) ?: CInt.ZERO
 
