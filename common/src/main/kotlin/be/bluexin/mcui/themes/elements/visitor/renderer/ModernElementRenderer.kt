@@ -14,15 +14,15 @@ import org.koin.core.component.inject
 
 /**
  * Render entrypoint for the modern element tree : maps Minecraft state to a [RenderingElementVisitor]
- * and an initial [ElementVisitor.Context], then visits the given [element].
+ * and an initial [ElementVisitor.Context], then visits the given [Element].
  *
- * Traversal, z-ordering and per-part profiling live in the tree itself ([Element.visit]) ; this class
+ * Traversal, z-ordering, and per-part profiling live in the tree itself ([Element.visit]) ; this class
  * only owns the adaptation seam. Mirrors the legacy `Hud.drawAll` behavior for A/B parity :
  *
- * - mouse starts at (-1, -1) by default (widgets don't hover during HUD rendering) and is made
+ * - Mouse starts at (-1, -1) by default (widgets don't hover during HUD rendering) and is made
  *   group-relative as the tree descends,
- * - repetition-group loop indices are forwarded to the legacy expression context (`i()`),
- * - the [ElementVisitor.Context.profile] hook is wired to the legacy debug profiler.
+ * - The [ElementVisitor.Context.profile] hook is wired to mc profiler,
+ * - Variables for use in Miniscript are pushed/popped on the existing legacy context stack for JEL dynamic properties binding.
  */
 @Single
 internal class ModernElementRenderer : KoinComponent {
@@ -34,8 +34,9 @@ internal class ModernElementRenderer : KoinComponent {
         val context = ElementVisitor.Context(
             gameInfo = gameContext,
             mouse = mouse,
-            loopIndex = hudDrawContext::setI,
             profile = { key, block -> hudDrawContext.profile(key, block) },
+            pushVariables = hudDrawContext::pushContext,
+            popVariables = hudDrawContext::popContext,
         )
         visitor.visit(element, context)
     }

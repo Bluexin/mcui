@@ -19,7 +19,7 @@ internal class LegacyFormatContext(
 ) : Factory.Context {
 
     private val path = ArrayDeque<String>()
-    private val fragments = mutableMapOf<ResourceLocation, Fragment?>()
+    private val fragments = mutableMapOf<ResourceLocation, FragmentXml?>()
 
     override fun nested(path: String) {
         this.path.addLast(path)
@@ -35,6 +35,6 @@ internal class LegacyFormatContext(
     }
 
     override fun loadFragment(id: ResourceLocation): Fragment? = fragments.getOrPut(id) {
-        fragmentLoader(id)?.let { fragmentFactory.create(it, this).getOrNull() }
-    }
+        fragmentLoader(id)
+    }?.let { fragmentFactory.create(it, this).getOrNull() }
 }

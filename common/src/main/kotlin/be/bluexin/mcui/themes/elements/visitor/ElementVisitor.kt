@@ -3,6 +3,7 @@ package be.bluexin.mcui.themes.elements.visitor
 import be.bluexin.mcui.themes.elements.Element
 import be.bluexin.mcui.themes.elements.RenderState
 import be.bluexin.mcui.themes.elements.Transform
+import be.bluexin.mcui.themes.miniscript.CValue
 import be.bluexin.mcui.themes.miniscript.api.GameContext
 import org.joml.Vector2dc
 
@@ -23,15 +24,14 @@ interface ElementVisitor {
         val gameInfo: GameContext,
         val mouse: Vector2dc,
         /**
-         * Set the current repetition-group loop index while visiting a repeated group.
-         * Wired to the legacy expression draw context so `i()`-style JEL expressions keep working.
-         * No-op when no [be.bluexin.mcui.themes.elements.RepetitionGroup] is active.
-         */
-        val loopIndex: (Int) -> Unit = {},
-        /**
-         * Profiling hook, keyed by name. Defaults to identity so the element model stays Minecraft-free ;
-         * wired to the legacy debug profiler during rendering (A/B parity).
+         * Run a profiled block, if profiling is available (on Minecraft, this uses the vanilla profiler).
+         * String argument is the profiler key to be used.
          */
         val profile: (String, () -> Unit) -> Unit = { _, block -> block() },
+        /**
+         * Push/pop a named-variable scope made available to Miniscripts through JEL dynamic properties.
+         */
+        val pushVariables: (Map<String, CValue<*>>) -> Unit = {},
+        val popVariables: () -> Unit = {},
     )
 }

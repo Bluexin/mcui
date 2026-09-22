@@ -37,9 +37,13 @@ data class RepetitionGroup(
             val sortedChildren = children.sortedBy { it.transform.z() }
             val count = amount()
             for (i in 0 until count) {
-                context.loopIndex(i)
-                sortedChildren.forEach { child ->
-                    child.visit(visitor, relativeContext)
+                context.pushVariables(mapOf("i" to CInt { i }))
+                try {
+                    sortedChildren.forEach { child ->
+                        child.visit(visitor, relativeContext)
+                    }
+                } finally {
+                    context.popVariables()
                 }
             }
 
