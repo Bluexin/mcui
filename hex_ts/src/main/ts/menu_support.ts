@@ -1,4 +1,4 @@
-import type {Widget} from "../../typings/Widget";
+import type {Widget} from "@mcui/types/generated/legacy/Widget";
 import {type ButtonArgs, loadButton, typedStaticValue} from "./widget_lib";
 
 const menu_frag = theme.readWidget("mcui.hex-ts:menu_parent");
@@ -11,7 +11,7 @@ export interface Menu extends Widget {
 }
 
 /**
- * Adds a paged menu to given widget
+ * Adds a paged menu to the given widget
  */
 export function addMenu(parent: Widget | string): Menu {
     const r = theme.loadWidget(parent, menu_frag) as Menu || error(`Unable to load menu`);

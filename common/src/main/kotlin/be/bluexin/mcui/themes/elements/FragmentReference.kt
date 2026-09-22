@@ -3,6 +3,7 @@ package be.bluexin.mcui.themes.elements
 import be.bluexin.luajksp.annotations.LuajExclude
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.themes.elements.access.FragmentReferenceAccess
+import be.bluexin.mcui.themes.elements.visitor.ElementVisitor
 import be.bluexin.mcui.themes.miniscript.CValue
 import org.luaj.vm2.LuaValue
 
@@ -19,7 +20,12 @@ data class FragmentReference(
     override fun visit(visitor: ElementVisitor, context: ElementVisitor.Context) {
         if (visitor.start(renderState, context)) {
             visitor.transform(transform, context)
-            group.visit(visitor, context)
+            context.pushVariables(variables)
+            try {
+                group.visit(visitor, context)
+            } finally {
+                context.popVariables()
+            }
             visitor.popTransform(context)
         }
     }

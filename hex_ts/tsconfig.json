@@ -8,7 +8,8 @@
     ],
     "types": [
       "@typescript-to-lua/language-extensions",
-      "lua-types/5.2"
+      "lua-types/5.2",
+      "@mcui/types"
     ],
     "baseUrl": ".",
     "rootDir": "src/main/ts",
@@ -17,8 +18,7 @@
     "sourceMap": true
   },
   "include": [
-    "src/main/ts/**/*.ts",
-    "src/typings/**/*.d.ts"
+    "src/main/ts/**/*.ts"
   ],
   "tstl": {
     "luaTarget": "5.2",

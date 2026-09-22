@@ -1,12 +1,12 @@
-package be.bluexin.mcui.themes.elements.renderer
+package be.bluexin.mcui.themes.elements.visitor.renderer
 
-import be.bluexin.mcui.themes.elements.ElementVisitor
-import be.bluexin.mcui.themes.elements.GLOperations
 import be.bluexin.mcui.themes.elements.RenderState
 import be.bluexin.mcui.themes.elements.Transform
+import be.bluexin.mcui.themes.elements.visitor.ElementVisitor
+import be.bluexin.mcui.themes.elements.visitor.GLOperations
 import com.mojang.blaze3d.vertex.PoseStack
 
-class RenderingElementVisitor(
+internal class RenderingElementVisitor(
     private val poseStack: PoseStack
 ) : ElementVisitor {
 

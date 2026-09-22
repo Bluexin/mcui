@@ -1,5 +1,5 @@
-import type {Widget} from "../../typings/Widget";
-import type {CDouble, CInt, CString, CValue, JelType, TypeSpecificCValue} from "../../typings/support"
+import type {Widget} from "@mcui/types/generated/legacy/Widget";
+import type {CDouble, CInt, CString, CValue, JelType, TypeSpecificCValue} from "@mcui/types/support"
 
 export const getChildWidget = (parent: Widget | null, name: string) => {
     if (parent) {

@@ -1,11 +1,13 @@
 package be.bluexin.mcui.themes.serde.legacyformat.factory
 
+import be.bluexin.mcui.themes.elements.Element
 import be.bluexin.mcui.themes.elements.RenderState
 import be.bluexin.mcui.themes.elements.Transform
 import be.bluexin.mcui.themes.miniscript.*
 import be.bluexin.mcui.themes.miniscript.serialization.*
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context
+import be.bluexin.mcui.themes.serde.legacyformat.xml.ChildrenXml
 import be.bluexin.mcui.themes.serde.legacyformat.xml.ElementXml
 import be.bluexin.mcui.themes.serde.legacyformat.xml.ExpressionIntermediate
 import kotlin.reflect.KClass
@@ -54,4 +56,25 @@ internal sealed class LegacyFactory<IN : ElementXml, out OUT : Any>(
 
     protected fun KProperty0<ExpressionIntermediate?>.compileUnit(context: Context): CUnit? =
         compile(context, UnitExpressionAdapter::tryCompile)
+
+    protected fun KProperty0<ExpressionIntermediate?>.compileTextureCompat(context: Context): CResourceLocation? =
+        compile(context) { expr ->
+            StringExpressionAdapter.tryCompile(expr).recover { CString { expr.expression.lowercase() } }
+        }?.let(::CResourceLocation)
+
+    protected fun createChildren(
+        children: ChildrenXml?,
+        context: Context,
+        registry: LegacyFactoryRegistry
+    ): List<Element> = children?.elements?.mapNotNull { childXml ->
+        val childName = (childXml as? ElementXml.WithRenderState)?.name ?: "unknown"
+        context.nested(childName)
+        val result = registry.createFromXml(childXml, context)
+        context.pop()
+
+        if (result.isFailure) {
+            context.error("Failed to create child element: ${result.exceptionOrNull()?.message}")
+        }
+        result.getOrNull()
+    }.orEmpty()
 }

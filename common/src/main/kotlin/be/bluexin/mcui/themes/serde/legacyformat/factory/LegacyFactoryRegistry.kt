@@ -7,9 +7,9 @@ import org.koin.core.annotation.Single
 
 @Single
 internal class LegacyFactoryRegistry(
-    factories: List<LegacyFactory<ElementXml, Element>>
+    private val factories: List<LegacyFactory<ElementXml, Element>>,
 ) {
-    private val factoryMap = factories.associateBy { it.xmlType }
+    private val factoryMap by lazy { factories.associateBy { it.xmlType } }
 
     fun createFromXml(xml: ElementXml, context: Factory.Context): Result<Element> {
         val factory = factoryMap[xml::class] ?: return Result.failure(

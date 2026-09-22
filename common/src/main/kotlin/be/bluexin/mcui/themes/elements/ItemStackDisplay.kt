@@ -2,10 +2,11 @@ package be.bluexin.mcui.themes.elements
 
 import be.bluexin.luajksp.annotations.LuajExclude
 import be.bluexin.luajksp.annotations.LuajExpose
+import be.bluexin.mcui.themes.elements.access.ItemStackDisplayAccess
+import be.bluexin.mcui.themes.elements.visitor.ElementVisitor
 import be.bluexin.mcui.themes.miniscript.CInt
 import be.bluexin.mcui.themes.miniscript.api.GameContext
 import be.bluexin.mcui.themes.miniscript.api.MiniscriptItemStack
-import org.luaj.vm2.LuaTable
 import org.luaj.vm2.LuaValue
 
 @LuajExpose
@@ -18,12 +19,12 @@ data class ItemStackDisplay(
     @LuajExclude
     override fun visit(visitor: ElementVisitor, context: ElementVisitor.Context) {
         if (visitor.start(renderState, context)) {
-            visitor.transform(transform, context)
-
             val (slotIndex, inventorySource) = properties
             val itemStack = inventorySource(context.gameInfo, slotIndex())
 
             if (itemStack.isEmpty()) return
+
+            visitor.transform(transform, context)
 
             visitor.draw(context) {
                 renderItemStack(
@@ -45,5 +46,5 @@ data class ItemStackDisplay(
     )
 
     @LuajExclude
-    override fun toLua(): LuaValue = LuaTable()
+    override fun toLua(): LuaValue = ItemStackDisplayAccess(this)
 }

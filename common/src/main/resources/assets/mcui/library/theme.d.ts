@@ -1,6 +1,6 @@
 import {CValue} from "./support";
-import {Fragment} from "./Fragment";
-import {Widget} from "./Widget";
+import {Fragment} from "./generated/legacy/Fragment";
+import {Widget} from "./generated/legacy/Widget";
 
 /**
  * Theme API — reading/loading fragments and widgets, and registering screens.

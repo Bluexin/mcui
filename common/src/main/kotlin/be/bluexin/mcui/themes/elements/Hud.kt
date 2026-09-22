@@ -3,33 +3,38 @@ package be.bluexin.mcui.themes.elements
 import be.bluexin.luajksp.annotations.LuajExclude
 import be.bluexin.luajksp.annotations.LuajExpose
 import be.bluexin.mcui.themes.elements.access.HudAccess
-import be.bluexin.mcui.themes.elements.legacy.HudPartType
+import be.bluexin.mcui.themes.elements.visitor.ElementVisitor
 import org.luaj.vm2.LuaValue
 
 /**
- * HUD element containing multiple named parts (health, hotbar, etc.)
- * Each part is a Group that can be rendered independently.
+ * Top-level HUD container over named parts.
+ *
+ * Like [Group], the container is itself an [Element] whose [visit] traverses its parts, so the whole
+ * tree is uniformly visitable (rendering, interaction, Lua) - entry points are just
+ * `visitor.visit(hud, ...)`. Parts are visited in declared order, keyed by their String slot key
+ * (e.g. `"HOTBAR"`), matching the legacy `Hud.drawAll` profiler entries.
  */
 @LuajExpose
 data class Hud(
     val name: String,
-    val version: String,
+    // Lua access classes support Lists but not Maps : parts (and the keyed `get`) stay Kotlin-side
     @LuajExclude
-    val parts: Map<HudPartType, Group>,
+    val parts: Map<String, Group>,
 ) : Element {
 
-    @LuajExclude
     override val transform: Transform = Transform.ZERO
-
-    @LuajExclude // FIXME : should add support in luaj-ksp
-    operator fun get(key: HudPartType): Group? = parts[key]
 
     @LuajExclude
     override fun visit(visitor: ElementVisitor, context: ElementVisitor.Context) {
-        // HUD itself doesn't transform or render - it delegates to its parts
-        // Rendering individual parts is handled by external code calling visitor.visit(hud[key], context)
+        context.profile(name) {
+            parts.forEach { (key, part) ->
+                context.profile(key) { visitor.visit(part, context) }
+            }
+        }
     }
 
     @LuajExclude
     override fun toLua(): LuaValue = HudAccess(this)
+
+    operator fun get(key: String): Group? = parts[key]
 }

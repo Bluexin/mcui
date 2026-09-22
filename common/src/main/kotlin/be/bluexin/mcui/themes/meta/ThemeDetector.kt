@@ -36,9 +36,7 @@ internal class ThemeDetectorImpl : ThemeDetector {
         }.map { it.extractMcuiThemeDefinition(resourceManager) }
         val modernThemesSet = modernThemes.map { it.second.themeRoot }.toSet()
         return (modernThemes + resourceManager.listResources("themes") { rl ->
-            rl.parent !in modernThemesSet && HudFormat.entries.any {
-                rl.path.endsWith("/${it.hudFileSuffix}")
-            }
+            rl.parent !in modernThemesSet && rl.path.endsWith("/${ThemeDefinition.HUD_FILE}")
         }.map { (key, value) ->
             (key to value).extractLegacyThemeDefinition(resourceManager)
         }).toMap()
@@ -105,21 +103,10 @@ internal class ThemeDetectorImpl : ThemeDetector {
             ThemeMetadata(format = ThemeFormat.ERROR)
         }
         logger.debug { "Found candidate theme $themeId from $themeRoot and metadata $themeMetadata" }
-        val hudCandidates = HudFormat.entries.asSequence()
-            .map { themeRoot.append("/${it.hudFileSuffix}") }
-            .filter { resourceManager.getResource(it).isPresent }
-            .toList()
-        val hud = when (hudCandidates.size) {
-            0 -> {
-                logger.debug { "No HUD definition found in $themeId" }
-                null
-            }
-
-            1 -> hudCandidates.single()
-            else -> {
-                logger.warn { "Multiple HUD candidates found for $themeId : ${hudCandidates}, none will be loaded." }
-                null
-            }
+        val hudLocation = themeRoot.append("/${ThemeDefinition.HUD_FILE}")
+        val hud = if (resourceManager.getResource(hudLocation).isPresent) hudLocation else {
+            logger.debug { "No HUD definition found in $themeId" }
+            null
         }
         return themeId to ThemeDefinition(
             id = themeId,
@@ -138,7 +125,7 @@ internal class ThemeDetectorImpl : ThemeDetector {
         themeId: ResourceLocation,
         themeRoot: ResourceLocation,
         path: String,
-        allowedExtensions: Set<String> = setOf("json", "xml"),
+        allowedExtensions: Set<String> = setOf("xml"),
     ): Map<ResourceLocation, ResourceLocation> =
         listResources("${themeRoot.path}/$path") {
             it.namespace == themeRoot.namespace && it.path.substringAfterLast('.') in allowedExtensions

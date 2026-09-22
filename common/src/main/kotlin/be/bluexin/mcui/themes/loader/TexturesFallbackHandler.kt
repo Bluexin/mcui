@@ -58,31 +58,14 @@ class TexturesFallbackHandler {
             "status icons ${missingEffects.map(StatusEffect::name)}",
             defaultStatusIcons, theme
         )
-
-        /*val missingMenuIcons = buildList {
-            IconCore.entries.forEach {
-                it.rl = GLCore.takeTextureIfExists(textureRoot.append(it.path)) ?: run {
-                    add(it.name)
-                    defaultMenuIcons.append(it.path)
-                }
-            }
-        }
-        if (missingMenuIcons.isNotEmpty()) logMissingAndUse(
-            "menu icons $missingMenuIcons",
-            defaultStatusIcons, theme
-        )*/
     }
-
-    //    lateinit var gui: ResourceLocation
-//    lateinit var slot: ResourceLocation
-//    lateinit var entities: ResourceLocation
-//    lateinit var particleLarge: ResourceLocation
-    lateinit var statusIcons: ResourceLocation
-
-    //    private val defaultGui = ResourceLocation(Constants.LEGACY_MOD_ID, "textures/sao/gui.png")
-//    private val defaultSlot = ResourceLocation(Constants.LEGACY_MOD_ID, "textures/slot.png")
-//    private val defaultEntities = ResourceLocation(Constants.LEGACY_MOD_ID, "textures/sao/entities.png")
-//    private val defaultParticleLarge = ResourceLocation(Constants.LEGACY_MOD_ID, "textures/sao/particlelarge.png")
     private val defaultStatusIcons = ResourceLocation(Constants.LEGACY_MOD_ID, "textures/sao/status_icons/")
-//    private val defaultMenuIcons = ResourceLocation(Constants.LEGACY_MOD_ID, "textures/sao/")
+
+    /**
+     * Status effect icons texture root for the currently active HUD. [init] is only invoked when a
+     * HUD becomes active (see ThemeManager::resolveActiveHud), so this defaults to the SAO icons
+     * for the no-HUD / misconfiguration case instead of crashing on first access.
+     */
+    var statusIcons: ResourceLocation = defaultStatusIcons
+        private set
 }

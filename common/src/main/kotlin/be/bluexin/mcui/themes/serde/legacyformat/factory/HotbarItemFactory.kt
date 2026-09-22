@@ -4,7 +4,6 @@ import be.bluexin.mcui.themes.elements.*
 import be.bluexin.mcui.themes.miniscript.CBoolean
 import be.bluexin.mcui.themes.miniscript.CDouble
 import be.bluexin.mcui.themes.miniscript.CInt
-import be.bluexin.mcui.themes.miniscript.CResourceLocation
 import be.bluexin.mcui.themes.serde.Factory
 import be.bluexin.mcui.themes.serde.Factory.Context.Companion.tryRun
 import be.bluexin.mcui.themes.serde.legacyformat.xml.HotbarItemXml
@@ -33,7 +32,7 @@ internal class HotbarItemFactory : LegacyFactory<HotbarItemXml, Group>(HotbarIte
         // Create background rectangle from GLRectangleParent properties
         val width = input::w.compileDouble(context) ?: CDouble.ZERO
         val height = input::h.compileDouble(context) ?: CDouble.ZERO
-        val texture = input::texture.compileString(context)
+        val texture = input::texture.compileTextureCompat(context)
 
         val background = Rectangle(
             renderState = RenderState(
@@ -45,7 +44,7 @@ internal class HotbarItemFactory : LegacyFactory<HotbarItemXml, Group>(HotbarIte
                 rgba = input::rgba.compileInt(context),
                 width = width,
                 height = height,
-                texture = texture?.let(::CResourceLocation),
+                texture = texture,
                 sourceX = input::srcX.compileDouble(context) ?: CDouble.ZERO,
                 sourceY = input::srcY.compileDouble(context) ?: CDouble.ZERO,
                 sourceWidth = input::srcW.compileDouble(context) ?: width,
