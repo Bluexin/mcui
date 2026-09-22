@@ -21,14 +21,18 @@ import be.bluexin.mcui.commands.GeneralCommands
 import be.bluexin.mcui.commands.McuiCommand
 import be.bluexin.mcui.config.ConfigHandler
 import be.bluexin.mcui.logger
-import be.bluexin.mcui.screens.LuaScriptedScreen
-import be.bluexin.mcui.themes.loader.*
+import be.bluexin.mcui.themes.elements.Hud
+import be.bluexin.mcui.themes.loader.AbstractThemeLoader
+import be.bluexin.mcui.themes.loader.SettingsLoader
+import be.bluexin.mcui.themes.loader.TexturesFallbackHandler
+import be.bluexin.mcui.themes.loader.ThemeLoaderRegistry
 import be.bluexin.mcui.themes.scripting.lib.RegisterScreen
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.Client.resourceManager
 import be.bluexin.mcui.util.debug
 import be.bluexin.mcui.util.info
 import net.minecraft.ChatFormatting
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
@@ -53,21 +57,13 @@ class ThemeManager(
     private var activeHudThemeId: ResourceLocation? = null
 
     /**
-     * The single active HUD pair (legacy tree + optional modern tree, built together by the loader).
-     * Only the **one** active theme's HUD resources are ever loaded : switching the HUD theme
-     * (via [setScreenConfiguration] or a theme reload) evicts the previous asset set, mirroring the
-     * screen cache. This is a pure read for rendering ; it is (re)populated by [resolveActiveHud]
-     * at reload/config-apply boundaries. Null when no theme provides a HUD.
+     * The single active HUD's element tree. Only the **one** active theme's HUD is ever loaded :
+     * switching the HUD theme (via [setScreenConfiguration] or a theme reload) evicts the previous
+     * one, mirroring the screen cache. This is a pure read for rendering ; it is (re)populated by
+     * [resolveActiveHud] at reload/config-apply boundaries. Null when no theme provides a HUD.
      */
-    var activeHudAssets: ThemeAssetSet? = null
+    var activeHud: Hud? = null
         private set
-
-    /**
-     * A/B toggle : when true, [ThemeAssetSet.modernHud] (new element tree) is rendered instead of
-     * the legacy HUD. Falls back to legacy rendering when no modern tree is available.
-     * Controlled via the `/mcui debug modern` command.
-     */
-    var renderModernHud: Boolean = false
 
     lateinit var themeList: Map<ResourceLocation, ThemeDefinition>
         private set
@@ -86,7 +82,7 @@ class ThemeManager(
      */
     private val screenConfiguration = ConfigHandler.getScreenSettings().toMutableMap()
 
-    private val screenCache = mutableMapOf<ResourceLocation, LuaScriptedScreen?>()
+    private val screenCache = mutableMapOf<ResourceLocation, Screen?>()
 
     private var isReloading = false
 
@@ -204,16 +200,16 @@ class ThemeManager(
             // Status effects icons are drawn mainly by the HUD, so the fallback textures follow
             // the active HUD's lifecycle.
             texturesFallbackHandler.init(theme)
-            activeHudAssets = themeLoaderRegistry.resolve(theme.metadata)?.load(resourceManager, theme)
+            activeHud = themeLoaderRegistry.resolve(theme.metadata)?.load(resourceManager, theme)
             activeHudThemeId = theme.id
         }
     }
 
     /**
-     * Drops the current HUD asset pair so the next [resolveActiveHud] reloads from scratch.
+     * Drops the current HUD so the next [resolveActiveHud] reloads from scratch.
      */
     private fun unloadActiveHud() {
-        activeHudAssets = null
+        activeHud = null
         activeHudThemeId = null
     }
 
@@ -281,22 +277,27 @@ class ThemeManager(
 
     /**
      * This will not cache and is exposed for use in debug commands !
-     * @return a new screen instance for the specified [screenId] as implemented by given [themeId]
+     *
+     * Interactive theme screens were built on the legacy `Widget` tree, which has been removed
+     * pending its modern-tree replacement. This always returns null (closing/no-oping the screen)
+     * and logs a warning instead of constructing anything.
+     * @return null ; interactive theme screens are temporarily unavailable
      */
-    fun getThemeScreen(screenId: ResourceLocation, themeId: ResourceLocation): LuaScriptedScreen? {
-        if (screenId == ThemeAnalyzer.HUD) return null // the HUD is not a LuaScriptedScreen
-        return getAllScreens(screenId)[themeId]?.let { callback ->
-            LuaScriptedScreen(screenId, themeId).also {
-                it.load(callback)
-            }
-        }
+    fun getThemeScreen(screenId: ResourceLocation, themeId: ResourceLocation): Screen? {
+        if (screenId == ThemeAnalyzer.HUD) return null // the HUD is not an interactive screen
+        if (getAllScreens(screenId)[themeId] == null) return null
+        logger.warn(
+            "Interactive theme screens are temporarily unavailable (screen=$screenId, theme=$themeId) ; " +
+                    "the legacy widget system was removed pending its replacement"
+        )
+        return null
     }
 
     /**
      * This will configure screens lazily and cache results.
-     * @return the screen instance for the specified [screenId]
+     * @return null ; interactive theme screens are temporarily unavailable, see [getThemeScreen]
      */
-    fun getScreen(screenId: ResourceLocation): LuaScriptedScreen? = screenCache.getOrPut(screenId) {
+    fun getScreen(screenId: ResourceLocation): Screen? = screenCache.getOrPut(screenId) {
         getScreenConfiguration(screenId)?.let {
             getThemeScreen(screenId, it)
         }

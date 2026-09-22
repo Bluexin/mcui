@@ -22,7 +22,6 @@ import be.bluexin.mcui.effects.StatusEffect
 import be.bluexin.mcui.effects.StatusEffect.Companion.getEffects
 import be.bluexin.mcui.social.StaticPlayerHelper.getHungerLevel
 import be.bluexin.mcui.social.StaticPlayerHelper.getMaxHealth
-import be.bluexin.mcui.themes.miniscript.*
 import be.bluexin.mcui.util.Client
 import be.bluexin.mcui.util.HealthStep
 import be.bluexin.mcui.util.HealthStep.Companion.getStep
@@ -191,10 +190,6 @@ private var effects: List<StatusEffect>? = null
 
     fun getI(): Int {
         return i
-    }
-
-    override fun setI(i: Int) {
-        this.i = i
     }
 
     override fun i(): Int {

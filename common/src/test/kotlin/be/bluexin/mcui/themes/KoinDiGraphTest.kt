@@ -1,9 +1,9 @@
 package be.bluexin.mcui.themes
 
 import be.bluexin.mcui.themes.elements.ElementModule
+import be.bluexin.mcui.themes.loader.LegacyXmlThemeLoader
 import be.bluexin.mcui.themes.loader.ThemeLoaderModule
 import be.bluexin.mcui.themes.loader.ThemeLoaderRegistry
-import be.bluexin.mcui.themes.loader.XmlThemeLoader
 import be.bluexin.mcui.themes.meta.ThemeMetaModule
 import be.bluexin.mcui.themes.miniscript.MiniscriptModule
 import be.bluexin.mcui.themes.scripting.ScriptingModule
@@ -35,7 +35,7 @@ class KoinDiGraphTest {
                 )
             }.koin.also { koin ->
                 assertNotNull(koin.get<ThemeLoaderRegistry>())
-                assertNotNull(koin.get<XmlThemeLoader>())
+                assertNotNull(koin.get<LegacyXmlThemeLoader>())
                 assertNotNull(koin.get<LegacyFactoryRegistry>())
             }
         } finally {

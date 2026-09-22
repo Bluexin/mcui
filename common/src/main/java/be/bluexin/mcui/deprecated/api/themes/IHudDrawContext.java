@@ -193,11 +193,6 @@ public interface IHudDrawContext {
     float horsejump();
 
     /**
-     * Internal
-     */
-    void setI(int i);
-
-    /**
      * @return index in repetition groups
      */
     int i();

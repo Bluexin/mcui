@@ -1,9 +1,7 @@
 package be.bluexin.mcui.themes.loader
 
 import be.bluexin.mcui.Constants
-import be.bluexin.mcui.themes.elements.legacy.Fragment
-import be.bluexin.mcui.themes.elements.legacy.Hud
-import be.bluexin.mcui.themes.elements.legacy.Widget
+import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.meta.ThemeMetadata
 import be.bluexin.mcui.themes.serde.legacyformat.factory.FragmentFactory
@@ -21,14 +19,13 @@ import org.koin.core.annotation.Single
 import java.io.InputStream
 
 /**
- * The "legacy_xml" format loader (one [AbstractThemeLoader] per format).
+ * The "legacy_xml" format loader.
  *
- * Loads the legacy tree via [AbstractThemeLoader], and the modern `elements.*` tree straight from
- * the same XML DTOs through the legacy factory pipeline ([HudFactory]/[FragmentFactory]) for the
- * A/B migration.
+ * Builds the `elements.*` tree from the old-format XML DTOs through the factory pipeline
+ * ([HudFactory]/[FragmentFactory]).
  */
 @Single
-class XmlThemeLoader internal constructor(
+class LegacyXmlThemeLoader internal constructor(
     private val hudFactory: HudFactory,
     private val fragmentFactory: FragmentFactory,
 ) : AbstractThemeLoader() {
@@ -49,14 +46,10 @@ class XmlThemeLoader internal constructor(
         xml.decodeFromReader(XmlStreaming.newReader(it, Charsets.UTF_8.name()))
     }
 
-    override fun InputStream.loadHud(): Hud = load()
-    override fun InputStream.loadFragment(): Fragment = load()
-    override fun InputStream.loadWidget(): Widget = load()
-
-    override fun buildModernHud(
+    override fun buildHud(
         resourceManager: ResourceManager,
         theme: ThemeDefinition,
-    ): be.bluexin.mcui.themes.elements.Hud? = runCatching {
+    ): Hud? = runCatching {
         val location = theme.themeRoot.append("/${ThemeDefinition.HUD_FILE}")
         val hudXml = loadHudXml(resourceManager, location)
 

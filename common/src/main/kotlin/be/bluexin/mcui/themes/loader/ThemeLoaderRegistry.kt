@@ -6,7 +6,7 @@ import org.koin.core.annotation.Single
 /**
  * Dispatches a theme's HUD loading to the [AbstractThemeLoader] of its format
  * ([ThemeMetadata.modernSource]). One loader per serialized format : `legacy_xml` is handled by
- * [XmlThemeLoader] today ; future formats (xml_v1, json_v1, ...) add their own loader and
+ * [LegacyXmlThemeLoader] today ; future formats (xml_v1, json_v1, ...) add their own loader and
  * [ThemeMetadata.modernSource] value, without changing the load flow.
  */
 @Single

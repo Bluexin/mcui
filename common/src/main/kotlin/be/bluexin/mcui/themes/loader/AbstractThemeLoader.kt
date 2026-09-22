@@ -2,10 +2,7 @@ package be.bluexin.mcui.themes.loader
 
 import be.bluexin.mcui.Constants
 import be.bluexin.mcui.effects.ColorState
-import be.bluexin.mcui.themes.elements.legacy.ElementGroup
-import be.bluexin.mcui.themes.elements.legacy.Fragment
-import be.bluexin.mcui.themes.elements.legacy.Hud
-import be.bluexin.mcui.themes.elements.legacy.Widget
+import be.bluexin.mcui.themes.elements.Hud
 import be.bluexin.mcui.themes.meta.ThemeDefinition
 import be.bluexin.mcui.themes.meta.ThemeMetadata
 import be.bluexin.mcui.util.*
@@ -17,9 +14,6 @@ import com.helger.css.decl.visit.DefaultCSSVisitor
 import com.helger.css.reader.CSSReader
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
-import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.util.*
 
@@ -27,7 +21,7 @@ abstract class AbstractThemeLoader internal constructor() {
 
     /**
      * Id of the serialized theme format this loader handles (see [ThemeMetadata.modernSource]).
-     * One loader per format : `legacy_xml` is served by [XmlThemeLoader] today, future formats
+     * One loader per format : `legacy_xml` is served by [LegacyXmlThemeLoader] today, future formats
      * (xml_v1, json_v1, ...) get their own loader and [ThemeMetadata.modernSource] value.
      */
     abstract val formatId: String
@@ -42,31 +36,25 @@ abstract class AbstractThemeLoader internal constructor() {
     }
 
     /**
-     * Heavily load a theme's HUD (including bindings its fragments and optional modern element tree)
-     * and return the result. Returns null when the HUD could not be loaded (errors are reported to
-     * [Reporter]).
+     * Load a theme's HUD (the modern element tree) and return the result. Returns null when the HUD
+     * could not be loaded (errors are reported to [Reporter]).
      */
     fun load(
         resourceManager: ResourceManager,
         theme: ThemeDefinition,
-    ): ThemeAssetSet? {
+    ): Hud? {
 //        if (OptionCore.CUSTOM_FONT.isEnabled) GLCore.setFont(Minecraft.getMinecraft(), OptionCore.CUSTOM_FONT.isEnabled)
         Reporter.errors.clear()
 
         val start = System.currentTimeMillis()
 
         val hud = try {
-            val hud = loadHud(resourceManager, theme.themeRoot.append("/${ThemeDefinition.HUD_FILE}"))
-            val fragments = theme.fragments.mapValues { (_, path) -> { this.loadFragment(path) } }
-            hud.setup(fragments, theme)
-            hud
+            buildHud(resourceManager, theme)
         } catch (e: Exception) {
             Constants.LOG.warn("Failed to load $theme", e)
             Reporter += e.message ?: "unknown error"
             return null
-        }
-
-        val modernHud = buildModernHud(resourceManager, theme)
+        } ?: return null
 
         loadCss(theme.themeRoot.append("/style.css"))
 
@@ -77,63 +65,17 @@ abstract class AbstractThemeLoader internal constructor() {
             theme.name, theme.id, System.currentTimeMillis() - start
         )
 
-        return ThemeAssetSet(hud, modernHud)
+        return hud
     }
 
     /**
-     * Builds the modern element tree for [theme] (A/B migration). Format loaders override this
-     * when their format can produce a modern tree ; defaults to none.
+     * Builds the element tree for [theme]. Format loaders implement this for their own format.
+     * Returns null when it could not be built (errors are reported to [Reporter]).
      */
-    protected open fun buildModernHud(
+    protected abstract fun buildHud(
         resourceManager: ResourceManager,
         theme: ThemeDefinition,
-    ): be.bluexin.mcui.themes.elements.Hud? = null
-
-    /**
-     * Load [Hud] from File reference
-     */
-    fun loadHud(location: File): Hud = FileInputStream(location).loadHud()
-
-    /**
-     * Load [Hud] from ResourceLocation reference (using mc ResourceManager)
-     */
-    fun loadHud(resourceManager: ResourceManager, location: ResourceLocation): Hud =
-        resourceManager.getResourceOrThrow(location).open().loadHud()
-
-    /**
-     * Load [ElementGroup] from File reference
-     */
-    fun loadFragment(location: File): Fragment = FileInputStream(location).loadFragment()
-
-    /**
-     * Load [ElementGroup] from ResourceLocation reference (using mc ResourceManager)
-     */
-    fun loadFragment(location: ResourceLocation): Fragment =
-        Client.resourceManager.getResourceOrThrow(location).open().loadFragment()
-
-    /**
-     * Load [ElementGroup] from ResourceLocation reference (using mc ResourceManager)
-     */
-    fun loadWidget(location: ResourceLocation): Widget =
-        Client.resourceManager.getResourceOrThrow(location).open().loadWidget()
-
-    /**
-     * Load [Hud] from [InputStream].
-     * Implementations should throw on errors.
-     */
-    protected abstract fun InputStream.loadHud(): Hud
-
-    /**
-     * Load [Fragment] from [InputStream].
-     * Implementations should throw on errors.
-     */
-    protected abstract fun InputStream.loadFragment(): Fragment
-
-    /**
-     * Load [Widget] from [InputStream].
-     * Implementations should throw on errors.
-     */
-    protected abstract fun InputStream.loadWidget(): Widget
+    ): Hud?
 
     private fun loadCss(location: ResourceLocation) {
         val start = System.currentTimeMillis()

@@ -13,11 +13,11 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Render entrypoint for the modern element tree : maps Minecraft state to a [RenderingElementVisitor]
+ * Render entrypoint for the element tree : maps Minecraft state to a [RenderingElementVisitor]
  * and an initial [ElementVisitor.Context], then visits the given [Element].
  *
  * Traversal, z-ordering, and per-part profiling live in the tree itself ([Element.visit]) ; this class
- * only owns the adaptation seam. Mirrors the legacy `Hud.drawAll` behavior for A/B parity :
+ * only owns the adaptation seam :
  *
  * - Mouse starts at (-1, -1) by default (widgets don't hover during HUD rendering) and is made
  *   group-relative as the tree descends,
